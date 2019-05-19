@@ -1,0 +1,59 @@
+# Control file for code generating pe_gen.go.
+# This depends on www.velocidex.com/golang/binparsergen
+
+# Generate like:
+# binparsegen conversion.spec.yaml > pe_gen.go
+
+Module: pe
+Profile: PeProfile
+Filename: pe_profile.json
+GenerateDebugString: false
+Structs:
+  - _IMAGE_DOS_HEADER
+  - _IMAGE_NT_HEADERS
+  #- _IMAGE_EXPORT_DIRECTORY
+  - _IMAGE_FILE_HEADER
+  - _IMAGE_OPTIONAL_HEADER
+  - _IMAGE_OPTIONAL_HEADER64
+  - _IMAGE_DATA_DIRECTORY
+  - _IMAGE_RESOURCE_DIRECTORY
+  - _IMAGE_RESOURCE_DIRECTORY_ENTRY
+  - _IMAGE_SECTION_HEADER
+  # - _IMAGE_THUNK_DATA32
+  # - _IMAGE_THUNK_DATA64
+  # - _IMAGE_THUNK_DATA32_u1
+  # - _IMAGE_THUNK_DATA64_u1
+  - _GUID
+  - CV_RSDS_HEADER
+  - _IMAGE_DEBUG_DIRECTORY
+  - _IMAGE_RESOURCE_DATA_ENTRY
+  - PrefixedString
+
+  # The following are used to parse out the VersionInformation resource data.
+
+  # https://docs.microsoft.com/en-au/windows/desktop/menurc/vs-versioninfo
+  - VS_VERSIONINFO
+  # https://docs.microsoft.com/en-us/windows/desktop/api/VerRsrc/ns-verrsrc-tagvs_fixedfileinfo
+  - tagVS_FIXEDFILEINFO
+  # https://docs.microsoft.com/en-au/windows/desktop/menurc/stringfileinfo
+  - StringFileInfo
+  # https://docs.microsoft.com/en-au/windows/desktop/menurc/stringtable
+  - StringTable
+  # https://docs.microsoft.com/en-au/windows/desktop/menurc/string-str
+  - ResourceString
+
+# We only use specific fields in many structs. For efficiency, this
+# code will only generate bindings for the fields we actually use.
+FieldWhiteList:
+  _IMAGE_DOS_HEADER: [E_magic, E_lfanew]
+  _IMAGE_SECTION_HEADER: [PointerToRawData, VirtualAddress,
+       Characteristics, SizeOfRawData, Name]
+  _IMAGE_FILE_HEADER: [SizeOfOptionalHeader, TimeDateStamp,
+       NumberOfSections, Machine]
+  _IMAGE_EXPORT_DIRECTORY: []
+  _IMAGE_RESOURCE_DIRECTORY: [_Entries, NumberOfIdEntries, NumberOfNamedEntries]
+  _IMAGE_RESOURCE_DIRECTORY_ENTRY: [NameIsString, NameOffset, Type,
+       DataIsDirectory, OffsetToDirectory, OffsetToData]
+  _IMAGE_OPTIONAL_HEADER: [Magic, DataDirectory, ImageBase]
+  _IMAGE_OPTIONAL_HEADER64: [Magic, DataDirectory, ImageBase]
+  tagVS_FIXEDFILEINFO: []

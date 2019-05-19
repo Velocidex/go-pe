@@ -1,0 +1,391 @@
+{
+    "_IMAGE_DOS_HEADER": [64, {
+        "E_cblp": [2, ["unsigned short", {}]],
+        "E_cp": [4, ["unsigned short", {}]],
+        "E_cparhdr": [8, ["unsigned short", {}]],
+        "E_crlc": [6, ["unsigned short", {}]],
+        "E_cs": [22, ["unsigned short", {}]],
+        "E_csum": [18, ["unsigned short", {}]],
+        "E_ip": [20, ["unsigned short", {}]],
+        "E_lfanew": [60, ["long", {}]],
+        "E_lfarlc": [24, ["unsigned short", {}]],
+        "E_magic": [0, ["unsigned short", {}]],
+        "E_maxalloc": [12, ["unsigned short", {}]],
+        "E_minalloc": [10, ["unsigned short", {}]],
+        "E_oemid": [36, ["unsigned short", {}]],
+        "E_oeminfo": [38, ["unsigned short", {}]],
+        "E_ovno": [26, ["unsigned short", {}]],
+        "E_res": [28, ["Array", {
+            "count": 8,
+            "target": "unsigned short"
+        }]],
+        "E_res2": [40, ["Array", {
+            "count": 20,
+            "target": "unsigned short"
+        }]],
+        "E_sp": [16, ["unsigned short", {}]],
+        "E_ss": [14, ["unsigned short", {}]]
+    }],
+    "_IMAGE_EXPORT_DIRECTORY": [40, {
+        "AddressOfFunctions": [28, ["unsigned long", {}]],
+        "AddressOfNameOrdinals": [36, ["unsigned long", {}]],
+        "AddressOfNames": [32, ["unsigned long", {}]],
+        "Base": [16, ["unsigned long", {}]],
+        "Characteristics": [0, ["unsigned long", {}]],
+        "MajorVersion": [8, ["unsigned short", {}]],
+        "MinorVersion": [10, ["unsigned short", {}]],
+        "Name": [12, ["unsigned long", {}]],
+        "NumberOfFunctions": [20, ["unsigned long", {}]],
+        "NumberOfNames": [24, ["unsigned long", {}]],
+        "TimeDateStamp": [4, ["unsigned long", {}]]
+    }],
+    "_IMAGE_FILE_HEADER": [20, {
+        "Characteristics": [18, ["unsigned short", {}]],
+        "Machine": [0, ["Enumeration", {
+            "choices": {
+                "34404": "IMAGE_FILE_MACHINE_AMD64",
+                "448": "IMAGE_FILE_MACHINE_ARM",
+                "332": "IMAGE_FILE_MACHINE_I386",
+                "512": "IMAGE_FILE_MACHINE_IA64"
+            },
+            "target": "unsigned short"
+        }]],
+        "NumberOfSections": [2, ["unsigned short", {}]],
+        "NumberOfSymbols": [12, ["unsigned long", {}]],
+        "PointerToSymbolTable": [8, ["unsigned long", {}]],
+        "SizeOfOptionalHeader": [16, ["unsigned short", {}]],
+        "TimeDateStamp": [4, ["UnixTimeStamp", {}]]
+    }],
+    "_IMAGE_IMPORT_BY_NAME": [4, {
+        "Hint": [0, ["unsigned short", {}]],
+        "Name": [2, ["String"]]
+    }],
+    "_IMAGE_IMPORT_DESCRIPTOR": [20, {
+        "Characteristics": [0, ["unsigned long", {}]],
+        "FirstThunk": [16, ["unsigned long", {}]],
+        "ForwarderChain": [8, ["unsigned long", {}]],
+        "Name": [12, ["unsigned long", {}]],
+        "OriginalFirstThunk": [0, ["unsigned long", {}]],
+        "TimeDateStamp": [4, ["unsigned long", {}]]
+    }],
+    "_IMAGE_NT_HEADERS": [248, {
+        "FileHeader": [4, ["_IMAGE_FILE_HEADER", {}]],
+        "OptionalHeader": [24, ["_IMAGE_OPTIONAL_HEADER", {}]],
+        "Signature": [0, ["unsigned long", {}]]
+    }],
+    "_IMAGE_NT_HEADERS64": [264, {
+        "FileHeader": [4, ["_IMAGE_FILE_HEADER", {}]],
+        "OptionalHeader": [24, ["_IMAGE_OPTIONAL_HEADER64", {}]],
+        "Signature": [0, ["unsigned long", {}]]
+    }],
+    "_IMAGE_OPTIONAL_HEADER": [224, {
+        "AddressOfEntryPoint": [16, ["unsigned long", {}]],
+        "BaseOfCode": [20, ["unsigned long", {}]],
+        "BaseOfData": [24, ["unsigned long", {}]],
+        "CheckSum": [64, ["unsigned long", {}]],
+        "DataDirectory": [96, ["Array", {
+            "count": 128,
+            "target": "_IMAGE_DATA_DIRECTORY"
+        }]],
+        "DllCharacteristics": [70, ["unsigned short", {}]],
+        "FileAlignment": [36, ["unsigned long", {}]],
+        "ImageBase": [28, ["unsigned long", {}]],
+        "LoaderFlags": [88, ["unsigned long", {}]],
+        "Magic": [0, ["unsigned short", {}]],
+        "MajorImageVersion": [44, ["unsigned short", {}]],
+        "MajorLinkerVersion": [2, ["unsigned char", {}]],
+        "MajorOperatingSystemVersion": [40, ["unsigned short", {}]],
+        "MajorSubsystemVersion": [48, ["unsigned short", {}]],
+        "MinorImageVersion": [46, ["unsigned short", {}]],
+        "MinorLinkerVersion": [3, ["unsigned char", {}]],
+        "MinorOperatingSystemVersion": [42, ["unsigned short", {}]],
+        "MinorSubsystemVersion": [50, ["unsigned short", {}]],
+        "NumberOfRvaAndSizes": [92, ["unsigned long", {}]],
+        "SectionAlignment": [32, ["unsigned long", {}]],
+        "SizeOfCode": [4, ["unsigned long", {}]],
+        "SizeOfHeaders": [60, ["unsigned long", {}]],
+        "SizeOfHeapCommit": [84, ["unsigned long", {}]],
+        "SizeOfHeapReserve": [80, ["unsigned long", {}]],
+        "SizeOfImage": [56, ["unsigned long", {}]],
+        "SizeOfInitializedData": [8, ["unsigned long", {}]],
+        "SizeOfStackCommit": [76, ["unsigned long", {}]],
+        "SizeOfStackReserve": [72, ["unsigned long", {}]],
+        "SizeOfUninitializedData": [12, ["unsigned long", {}]],
+        "Subsystem": [68, ["unsigned short", {}]],
+        "Win32VersionValue": [52, ["unsigned long", {}]]
+    }],
+    "_IMAGE_OPTIONAL_HEADER64": [240, {
+        "AddressOfEntryPoint": [16, ["unsigned long", {}]],
+        "BaseOfCode": [20, ["unsigned long", {}]],
+        "CheckSum": [64, ["unsigned long", {}]],
+        "DataDirectory": [112, ["Array", {
+            "count": 128,
+            "target": "_IMAGE_DATA_DIRECTORY"
+        }]],
+        "DllCharacteristics": [70, ["unsigned short", {}]],
+        "FileAlignment": [36, ["unsigned long", {}]],
+        "ImageBase": [24, ["unsigned long long", {}]],
+        "LoaderFlags": [104, ["unsigned long", {}]],
+        "Magic": [0, ["unsigned short", {}]],
+        "MajorImageVersion": [44, ["unsigned short", {}]],
+        "MajorLinkerVersion": [2, ["unsigned char", {}]],
+        "MajorOperatingSystemVersion": [40, ["unsigned short", {}]],
+        "MajorSubsystemVersion": [48, ["unsigned short", {}]],
+        "MinorImageVersion": [46, ["unsigned short", {}]],
+        "MinorLinkerVersion": [3, ["unsigned char", {}]],
+        "MinorOperatingSystemVersion": [42, ["unsigned short", {}]],
+        "MinorSubsystemVersion": [50, ["unsigned short", {}]],
+        "NumberOfRvaAndSizes": [108, ["unsigned long", {}]],
+        "SectionAlignment": [32, ["unsigned long", {}]],
+        "SizeOfCode": [4, ["unsigned long", {}]],
+        "SizeOfHeaders": [60, ["unsigned long", {}]],
+        "SizeOfHeapCommit": [96, ["unsigned long long", {}]],
+        "SizeOfHeapReserve": [88, ["unsigned long long", {}]],
+        "SizeOfImage": [56, ["unsigned long", {}]],
+        "SizeOfInitializedData": [8, ["unsigned long", {}]],
+        "SizeOfStackCommit": [80, ["unsigned long long", {}]],
+        "SizeOfStackReserve": [72, ["unsigned long long", {}]],
+        "SizeOfUninitializedData": [12, ["unsigned long", {}]],
+        "Subsystem": [68, ["Enumeration", {
+            "choices": {
+                "0": "IMAGE_SUBSYSTEM_UNKNOWN",
+                "1": "IMAGE_SUBSYSTEM_NATIVE",
+                "2": "IMAGE_SUBSYSTEM_WINDOWS_GUI",
+                "3": "IMAGE_SUBSYSTEM_WINDOWS_CUI",
+                "5": "IMAGE_SUBSYSTEM_OS2_CUI",
+                "7": "IMAGE_SUBSYSTEM_POSIX_CUI",
+                "9": "IMAGE_SUBSYSTEM_WINDOWS_CE_GUI",
+                "10":"IMAGE_SUBSYSTEM_EFI_APPLICATION",
+                "11":"IMAGE_SUBSYSTEM_EFI_BOOT_SERVICE_DRIVER",
+                "12":"IMAGE_SUBSYSTEM_EFI_RUNTIME_DRIVER",
+                "13":"IMAGE_SUBSYSTEM_EFI_ROM",
+                "14":"IMAGE_SUBSYSTEM_XBOX"
+            },
+            "target": "unsigned short"
+        }]],
+        "Win32VersionValue": [52, ["unsigned long", {}]]
+    }],
+    "_IMAGE_RESOURCE_DIRECTORY": [16, {
+        "Characteristics": [0, ["unsigned long", {}]],
+        "MajorVersion": [8, ["unsigned short", {}]],
+        "MinorVersion": [10, ["unsigned short", {}]],
+        "NumberOfIdEntries": [14, ["unsigned short", {}]],
+        "NumberOfNamedEntries": [12, ["unsigned short", {}]],
+        "TimeDateStamp": [4, ["unsigned long", {}]],
+        "_Entries": [16, ["Array", {
+            "target": "_IMAGE_RESOURCE_DIRECTORY_ENTRY"
+        }]]
+    }],
+    "_IMAGE_RESOURCE_DIRECTORY_ENTRY": [8, {
+        "Type": [0, ["Enumeration", {
+            "choices": {
+                "1":    "RT_CURSOR",
+                "2":    "RT_BITMAP",
+                "3":    "RT_ICON",
+                "4":    "RT_MENU",
+                "5":    "RT_DIALOG",
+                "6":    "RT_STRING",
+                "7":    "RT_FONTDIR",
+                "8":    "RT_FONT",
+                "9":    "RT_ACCELERATOR",
+                "10":   "RT_RCDATA",
+                "11":   "RT_MESSAGETABLE",
+                "12":   "RT_GROUP_CURSOR",
+                "14":   "RT_GROUP_ICON",
+                "16":   "RT_VERSION",
+                "17":   "RT_DLGINCLUDE",
+                "19":   "RT_PLUGPLAY",
+                "20":   "RT_VXD",
+                "21":   "RT_ANICURSOR",
+                "22":   "RT_ANIICON",
+                "23":   "RT_HTML",
+                "24":   "RT_MANIFEST"
+            },
+            "target": "unsigned char"
+        }]],
+        "DataIsDirectory": [4, ["BitField", {
+            "end_bit": 32,
+            "start_bit": 31,
+            "target": "unsigned long"
+        }]],
+        "Id": [0, ["unsigned short", {}]],
+        "Name": [0, ["unsigned long", {}]],
+        "NameIsString": [0, ["BitField", {
+            "end_bit": 32,
+            "start_bit": 31,
+            "target": "unsigned long"
+        }]],
+        "NameOffset": [0, ["BitField", {
+            "end_bit": 31,
+            "target": "unsigned long"
+        }]],
+        "ChildIsEntry": [4, ["BitField", {
+            "start_bit": 31,
+            "end_bit": 32,
+            "target": "unsigned long"
+        }]],
+        "OffsetToData": [4, ["BitField", {
+            "end_bit": 31,
+            "target": "unsigned long"
+        }]],
+        "OffsetToDirectory": [4, ["BitField", {
+            "end_bit": 31,
+            "target": "unsigned long"
+        }]]
+    }],
+
+    "_IMAGE_RESOURCE_DATA_ENTRY": [16, {
+        "OffsetToData": [0, ["unsigned long"]],
+        "DataSize": [4, ["unsigned long"]],
+        "CodePage": [8, ["unsigned long"]]
+    }],
+
+    "_IMAGE_SECTION_HEADER": [40, {
+        "Characteristics": [36, ["unsigned long", {}]],
+        "Misc": [8, ["_IMAGE_SECTION_HEADER_Misc", {}]],
+        "Name": [0, ["String"]],
+        "NumberOfLinenumbers": [34, ["unsigned short", {}]],
+        "NumberOfRelocations": [32, ["unsigned short", {}]],
+        "PointerToLinenumbers": [28, ["unsigned long", {}]],
+        "PointerToRawData": [20, ["unsigned long", {}]],
+        "PointerToRelocations": [24, ["unsigned long", {}]],
+        "SizeOfRawData": [16, ["unsigned long", {}]],
+        "VirtualAddress": [12, ["unsigned long", {}]]
+    }],
+    "_IMAGE_SECTION_HEADER_Misc": [4, {
+        "PhysicalAddress": [0, ["unsigned long", {}]],
+        "VirtualSize": [0, ["unsigned long", {}]]
+    }],
+    "_IMAGE_THUNK_DATA32": [4, {
+        "u1": [0, ["_IMAGE_THUNK_DATA32_u1", {}]]
+    }],
+    "_IMAGE_THUNK_DATA32_u1": [4, {
+        "AddressOfData": [0, ["unsigned long", {}]],
+        "ForwarderString": [0, ["unsigned long", {}]],
+        "Function": [0, ["unsigned long", {}]],
+        "Ordinal": [0, ["unsigned long", {}]]
+    }],
+    "_IMAGE_THUNK_DATA64": [8, {
+        "u1": [0, ["_IMAGE_THUNK_DATA64_u1", {}]]
+    }],
+    "_IMAGE_DATA_DIRECTORY": [8, {
+        "DirSize": [4, ["unsigned long", {}]],
+        "VirtualAddress": [0, ["unsigned long", {}]]
+    }],
+
+    "_IMAGE_THUNK_DATA64_u1": [8, {
+        "AddressOfData": [0, ["unsigned long long", {}]],
+        "ForwarderString": [0, ["unsigned long long", {}]],
+        "Function": [0, ["unsigned long long", {}]],
+        "Ordinal": [0, ["unsigned long long", {}]]
+    }],
+    "_IMAGE_NT_HEADERS": [248, {
+        "FileHeader": [4, ["_IMAGE_FILE_HEADER", {}]],
+        "OptionalHeader": [24, ["_IMAGE_OPTIONAL_HEADER", {}]],
+        "Signature": [0, ["unsigned long", {}]]
+    }],
+    "_IMAGE_DEBUG_DIRECTORY": [24, {
+        "AddressOfRawData": [20, ["unsigned long"]],
+        "TimeDateStamp": [4, ["UnixTimeStamp"]],
+        "Type": [12, ["Enumeration", {
+            "choices": {
+                "0": "IMAGE_DEBUG_TYPE_UNKNOWN",
+                "1": "IMAGE_DEBUG_TYPE_COFF",
+                "2": "IMAGE_DEBUG_TYPE_CODEVIEW",
+                "3": "IMAGE_DEBUG_TYPE_FPO",
+                "4": "IMAGE_DEBUG_TYPE_MISC",
+                "5": "IMAGE_DEBUG_TYPE_EXCEPTION",
+                "6": "IMAGE_DEBUG_TYPE_FIXUP",
+                "7": "IMAGE_DEBUG_TYPE_OMAP_TO_SRC",
+                "8": "IMAGE_DEBUG_TYPE_OMAP_FROM_SRC",
+                "9": "IMAGE_DEBUG_TYPE_BORLAND",
+                "10": "IMAGE_DEBUG_TYPE_RESERVED"
+            },
+            "target": "unsigned long"
+        }]]
+    }],
+
+    "_GUID": [16, {
+        "Data1": [0, ["unsigned long", {}]],
+        "Data2": [4, ["unsigned short", {}]],
+        "Data3": [6, ["unsigned short", {}]],
+        "Data4": [8, ["Array", {
+            "count": 8,
+            "target": "unsigned char"
+        }]]
+    }],
+
+    "PrefixedString" : [2, {
+        "Length" : [0, ["unsigned short"]],
+        "_Buffer" : [2, ["unsigned char"]]
+    }],
+
+    "VS_VERSIONINFO": [6, {
+        "Length": [0, ["unsigned short"]],
+        "ValueLength": [2, ["unsigned short"]],
+        "Type": [4, ["Enumeration", {
+            "choices": {
+                "0": "Binary",
+                "1": "Text"
+            },
+            "target": "unsigned short"
+        }]],
+        "szKey": [6, ["UnicodeString", {"length": 32}]]
+    }],
+
+    "tagVS_FIXEDFILEINFO": [52, {
+        "dwFileDateLS": [48, ["unsigned long", {}]],
+        "dwFileDateMS": [44, ["unsigned long", {}]],
+        "dwFileFlags": [28, ["unsigned long", {}]],
+        "dwFileFlagsMask": [24, ["unsigned long", {}]],
+        "dwFileOS": [32, ["unsigned long", {}]],
+        "dwFileSubtype": [40, ["unsigned long", {}]],
+        "dwFileVersionLS": [12, ["unsigned long", {}]],
+        "dwFileVersionMS": [8, ["unsigned long", {}]],
+        "dwProductVersionLS": [20, ["unsigned long", {}]],
+        "dwProductVersionMS": [16, ["unsigned long", {}]],
+        "dwSignature": [0, ["unsigned long", {}]],
+        "dwStrucVersion": [4, ["unsigned long", {}]],
+        "dwFileType": [36, ["Enumeration", {
+            "choices": {
+                "1": "VFT_APP (Application)",
+                "2": "VFT_DLL (DLL)",
+                "3": "VFT_DRV (Driver)",
+                "4": "VFT_FORT (Font)",
+                "5": "VFT_VXD",
+                "7": "VFT_STATIC_LIB"
+            },
+            "target": "unsigned int"
+        }]]
+    }],
+
+    "StringFileInfo": [0, {
+        "Length": [0, ["unsigned short"]],
+        "ValueLength": [2, ["unsigned short"]],
+        "Type": [4, ["unsigned short"]],
+        "Key": [6, ["UnicodeString"]]
+    }],
+
+    "StringTable": [0, {
+        "Length": [0, ["unsigned short"]],
+        "ValueLength": [2, ["unsigned short"]],
+        "Type": [4, ["unsigned short"]],
+        "Key": [6, ["UnicodeString", {"length": 16}]]
+    }],
+
+    "ResourceString": [0, {
+        "Length": [0, ["unsigned short"]],
+        "ValueLength": [2, ["unsigned short"]],
+        "Type": [4, ["unsigned short"]],
+        "Key": [6, ["UnicodeString"]]
+    }],
+
+    "CV_RSDS_HEADER": [28, {
+        "Signature": [0, ["String", {
+            "length": 4
+        }]],
+        "GUID": [4, ["_GUID"]],
+        "Age": [20, ["unsigned long"]],
+        "Filename": [24, ["String"]]
+    }]
+}
