@@ -38,14 +38,14 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:719096d80c259c46618fac1a3fddc93ea3be24fc8a446594b364895caf9953ad"
+  digest = "1:a7e72fffe0597aa44d85cb3123306b2371a2478e55bfaff50e886edd0f7cdd41"
   name = "www.velocidex.com/golang/binparsergen"
   packages = [
     ".",
     "reader",
   ]
   pruneopts = "UT"
-  revision = "9c897db259c8cd0121969c0e3811c69b67a02ab6"
+  revision = "49593555e5582bbcae994d0cc5e923164c80b5b6"
 
 [solve-meta]
   analyzer-name = "dep"

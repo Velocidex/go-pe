@@ -257,27 +257,24 @@
         "VirtualSize": [0, ["unsigned long", {}]]
     }],
     "_IMAGE_THUNK_DATA32": [4, {
-        "u1": [0, ["_IMAGE_THUNK_DATA32_u1", {}]]
-    }],
-    "_IMAGE_THUNK_DATA32_u1": [4, {
         "AddressOfData": [0, ["unsigned long", {}]],
         "ForwarderString": [0, ["unsigned long", {}]],
         "Function": [0, ["unsigned long", {}]],
         "Ordinal": [0, ["unsigned long", {}]]
     }],
     "_IMAGE_THUNK_DATA64": [8, {
-        "u1": [0, ["_IMAGE_THUNK_DATA64_u1", {}]]
-    }],
-    "_IMAGE_DATA_DIRECTORY": [8, {
-        "DirSize": [4, ["unsigned long", {}]],
-        "VirtualAddress": [0, ["unsigned long", {}]]
-    }],
-
-    "_IMAGE_THUNK_DATA64_u1": [8, {
         "AddressOfData": [0, ["unsigned long long", {}]],
         "ForwarderString": [0, ["unsigned long long", {}]],
         "Function": [0, ["unsigned long long", {}]],
         "Ordinal": [0, ["unsigned long long", {}]]
+    }],
+    "_IMAGE_IMPORT_BY_NAME": [4, {
+        "Hint": [0, ["unsigned short", {}]],
+        "Name": [2, ["String"]]
+    }],
+    "_IMAGE_DATA_DIRECTORY": [8, {
+        "DirSize": [4, ["unsigned long", {}]],
+        "VirtualAddress": [0, ["unsigned long", {}]]
     }],
     "_IMAGE_NT_HEADERS": [248, {
         "FileHeader": [4, ["_IMAGE_FILE_HEADER", {}]],
