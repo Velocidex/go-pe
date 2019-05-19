@@ -23,143 +23,119 @@ var (
 )
 
 type PeProfile struct {
-    Off_VS_VERSIONINFO_ValueLength int64
-    Off_VS_VERSIONINFO_Type int64
-    Off_VS_VERSIONINFO_szKey int64
+    Off_CV_RSDS_HEADER_Age int64
+    Off_CV_RSDS_HEADER_Filename int64
+    Off_CV_RSDS_HEADER_GUID int64
+    Off_CV_RSDS_HEADER_Signature int64
+    Off_PrefixedString_Length int64
+    Off_PrefixedString__Buffer int64
+    Off_ResourceString_Key int64
+    Off_ResourceString_Length int64
+    Off_ResourceString_Type int64
+    Off_ResourceString_ValueLength int64
+    Off_StringFileInfo_Key int64
+    Off_StringFileInfo_Length int64
+    Off_StringFileInfo_Type int64
+    Off_StringFileInfo_ValueLength int64
+    Off_StringTable_Key int64
+    Off_StringTable_Length int64
+    Off_StringTable_Type int64
+    Off_StringTable_ValueLength int64
     Off_VS_VERSIONINFO_Length int64
+    Off_VS_VERSIONINFO_Type int64
+    Off_VS_VERSIONINFO_ValueLength int64
+    Off_VS_VERSIONINFO_szKey int64
+    Off_GUID_Data1 int64
+    Off_GUID_Data2 int64
+    Off_GUID_Data3 int64
+    Off_GUID_Data4 int64
     Off_IMAGE_DATA_DIRECTORY_DirSize int64
     Off_IMAGE_DATA_DIRECTORY_VirtualAddress int64
-    Off_PrefixedString__Buffer int64
-    Off_PrefixedString_Length int64
+    Off_IMAGE_DEBUG_DIRECTORY_AddressOfRawData int64
+    Off_IMAGE_DEBUG_DIRECTORY_TimeDateStamp int64
+    Off_IMAGE_DEBUG_DIRECTORY_Type int64
+    Off_IMAGE_DOS_HEADER_E_lfanew int64
+    Off_IMAGE_DOS_HEADER_E_magic int64
+    Off_IMAGE_FILE_HEADER_Machine int64
+    Off_IMAGE_FILE_HEADER_NumberOfSections int64
+    Off_IMAGE_FILE_HEADER_SizeOfOptionalHeader int64
+    Off_IMAGE_FILE_HEADER_TimeDateStamp int64
+    Off_IMAGE_IMPORT_BY_NAME_Name int64
+    Off_IMAGE_IMPORT_DESCRIPTOR_Characteristics int64
+    Off_IMAGE_IMPORT_DESCRIPTOR_Name int64
+    Off_IMAGE_IMPORT_DESCRIPTOR_OriginalFirstThunk int64
+    Off_IMAGE_NT_HEADERS_FileHeader int64
+    Off_IMAGE_NT_HEADERS_OptionalHeader int64
+    Off_IMAGE_NT_HEADERS_Signature int64
+    Off_IMAGE_OPTIONAL_HEADER_DataDirectory int64
+    Off_IMAGE_OPTIONAL_HEADER_ImageBase int64
+    Off_IMAGE_OPTIONAL_HEADER_Magic int64
+    Off_IMAGE_OPTIONAL_HEADER64_DataDirectory int64
+    Off_IMAGE_OPTIONAL_HEADER64_ImageBase int64
+    Off_IMAGE_OPTIONAL_HEADER64_Magic int64
+    Off_IMAGE_RESOURCE_DATA_ENTRY_CodePage int64
+    Off_IMAGE_RESOURCE_DATA_ENTRY_DataSize int64
+    Off_IMAGE_RESOURCE_DATA_ENTRY_OffsetToData int64
+    Off_IMAGE_RESOURCE_DIRECTORY_NumberOfIdEntries int64
+    Off_IMAGE_RESOURCE_DIRECTORY_NumberOfNamedEntries int64
+    Off_IMAGE_RESOURCE_DIRECTORY__Entries int64
+    Off_IMAGE_RESOURCE_DIRECTORY_ENTRY_DataIsDirectory int64
+    Off_IMAGE_RESOURCE_DIRECTORY_ENTRY_NameIsString int64
+    Off_IMAGE_RESOURCE_DIRECTORY_ENTRY_NameOffset int64
+    Off_IMAGE_RESOURCE_DIRECTORY_ENTRY_OffsetToData int64
+    Off_IMAGE_RESOURCE_DIRECTORY_ENTRY_OffsetToDirectory int64
+    Off_IMAGE_RESOURCE_DIRECTORY_ENTRY_Type int64
     Off_IMAGE_SECTION_HEADER_Characteristics int64
     Off_IMAGE_SECTION_HEADER_Name int64
     Off_IMAGE_SECTION_HEADER_PointerToRawData int64
     Off_IMAGE_SECTION_HEADER_SizeOfRawData int64
     Off_IMAGE_SECTION_HEADER_VirtualAddress int64
-    Off_IMAGE_FILE_HEADER_Machine int64
-    Off_IMAGE_FILE_HEADER_NumberOfSections int64
-    Off_IMAGE_FILE_HEADER_SizeOfOptionalHeader int64
-    Off_IMAGE_FILE_HEADER_TimeDateStamp int64
-    Off_GUID_Data2 int64
-    Off_GUID_Data3 int64
-    Off_GUID_Data4 int64
-    Off_GUID_Data1 int64
-    Off_IMAGE_RESOURCE_DATA_ENTRY_DataSize int64
-    Off_IMAGE_RESOURCE_DATA_ENTRY_CodePage int64
-    Off_IMAGE_RESOURCE_DATA_ENTRY_OffsetToData int64
-    Off_IMAGE_RESOURCE_DIRECTORY_ENTRY_OffsetToDirectory int64
-    Off_IMAGE_RESOURCE_DIRECTORY_ENTRY_Type int64
-    Off_IMAGE_RESOURCE_DIRECTORY_ENTRY_NameIsString int64
-    Off_IMAGE_RESOURCE_DIRECTORY_ENTRY_NameOffset int64
-    Off_IMAGE_RESOURCE_DIRECTORY_ENTRY_OffsetToData int64
-    Off_IMAGE_RESOURCE_DIRECTORY_ENTRY_DataIsDirectory int64
-    Off_StringTable_Length int64
-    Off_StringTable_ValueLength int64
-    Off_StringTable_Type int64
-    Off_StringTable_Key int64
-    Off_CV_RSDS_HEADER_GUID int64
-    Off_CV_RSDS_HEADER_Age int64
-    Off_CV_RSDS_HEADER_Filename int64
-    Off_CV_RSDS_HEADER_Signature int64
-    Off_StringFileInfo_Length int64
-    Off_StringFileInfo_ValueLength int64
-    Off_StringFileInfo_Type int64
-    Off_StringFileInfo_Key int64
-    Off_IMAGE_NT_HEADERS_OptionalHeader int64
-    Off_IMAGE_NT_HEADERS_Signature int64
-    Off_IMAGE_NT_HEADERS_FileHeader int64
-    Off_ResourceString_Key int64
-    Off_ResourceString_Length int64
-    Off_ResourceString_ValueLength int64
-    Off_ResourceString_Type int64
-    Off_IMAGE_OPTIONAL_HEADER_DataDirectory int64
-    Off_IMAGE_OPTIONAL_HEADER_ImageBase int64
-    Off_IMAGE_OPTIONAL_HEADER_Magic int64
-    Off_IMAGE_RESOURCE_DIRECTORY__Entries int64
-    Off_IMAGE_RESOURCE_DIRECTORY_NumberOfIdEntries int64
-    Off_IMAGE_RESOURCE_DIRECTORY_NumberOfNamedEntries int64
-    Off_IMAGE_OPTIONAL_HEADER64_DataDirectory int64
-    Off_IMAGE_OPTIONAL_HEADER64_ImageBase int64
-    Off_IMAGE_OPTIONAL_HEADER64_Magic int64
-    Off_IMAGE_DEBUG_DIRECTORY_AddressOfRawData int64
-    Off_IMAGE_DEBUG_DIRECTORY_TimeDateStamp int64
-    Off_IMAGE_DEBUG_DIRECTORY_Type int64
-    Off_IMAGE_DOS_HEADER_E_magic int64
-    Off_IMAGE_DOS_HEADER_E_lfanew int64
+    Off_IMAGE_THUNK_DATA32_AddressOfData int64
+    Off_IMAGE_THUNK_DATA32_ForwarderString int64
+    Off_IMAGE_THUNK_DATA32_Function int64
+    Off_IMAGE_THUNK_DATA32_Ordinal int64
+    Off_IMAGE_THUNK_DATA64_AddressOfData int64
+    Off_IMAGE_THUNK_DATA64_ForwarderString int64
+    Off_IMAGE_THUNK_DATA64_Function int64
+    Off_IMAGE_THUNK_DATA64_Ordinal int64
 }
 
 func NewPeProfile() *PeProfile {
     // Specific offsets can be tweaked to cater for slight version mismatches.
-    self := &PeProfile{2,4,6,0,4,0,2,0,36,0,20,16,12,0,2,16,4,4,6,8,0,4,8,0,4,0,0,0,4,4,0,2,4,6,4,20,24,0,0,2,4,6,24,0,4,6,0,2,4,96,28,0,16,14,12,112,24,0,20,4,12,0,60}
+    self := &PeProfile{20,24,4,0,0,2,6,0,4,2,6,0,4,2,6,0,4,2,0,4,2,6,0,4,6,8,4,0,20,4,12,60,0,0,2,16,4,2,0,12,0,4,24,0,96,28,0,112,24,0,8,4,0,14,12,16,4,0,0,4,4,0,36,0,20,16,12,0,0,0,0,0,0,0,0}
     return self
-}
-
-func (self *PeProfile) VS_VERSIONINFO(reader io.ReaderAt, offset int64) *VS_VERSIONINFO {
-    return &VS_VERSIONINFO{Reader: reader, Offset: offset, Profile: self}
-}
-
-func (self *PeProfile) IMAGE_DATA_DIRECTORY(reader io.ReaderAt, offset int64) *IMAGE_DATA_DIRECTORY {
-    return &IMAGE_DATA_DIRECTORY{Reader: reader, Offset: offset, Profile: self}
-}
-
-func (self *PeProfile) PrefixedString(reader io.ReaderAt, offset int64) *PrefixedString {
-    return &PrefixedString{Reader: reader, Offset: offset, Profile: self}
-}
-
-func (self *PeProfile) IMAGE_SECTION_HEADER(reader io.ReaderAt, offset int64) *IMAGE_SECTION_HEADER {
-    return &IMAGE_SECTION_HEADER{Reader: reader, Offset: offset, Profile: self}
-}
-
-func (self *PeProfile) IMAGE_FILE_HEADER(reader io.ReaderAt, offset int64) *IMAGE_FILE_HEADER {
-    return &IMAGE_FILE_HEADER{Reader: reader, Offset: offset, Profile: self}
-}
-
-func (self *PeProfile) GUID(reader io.ReaderAt, offset int64) *GUID {
-    return &GUID{Reader: reader, Offset: offset, Profile: self}
-}
-
-func (self *PeProfile) IMAGE_RESOURCE_DATA_ENTRY(reader io.ReaderAt, offset int64) *IMAGE_RESOURCE_DATA_ENTRY {
-    return &IMAGE_RESOURCE_DATA_ENTRY{Reader: reader, Offset: offset, Profile: self}
-}
-
-func (self *PeProfile) IMAGE_RESOURCE_DIRECTORY_ENTRY(reader io.ReaderAt, offset int64) *IMAGE_RESOURCE_DIRECTORY_ENTRY {
-    return &IMAGE_RESOURCE_DIRECTORY_ENTRY{Reader: reader, Offset: offset, Profile: self}
-}
-
-func (self *PeProfile) StringTable(reader io.ReaderAt, offset int64) *StringTable {
-    return &StringTable{Reader: reader, Offset: offset, Profile: self}
-}
-
-func (self *PeProfile) TagVS_FIXEDFILEINFO(reader io.ReaderAt, offset int64) *TagVS_FIXEDFILEINFO {
-    return &TagVS_FIXEDFILEINFO{Reader: reader, Offset: offset, Profile: self}
 }
 
 func (self *PeProfile) CV_RSDS_HEADER(reader io.ReaderAt, offset int64) *CV_RSDS_HEADER {
     return &CV_RSDS_HEADER{Reader: reader, Offset: offset, Profile: self}
 }
 
-func (self *PeProfile) StringFileInfo(reader io.ReaderAt, offset int64) *StringFileInfo {
-    return &StringFileInfo{Reader: reader, Offset: offset, Profile: self}
-}
-
-func (self *PeProfile) IMAGE_NT_HEADERS(reader io.ReaderAt, offset int64) *IMAGE_NT_HEADERS {
-    return &IMAGE_NT_HEADERS{Reader: reader, Offset: offset, Profile: self}
+func (self *PeProfile) PrefixedString(reader io.ReaderAt, offset int64) *PrefixedString {
+    return &PrefixedString{Reader: reader, Offset: offset, Profile: self}
 }
 
 func (self *PeProfile) ResourceString(reader io.ReaderAt, offset int64) *ResourceString {
     return &ResourceString{Reader: reader, Offset: offset, Profile: self}
 }
 
-func (self *PeProfile) IMAGE_OPTIONAL_HEADER(reader io.ReaderAt, offset int64) *IMAGE_OPTIONAL_HEADER {
-    return &IMAGE_OPTIONAL_HEADER{Reader: reader, Offset: offset, Profile: self}
+func (self *PeProfile) StringFileInfo(reader io.ReaderAt, offset int64) *StringFileInfo {
+    return &StringFileInfo{Reader: reader, Offset: offset, Profile: self}
 }
 
-func (self *PeProfile) IMAGE_RESOURCE_DIRECTORY(reader io.ReaderAt, offset int64) *IMAGE_RESOURCE_DIRECTORY {
-    return &IMAGE_RESOURCE_DIRECTORY{Reader: reader, Offset: offset, Profile: self}
+func (self *PeProfile) StringTable(reader io.ReaderAt, offset int64) *StringTable {
+    return &StringTable{Reader: reader, Offset: offset, Profile: self}
 }
 
-func (self *PeProfile) IMAGE_OPTIONAL_HEADER64(reader io.ReaderAt, offset int64) *IMAGE_OPTIONAL_HEADER64 {
-    return &IMAGE_OPTIONAL_HEADER64{Reader: reader, Offset: offset, Profile: self}
+func (self *PeProfile) VS_VERSIONINFO(reader io.ReaderAt, offset int64) *VS_VERSIONINFO {
+    return &VS_VERSIONINFO{Reader: reader, Offset: offset, Profile: self}
+}
+
+func (self *PeProfile) GUID(reader io.ReaderAt, offset int64) *GUID {
+    return &GUID{Reader: reader, Offset: offset, Profile: self}
+}
+
+func (self *PeProfile) IMAGE_DATA_DIRECTORY(reader io.ReaderAt, offset int64) *IMAGE_DATA_DIRECTORY {
+    return &IMAGE_DATA_DIRECTORY{Reader: reader, Offset: offset, Profile: self}
 }
 
 func (self *PeProfile) IMAGE_DEBUG_DIRECTORY(reader io.ReaderAt, offset int64) *IMAGE_DEBUG_DIRECTORY {
@@ -170,174 +146,113 @@ func (self *PeProfile) IMAGE_DOS_HEADER(reader io.ReaderAt, offset int64) *IMAGE
     return &IMAGE_DOS_HEADER{Reader: reader, Offset: offset, Profile: self}
 }
 
+func (self *PeProfile) IMAGE_FILE_HEADER(reader io.ReaderAt, offset int64) *IMAGE_FILE_HEADER {
+    return &IMAGE_FILE_HEADER{Reader: reader, Offset: offset, Profile: self}
+}
 
-type IMAGE_OPTIONAL_HEADER struct {
+func (self *PeProfile) IMAGE_IMPORT_BY_NAME(reader io.ReaderAt, offset int64) *IMAGE_IMPORT_BY_NAME {
+    return &IMAGE_IMPORT_BY_NAME{Reader: reader, Offset: offset, Profile: self}
+}
+
+func (self *PeProfile) IMAGE_IMPORT_DESCRIPTOR(reader io.ReaderAt, offset int64) *IMAGE_IMPORT_DESCRIPTOR {
+    return &IMAGE_IMPORT_DESCRIPTOR{Reader: reader, Offset: offset, Profile: self}
+}
+
+func (self *PeProfile) IMAGE_NT_HEADERS(reader io.ReaderAt, offset int64) *IMAGE_NT_HEADERS {
+    return &IMAGE_NT_HEADERS{Reader: reader, Offset: offset, Profile: self}
+}
+
+func (self *PeProfile) IMAGE_OPTIONAL_HEADER(reader io.ReaderAt, offset int64) *IMAGE_OPTIONAL_HEADER {
+    return &IMAGE_OPTIONAL_HEADER{Reader: reader, Offset: offset, Profile: self}
+}
+
+func (self *PeProfile) IMAGE_OPTIONAL_HEADER64(reader io.ReaderAt, offset int64) *IMAGE_OPTIONAL_HEADER64 {
+    return &IMAGE_OPTIONAL_HEADER64{Reader: reader, Offset: offset, Profile: self}
+}
+
+func (self *PeProfile) IMAGE_RESOURCE_DATA_ENTRY(reader io.ReaderAt, offset int64) *IMAGE_RESOURCE_DATA_ENTRY {
+    return &IMAGE_RESOURCE_DATA_ENTRY{Reader: reader, Offset: offset, Profile: self}
+}
+
+func (self *PeProfile) IMAGE_RESOURCE_DIRECTORY(reader io.ReaderAt, offset int64) *IMAGE_RESOURCE_DIRECTORY {
+    return &IMAGE_RESOURCE_DIRECTORY{Reader: reader, Offset: offset, Profile: self}
+}
+
+func (self *PeProfile) IMAGE_RESOURCE_DIRECTORY_ENTRY(reader io.ReaderAt, offset int64) *IMAGE_RESOURCE_DIRECTORY_ENTRY {
+    return &IMAGE_RESOURCE_DIRECTORY_ENTRY{Reader: reader, Offset: offset, Profile: self}
+}
+
+func (self *PeProfile) IMAGE_SECTION_HEADER(reader io.ReaderAt, offset int64) *IMAGE_SECTION_HEADER {
+    return &IMAGE_SECTION_HEADER{Reader: reader, Offset: offset, Profile: self}
+}
+
+func (self *PeProfile) IMAGE_THUNK_DATA32(reader io.ReaderAt, offset int64) *IMAGE_THUNK_DATA32 {
+    return &IMAGE_THUNK_DATA32{Reader: reader, Offset: offset, Profile: self}
+}
+
+func (self *PeProfile) IMAGE_THUNK_DATA64(reader io.ReaderAt, offset int64) *IMAGE_THUNK_DATA64 {
+    return &IMAGE_THUNK_DATA64{Reader: reader, Offset: offset, Profile: self}
+}
+
+func (self *PeProfile) TagVS_FIXEDFILEINFO(reader io.ReaderAt, offset int64) *TagVS_FIXEDFILEINFO {
+    return &TagVS_FIXEDFILEINFO{Reader: reader, Offset: offset, Profile: self}
+}
+
+
+type CV_RSDS_HEADER struct {
     Reader io.ReaderAt
     Offset int64
     Profile *PeProfile
 }
 
-func NewIMAGE_OPTIONAL_HEADER(reader io.ReaderAt) *IMAGE_OPTIONAL_HEADER {
-    self := &IMAGE_OPTIONAL_HEADER{Reader: reader}
+func NewCV_RSDS_HEADER(reader io.ReaderAt) *CV_RSDS_HEADER {
+    self := &CV_RSDS_HEADER{Reader: reader}
     return self
 }
 
-func (self *IMAGE_OPTIONAL_HEADER) Size() int {
-    return 224
+func (self *CV_RSDS_HEADER) Size() int {
+    return 28
 }
 
-func (self *IMAGE_OPTIONAL_HEADER) DataDirectory() []*IMAGE_DATA_DIRECTORY {
-   return ParseArray_IMAGE_DATA_DIRECTORY(self.Profile, self.Reader, self.Profile.Off_IMAGE_OPTIONAL_HEADER_DataDirectory + self.Offset, 128)
+func (self *CV_RSDS_HEADER) Age() uint32 {
+   return ParseUint32(self.Reader, self.Profile.Off_CV_RSDS_HEADER_Age + self.Offset)
 }
 
-func (self *IMAGE_OPTIONAL_HEADER) ImageBase() uint32 {
-   return ParseUint32(self.Reader, self.Profile.Off_IMAGE_OPTIONAL_HEADER_ImageBase + self.Offset)
+
+func (self *CV_RSDS_HEADER) Filename() string {
+  return ParseTerminatedString(self.Reader, self.Profile.Off_CV_RSDS_HEADER_Filename + self.Offset)
 }
 
-func (self *IMAGE_OPTIONAL_HEADER) Magic() uint16 {
-   return ParseUint16(self.Reader, self.Profile.Off_IMAGE_OPTIONAL_HEADER_Magic + self.Offset)
+func (self *CV_RSDS_HEADER) GUID() *GUID {
+    return self.Profile.GUID(self.Reader, self.Profile.Off_CV_RSDS_HEADER_GUID + self.Offset)
 }
 
-type IMAGE_RESOURCE_DIRECTORY struct {
+
+func (self *CV_RSDS_HEADER) Signature() string {
+  return ParseString(self.Reader, self.Profile.Off_CV_RSDS_HEADER_Signature + self.Offset, 4)
+}
+
+type PrefixedString struct {
     Reader io.ReaderAt
     Offset int64
     Profile *PeProfile
 }
 
-func NewIMAGE_RESOURCE_DIRECTORY(reader io.ReaderAt) *IMAGE_RESOURCE_DIRECTORY {
-    self := &IMAGE_RESOURCE_DIRECTORY{Reader: reader}
+func NewPrefixedString(reader io.ReaderAt) *PrefixedString {
+    self := &PrefixedString{Reader: reader}
     return self
 }
 
-func (self *IMAGE_RESOURCE_DIRECTORY) Size() int {
-    return 16
+func (self *PrefixedString) Size() int {
+    return 2
 }
 
-func (self *IMAGE_RESOURCE_DIRECTORY) NumberOfIdEntries() uint16 {
-   return ParseUint16(self.Reader, self.Profile.Off_IMAGE_RESOURCE_DIRECTORY_NumberOfIdEntries + self.Offset)
+func (self *PrefixedString) Length() uint16 {
+   return ParseUint16(self.Reader, self.Profile.Off_PrefixedString_Length + self.Offset)
 }
 
-func (self *IMAGE_RESOURCE_DIRECTORY) NumberOfNamedEntries() uint16 {
-   return ParseUint16(self.Reader, self.Profile.Off_IMAGE_RESOURCE_DIRECTORY_NumberOfNamedEntries + self.Offset)
-}
-
-func (self *IMAGE_RESOURCE_DIRECTORY) _Entries() []*IMAGE_RESOURCE_DIRECTORY_ENTRY {
-   return ParseArray_IMAGE_RESOURCE_DIRECTORY_ENTRY(self.Profile, self.Reader, self.Profile.Off_IMAGE_RESOURCE_DIRECTORY__Entries + self.Offset, 0)
-}
-
-type IMAGE_OPTIONAL_HEADER64 struct {
-    Reader io.ReaderAt
-    Offset int64
-    Profile *PeProfile
-}
-
-func NewIMAGE_OPTIONAL_HEADER64(reader io.ReaderAt) *IMAGE_OPTIONAL_HEADER64 {
-    self := &IMAGE_OPTIONAL_HEADER64{Reader: reader}
-    return self
-}
-
-func (self *IMAGE_OPTIONAL_HEADER64) Size() int {
-    return 240
-}
-
-func (self *IMAGE_OPTIONAL_HEADER64) Magic() uint16 {
-   return ParseUint16(self.Reader, self.Profile.Off_IMAGE_OPTIONAL_HEADER64_Magic + self.Offset)
-}
-
-func (self *IMAGE_OPTIONAL_HEADER64) DataDirectory() []*IMAGE_DATA_DIRECTORY {
-   return ParseArray_IMAGE_DATA_DIRECTORY(self.Profile, self.Reader, self.Profile.Off_IMAGE_OPTIONAL_HEADER64_DataDirectory + self.Offset, 128)
-}
-
-func (self *IMAGE_OPTIONAL_HEADER64) ImageBase() uint64 {
-    return ParseUint64(self.Reader, self.Profile.Off_IMAGE_OPTIONAL_HEADER64_ImageBase + self.Offset)
-}
-
-type IMAGE_DEBUG_DIRECTORY struct {
-    Reader io.ReaderAt
-    Offset int64
-    Profile *PeProfile
-}
-
-func NewIMAGE_DEBUG_DIRECTORY(reader io.ReaderAt) *IMAGE_DEBUG_DIRECTORY {
-    self := &IMAGE_DEBUG_DIRECTORY{Reader: reader}
-    return self
-}
-
-func (self *IMAGE_DEBUG_DIRECTORY) Size() int {
-    return 24
-}
-
-func (self *IMAGE_DEBUG_DIRECTORY) AddressOfRawData() uint32 {
-   return ParseUint32(self.Reader, self.Profile.Off_IMAGE_DEBUG_DIRECTORY_AddressOfRawData + self.Offset)
-}
-
-func (self *IMAGE_DEBUG_DIRECTORY) TimeDateStamp() *UnixTimeStamp {
-    return self.Profile.UnixTimeStamp(self.Reader, self.Profile.Off_IMAGE_DEBUG_DIRECTORY_TimeDateStamp + self.Offset)
-}
-
-func (self *IMAGE_DEBUG_DIRECTORY) Type() *Enumeration {
-   value := ParseUint32(self.Reader, self.Profile.Off_IMAGE_DEBUG_DIRECTORY_Type + self.Offset)
-   name := "Unknown"
-   switch value {
-
-      case 3:
-         name = "IMAGE_DEBUG_TYPE_FPO"
-
-      case 6:
-         name = "IMAGE_DEBUG_TYPE_FIXUP"
-
-      case 9:
-         name = "IMAGE_DEBUG_TYPE_BORLAND"
-
-      case 2:
-         name = "IMAGE_DEBUG_TYPE_CODEVIEW"
-
-      case 1:
-         name = "IMAGE_DEBUG_TYPE_COFF"
-
-      case 4:
-         name = "IMAGE_DEBUG_TYPE_MISC"
-
-      case 5:
-         name = "IMAGE_DEBUG_TYPE_EXCEPTION"
-
-      case 7:
-         name = "IMAGE_DEBUG_TYPE_OMAP_TO_SRC"
-
-      case 8:
-         name = "IMAGE_DEBUG_TYPE_OMAP_FROM_SRC"
-
-      case 10:
-         name = "IMAGE_DEBUG_TYPE_RESERVED"
-
-      case 0:
-         name = "IMAGE_DEBUG_TYPE_UNKNOWN"
-}
-   return &Enumeration{Value: uint64(value), Name: name}
-}
-
-
-type IMAGE_DOS_HEADER struct {
-    Reader io.ReaderAt
-    Offset int64
-    Profile *PeProfile
-}
-
-func NewIMAGE_DOS_HEADER(reader io.ReaderAt) *IMAGE_DOS_HEADER {
-    self := &IMAGE_DOS_HEADER{Reader: reader}
-    return self
-}
-
-func (self *IMAGE_DOS_HEADER) Size() int {
-    return 64
-}
-
-func (self *IMAGE_DOS_HEADER) E_magic() uint16 {
-   return ParseUint16(self.Reader, self.Profile.Off_IMAGE_DOS_HEADER_E_magic + self.Offset)
-}
-
-func (self *IMAGE_DOS_HEADER) E_lfanew() uint32 {
-   return ParseUint32(self.Reader, self.Profile.Off_IMAGE_DOS_HEADER_E_lfanew + self.Offset)
+func (self *PrefixedString) _Buffer() byte {
+   return ParseUint8(self.Reader, self.Profile.Off_PrefixedString__Buffer + self.Offset)
 }
 
 type ResourceString struct {
@@ -355,21 +270,85 @@ func (self *ResourceString) Size() int {
     return 0
 }
 
-func (self *ResourceString) Length() uint16 {
-   return ParseUint16(self.Reader, self.Profile.Off_ResourceString_Length + self.Offset)
+
+func (self *ResourceString) Key() string {
+  return ParseTerminatedUTF16String(self.Reader, self.Profile.Off_ResourceString_Key + self.Offset)
 }
 
-func (self *ResourceString) ValueLength() uint16 {
-   return ParseUint16(self.Reader, self.Profile.Off_ResourceString_ValueLength + self.Offset)
+func (self *ResourceString) Length() uint16 {
+   return ParseUint16(self.Reader, self.Profile.Off_ResourceString_Length + self.Offset)
 }
 
 func (self *ResourceString) Type() uint16 {
    return ParseUint16(self.Reader, self.Profile.Off_ResourceString_Type + self.Offset)
 }
 
+func (self *ResourceString) ValueLength() uint16 {
+   return ParseUint16(self.Reader, self.Profile.Off_ResourceString_ValueLength + self.Offset)
+}
 
-func (self *ResourceString) Key() string {
-  return ParseTerminatedUTF16String(self.Reader, self.Profile.Off_ResourceString_Key + self.Offset)
+type StringFileInfo struct {
+    Reader io.ReaderAt
+    Offset int64
+    Profile *PeProfile
+}
+
+func NewStringFileInfo(reader io.ReaderAt) *StringFileInfo {
+    self := &StringFileInfo{Reader: reader}
+    return self
+}
+
+func (self *StringFileInfo) Size() int {
+    return 0
+}
+
+
+func (self *StringFileInfo) Key() string {
+  return ParseTerminatedUTF16String(self.Reader, self.Profile.Off_StringFileInfo_Key + self.Offset)
+}
+
+func (self *StringFileInfo) Length() uint16 {
+   return ParseUint16(self.Reader, self.Profile.Off_StringFileInfo_Length + self.Offset)
+}
+
+func (self *StringFileInfo) Type() uint16 {
+   return ParseUint16(self.Reader, self.Profile.Off_StringFileInfo_Type + self.Offset)
+}
+
+func (self *StringFileInfo) ValueLength() uint16 {
+   return ParseUint16(self.Reader, self.Profile.Off_StringFileInfo_ValueLength + self.Offset)
+}
+
+type StringTable struct {
+    Reader io.ReaderAt
+    Offset int64
+    Profile *PeProfile
+}
+
+func NewStringTable(reader io.ReaderAt) *StringTable {
+    self := &StringTable{Reader: reader}
+    return self
+}
+
+func (self *StringTable) Size() int {
+    return 0
+}
+
+
+func (self *StringTable) Key() string {
+  return ParseUTF16String(self.Reader, self.Profile.Off_StringTable_Key + self.Offset, 16)
+}
+
+func (self *StringTable) Length() uint16 {
+   return ParseUint16(self.Reader, self.Profile.Off_StringTable_Length + self.Offset)
+}
+
+func (self *StringTable) Type() uint16 {
+   return ParseUint16(self.Reader, self.Profile.Off_StringTable_Type + self.Offset)
+}
+
+func (self *StringTable) ValueLength() uint16 {
+   return ParseUint16(self.Reader, self.Profile.Off_StringTable_ValueLength + self.Offset)
 }
 
 type VS_VERSIONINFO struct {
@@ -391,10 +370,6 @@ func (self *VS_VERSIONINFO) Length() uint16 {
    return ParseUint16(self.Reader, self.Profile.Off_VS_VERSIONINFO_Length + self.Offset)
 }
 
-func (self *VS_VERSIONINFO) ValueLength() uint16 {
-   return ParseUint16(self.Reader, self.Profile.Off_VS_VERSIONINFO_ValueLength + self.Offset)
-}
-
 func (self *VS_VERSIONINFO) Type() *Enumeration {
    value := ParseUint16(self.Reader, self.Profile.Off_VS_VERSIONINFO_Type + self.Offset)
    name := "Unknown"
@@ -410,103 +385,13 @@ func (self *VS_VERSIONINFO) Type() *Enumeration {
 }
 
 
+func (self *VS_VERSIONINFO) ValueLength() uint16 {
+   return ParseUint16(self.Reader, self.Profile.Off_VS_VERSIONINFO_ValueLength + self.Offset)
+}
+
 
 func (self *VS_VERSIONINFO) szKey() string {
   return ParseUTF16String(self.Reader, self.Profile.Off_VS_VERSIONINFO_szKey + self.Offset, 32)
-}
-
-type IMAGE_DATA_DIRECTORY struct {
-    Reader io.ReaderAt
-    Offset int64
-    Profile *PeProfile
-}
-
-func NewIMAGE_DATA_DIRECTORY(reader io.ReaderAt) *IMAGE_DATA_DIRECTORY {
-    self := &IMAGE_DATA_DIRECTORY{Reader: reader}
-    return self
-}
-
-func (self *IMAGE_DATA_DIRECTORY) Size() int {
-    return 8
-}
-
-func (self *IMAGE_DATA_DIRECTORY) DirSize() uint32 {
-   return ParseUint32(self.Reader, self.Profile.Off_IMAGE_DATA_DIRECTORY_DirSize + self.Offset)
-}
-
-func (self *IMAGE_DATA_DIRECTORY) VirtualAddress() uint32 {
-   return ParseUint32(self.Reader, self.Profile.Off_IMAGE_DATA_DIRECTORY_VirtualAddress + self.Offset)
-}
-
-type PrefixedString struct {
-    Reader io.ReaderAt
-    Offset int64
-    Profile *PeProfile
-}
-
-func NewPrefixedString(reader io.ReaderAt) *PrefixedString {
-    self := &PrefixedString{Reader: reader}
-    return self
-}
-
-func (self *PrefixedString) Size() int {
-    return 2
-}
-
-func (self *PrefixedString) _Buffer() byte {
-   return ParseUint8(self.Reader, self.Profile.Off_PrefixedString__Buffer + self.Offset)
-}
-
-func (self *PrefixedString) Length() uint16 {
-   return ParseUint16(self.Reader, self.Profile.Off_PrefixedString_Length + self.Offset)
-}
-
-type IMAGE_FILE_HEADER struct {
-    Reader io.ReaderAt
-    Offset int64
-    Profile *PeProfile
-}
-
-func NewIMAGE_FILE_HEADER(reader io.ReaderAt) *IMAGE_FILE_HEADER {
-    self := &IMAGE_FILE_HEADER{Reader: reader}
-    return self
-}
-
-func (self *IMAGE_FILE_HEADER) Size() int {
-    return 20
-}
-
-func (self *IMAGE_FILE_HEADER) TimeDateStamp() *UnixTimeStamp {
-    return self.Profile.UnixTimeStamp(self.Reader, self.Profile.Off_IMAGE_FILE_HEADER_TimeDateStamp + self.Offset)
-}
-
-func (self *IMAGE_FILE_HEADER) Machine() *Enumeration {
-   value := ParseUint16(self.Reader, self.Profile.Off_IMAGE_FILE_HEADER_Machine + self.Offset)
-   name := "Unknown"
-   switch value {
-
-      case 512:
-         name = "IMAGE_FILE_MACHINE_IA64"
-
-      case 34404:
-         name = "IMAGE_FILE_MACHINE_AMD64"
-
-      case 448:
-         name = "IMAGE_FILE_MACHINE_ARM"
-
-      case 332:
-         name = "IMAGE_FILE_MACHINE_I386"
-}
-   return &Enumeration{Value: uint64(value), Name: name}
-}
-
-
-func (self *IMAGE_FILE_HEADER) NumberOfSections() uint16 {
-   return ParseUint16(self.Reader, self.Profile.Off_IMAGE_FILE_HEADER_NumberOfSections + self.Offset)
-}
-
-func (self *IMAGE_FILE_HEADER) SizeOfOptionalHeader() uint16 {
-   return ParseUint16(self.Reader, self.Profile.Off_IMAGE_FILE_HEADER_SizeOfOptionalHeader + self.Offset)
 }
 
 type GUID struct {
@@ -540,276 +425,210 @@ func (self *GUID) Data4() []byte {
    return ParseArray_byte(self.Profile, self.Reader, self.Profile.Off_GUID_Data4 + self.Offset, 8)
 }
 
-type IMAGE_RESOURCE_DATA_ENTRY struct {
+type IMAGE_DATA_DIRECTORY struct {
     Reader io.ReaderAt
     Offset int64
     Profile *PeProfile
 }
 
-func NewIMAGE_RESOURCE_DATA_ENTRY(reader io.ReaderAt) *IMAGE_RESOURCE_DATA_ENTRY {
-    self := &IMAGE_RESOURCE_DATA_ENTRY{Reader: reader}
+func NewIMAGE_DATA_DIRECTORY(reader io.ReaderAt) *IMAGE_DATA_DIRECTORY {
+    self := &IMAGE_DATA_DIRECTORY{Reader: reader}
     return self
 }
 
-func (self *IMAGE_RESOURCE_DATA_ENTRY) Size() int {
-    return 16
-}
-
-func (self *IMAGE_RESOURCE_DATA_ENTRY) CodePage() uint32 {
-   return ParseUint32(self.Reader, self.Profile.Off_IMAGE_RESOURCE_DATA_ENTRY_CodePage + self.Offset)
-}
-
-func (self *IMAGE_RESOURCE_DATA_ENTRY) OffsetToData() uint32 {
-   return ParseUint32(self.Reader, self.Profile.Off_IMAGE_RESOURCE_DATA_ENTRY_OffsetToData + self.Offset)
-}
-
-func (self *IMAGE_RESOURCE_DATA_ENTRY) DataSize() uint32 {
-   return ParseUint32(self.Reader, self.Profile.Off_IMAGE_RESOURCE_DATA_ENTRY_DataSize + self.Offset)
-}
-
-type IMAGE_RESOURCE_DIRECTORY_ENTRY struct {
-    Reader io.ReaderAt
-    Offset int64
-    Profile *PeProfile
-}
-
-func NewIMAGE_RESOURCE_DIRECTORY_ENTRY(reader io.ReaderAt) *IMAGE_RESOURCE_DIRECTORY_ENTRY {
-    self := &IMAGE_RESOURCE_DIRECTORY_ENTRY{Reader: reader}
-    return self
-}
-
-func (self *IMAGE_RESOURCE_DIRECTORY_ENTRY) Size() int {
+func (self *IMAGE_DATA_DIRECTORY) Size() int {
     return 8
 }
 
-func (self *IMAGE_RESOURCE_DIRECTORY_ENTRY) Type() *Enumeration {
-   value := ParseUint8(self.Reader, self.Profile.Off_IMAGE_RESOURCE_DIRECTORY_ENTRY_Type + self.Offset)
+func (self *IMAGE_DATA_DIRECTORY) DirSize() uint32 {
+   return ParseUint32(self.Reader, self.Profile.Off_IMAGE_DATA_DIRECTORY_DirSize + self.Offset)
+}
+
+func (self *IMAGE_DATA_DIRECTORY) VirtualAddress() uint32 {
+   return ParseUint32(self.Reader, self.Profile.Off_IMAGE_DATA_DIRECTORY_VirtualAddress + self.Offset)
+}
+
+type IMAGE_DEBUG_DIRECTORY struct {
+    Reader io.ReaderAt
+    Offset int64
+    Profile *PeProfile
+}
+
+func NewIMAGE_DEBUG_DIRECTORY(reader io.ReaderAt) *IMAGE_DEBUG_DIRECTORY {
+    self := &IMAGE_DEBUG_DIRECTORY{Reader: reader}
+    return self
+}
+
+func (self *IMAGE_DEBUG_DIRECTORY) Size() int {
+    return 24
+}
+
+func (self *IMAGE_DEBUG_DIRECTORY) AddressOfRawData() uint32 {
+   return ParseUint32(self.Reader, self.Profile.Off_IMAGE_DEBUG_DIRECTORY_AddressOfRawData + self.Offset)
+}
+
+func (self *IMAGE_DEBUG_DIRECTORY) TimeDateStamp() *UnixTimeStamp {
+    return self.Profile.UnixTimeStamp(self.Reader, self.Profile.Off_IMAGE_DEBUG_DIRECTORY_TimeDateStamp + self.Offset)
+}
+
+func (self *IMAGE_DEBUG_DIRECTORY) Type() *Enumeration {
+   value := ParseUint32(self.Reader, self.Profile.Off_IMAGE_DEBUG_DIRECTORY_Type + self.Offset)
    name := "Unknown"
    switch value {
 
-      case 7:
-         name = "RT_FONTDIR"
-
-      case 9:
-         name = "RT_ACCELERATOR"
-
-      case 11:
-         name = "RT_MESSAGETABLE"
-
-      case 12:
-         name = "RT_GROUP_CURSOR"
-
-      case 14:
-         name = "RT_GROUP_ICON"
-
-      case 17:
-         name = "RT_DLGINCLUDE"
-
-      case 21:
-         name = "RT_ANICURSOR"
-
-      case 4:
-         name = "RT_MENU"
-
-      case 5:
-         name = "RT_DIALOG"
-
-      case 6:
-         name = "RT_STRING"
-
-      case 8:
-         name = "RT_FONT"
-
-      case 10:
-         name = "RT_RCDATA"
-
-      case 16:
-         name = "RT_VERSION"
-
-      case 20:
-         name = "RT_VXD"
-
-      case 22:
-         name = "RT_ANIICON"
-
-      case 2:
-         name = "RT_BITMAP"
-
-      case 3:
-         name = "RT_ICON"
-
-      case 19:
-         name = "RT_PLUGPLAY"
-
-      case 23:
-         name = "RT_HTML"
-
-      case 24:
-         name = "RT_MANIFEST"
+      case 0:
+         name = "IMAGE_DEBUG_TYPE_UNKNOWN"
 
       case 1:
-         name = "RT_CURSOR"
+         name = "IMAGE_DEBUG_TYPE_COFF"
+
+      case 2:
+         name = "IMAGE_DEBUG_TYPE_CODEVIEW"
+
+      case 3:
+         name = "IMAGE_DEBUG_TYPE_FPO"
+
+      case 4:
+         name = "IMAGE_DEBUG_TYPE_MISC"
+
+      case 5:
+         name = "IMAGE_DEBUG_TYPE_EXCEPTION"
+
+      case 6:
+         name = "IMAGE_DEBUG_TYPE_FIXUP"
+
+      case 7:
+         name = "IMAGE_DEBUG_TYPE_OMAP_TO_SRC"
+
+      case 8:
+         name = "IMAGE_DEBUG_TYPE_OMAP_FROM_SRC"
+
+      case 9:
+         name = "IMAGE_DEBUG_TYPE_BORLAND"
+
+      case 10:
+         name = "IMAGE_DEBUG_TYPE_RESERVED"
 }
    return &Enumeration{Value: uint64(value), Name: name}
 }
 
 
-func (self *IMAGE_RESOURCE_DIRECTORY_ENTRY) NameIsString() uint64 {
-   value := ParseUint32(self.Reader, self.Profile.Off_IMAGE_RESOURCE_DIRECTORY_ENTRY_NameIsString + self.Offset)
-   return (uint64(value) & 0x7fffffffffffffff) >> 0x1f
-}
-
-func (self *IMAGE_RESOURCE_DIRECTORY_ENTRY) NameOffset() uint64 {
-   value := ParseUint32(self.Reader, self.Profile.Off_IMAGE_RESOURCE_DIRECTORY_ENTRY_NameOffset + self.Offset)
-   return (uint64(value) & 0x7fffffff) >> 0x0
-}
-
-func (self *IMAGE_RESOURCE_DIRECTORY_ENTRY) OffsetToData() uint64 {
-   value := ParseUint32(self.Reader, self.Profile.Off_IMAGE_RESOURCE_DIRECTORY_ENTRY_OffsetToData + self.Offset)
-   return (uint64(value) & 0x7fffffff) >> 0x0
-}
-
-func (self *IMAGE_RESOURCE_DIRECTORY_ENTRY) DataIsDirectory() uint64 {
-   value := ParseUint32(self.Reader, self.Profile.Off_IMAGE_RESOURCE_DIRECTORY_ENTRY_DataIsDirectory + self.Offset)
-   return (uint64(value) & 0x7fffffffffffffff) >> 0x1f
-}
-
-func (self *IMAGE_RESOURCE_DIRECTORY_ENTRY) OffsetToDirectory() uint64 {
-   value := ParseUint32(self.Reader, self.Profile.Off_IMAGE_RESOURCE_DIRECTORY_ENTRY_OffsetToDirectory + self.Offset)
-   return (uint64(value) & 0x7fffffff) >> 0x0
-}
-
-type StringTable struct {
+type IMAGE_DOS_HEADER struct {
     Reader io.ReaderAt
     Offset int64
     Profile *PeProfile
 }
 
-func NewStringTable(reader io.ReaderAt) *StringTable {
-    self := &StringTable{Reader: reader}
+func NewIMAGE_DOS_HEADER(reader io.ReaderAt) *IMAGE_DOS_HEADER {
+    self := &IMAGE_DOS_HEADER{Reader: reader}
     return self
 }
 
-func (self *StringTable) Size() int {
-    return 0
+func (self *IMAGE_DOS_HEADER) Size() int {
+    return 64
 }
 
-func (self *StringTable) Type() uint16 {
-   return ParseUint16(self.Reader, self.Profile.Off_StringTable_Type + self.Offset)
+func (self *IMAGE_DOS_HEADER) E_lfanew() uint32 {
+   return ParseUint32(self.Reader, self.Profile.Off_IMAGE_DOS_HEADER_E_lfanew + self.Offset)
 }
 
-
-func (self *StringTable) Key() string {
-  return ParseUTF16String(self.Reader, self.Profile.Off_StringTable_Key + self.Offset, 16)
+func (self *IMAGE_DOS_HEADER) E_magic() uint16 {
+   return ParseUint16(self.Reader, self.Profile.Off_IMAGE_DOS_HEADER_E_magic + self.Offset)
 }
 
-func (self *StringTable) Length() uint16 {
-   return ParseUint16(self.Reader, self.Profile.Off_StringTable_Length + self.Offset)
-}
-
-func (self *StringTable) ValueLength() uint16 {
-   return ParseUint16(self.Reader, self.Profile.Off_StringTable_ValueLength + self.Offset)
-}
-
-type IMAGE_SECTION_HEADER struct {
+type IMAGE_FILE_HEADER struct {
     Reader io.ReaderAt
     Offset int64
     Profile *PeProfile
 }
 
-func NewIMAGE_SECTION_HEADER(reader io.ReaderAt) *IMAGE_SECTION_HEADER {
-    self := &IMAGE_SECTION_HEADER{Reader: reader}
+func NewIMAGE_FILE_HEADER(reader io.ReaderAt) *IMAGE_FILE_HEADER {
+    self := &IMAGE_FILE_HEADER{Reader: reader}
     return self
 }
 
-func (self *IMAGE_SECTION_HEADER) Size() int {
-    return 40
+func (self *IMAGE_FILE_HEADER) Size() int {
+    return 20
 }
 
-func (self *IMAGE_SECTION_HEADER) PointerToRawData() uint32 {
-   return ParseUint32(self.Reader, self.Profile.Off_IMAGE_SECTION_HEADER_PointerToRawData + self.Offset)
+func (self *IMAGE_FILE_HEADER) Machine() *Enumeration {
+   value := ParseUint16(self.Reader, self.Profile.Off_IMAGE_FILE_HEADER_Machine + self.Offset)
+   name := "Unknown"
+   switch value {
+
+      case 332:
+         name = "IMAGE_FILE_MACHINE_I386"
+
+      case 448:
+         name = "IMAGE_FILE_MACHINE_ARM"
+
+      case 512:
+         name = "IMAGE_FILE_MACHINE_IA64"
+
+      case 34404:
+         name = "IMAGE_FILE_MACHINE_AMD64"
+}
+   return &Enumeration{Value: uint64(value), Name: name}
 }
 
-func (self *IMAGE_SECTION_HEADER) SizeOfRawData() uint32 {
-   return ParseUint32(self.Reader, self.Profile.Off_IMAGE_SECTION_HEADER_SizeOfRawData + self.Offset)
+
+func (self *IMAGE_FILE_HEADER) NumberOfSections() uint16 {
+   return ParseUint16(self.Reader, self.Profile.Off_IMAGE_FILE_HEADER_NumberOfSections + self.Offset)
 }
 
-func (self *IMAGE_SECTION_HEADER) VirtualAddress() uint32 {
-   return ParseUint32(self.Reader, self.Profile.Off_IMAGE_SECTION_HEADER_VirtualAddress + self.Offset)
+func (self *IMAGE_FILE_HEADER) SizeOfOptionalHeader() uint16 {
+   return ParseUint16(self.Reader, self.Profile.Off_IMAGE_FILE_HEADER_SizeOfOptionalHeader + self.Offset)
 }
 
-func (self *IMAGE_SECTION_HEADER) Characteristics() uint32 {
-   return ParseUint32(self.Reader, self.Profile.Off_IMAGE_SECTION_HEADER_Characteristics + self.Offset)
+func (self *IMAGE_FILE_HEADER) TimeDateStamp() *UnixTimeStamp {
+    return self.Profile.UnixTimeStamp(self.Reader, self.Profile.Off_IMAGE_FILE_HEADER_TimeDateStamp + self.Offset)
 }
 
-
-func (self *IMAGE_SECTION_HEADER) Name() string {
-  return ParseTerminatedString(self.Reader, self.Profile.Off_IMAGE_SECTION_HEADER_Name + self.Offset)
-}
-
-type CV_RSDS_HEADER struct {
+type IMAGE_IMPORT_BY_NAME struct {
     Reader io.ReaderAt
     Offset int64
     Profile *PeProfile
 }
 
-func NewCV_RSDS_HEADER(reader io.ReaderAt) *CV_RSDS_HEADER {
-    self := &CV_RSDS_HEADER{Reader: reader}
+func NewIMAGE_IMPORT_BY_NAME(reader io.ReaderAt) *IMAGE_IMPORT_BY_NAME {
+    self := &IMAGE_IMPORT_BY_NAME{Reader: reader}
     return self
 }
 
-func (self *CV_RSDS_HEADER) Size() int {
-    return 28
-}
-
-func (self *CV_RSDS_HEADER) GUID() *GUID {
-    return self.Profile.GUID(self.Reader, self.Profile.Off_CV_RSDS_HEADER_GUID + self.Offset)
-}
-
-func (self *CV_RSDS_HEADER) Age() uint32 {
-   return ParseUint32(self.Reader, self.Profile.Off_CV_RSDS_HEADER_Age + self.Offset)
+func (self *IMAGE_IMPORT_BY_NAME) Size() int {
+    return 4
 }
 
 
-func (self *CV_RSDS_HEADER) Filename() string {
-  return ParseTerminatedString(self.Reader, self.Profile.Off_CV_RSDS_HEADER_Filename + self.Offset)
+func (self *IMAGE_IMPORT_BY_NAME) Name() string {
+  return ParseTerminatedString(self.Reader, self.Profile.Off_IMAGE_IMPORT_BY_NAME_Name + self.Offset)
 }
 
-
-func (self *CV_RSDS_HEADER) Signature() string {
-  return ParseString(self.Reader, self.Profile.Off_CV_RSDS_HEADER_Signature + self.Offset, 4)
-}
-
-type StringFileInfo struct {
+type IMAGE_IMPORT_DESCRIPTOR struct {
     Reader io.ReaderAt
     Offset int64
     Profile *PeProfile
 }
 
-func NewStringFileInfo(reader io.ReaderAt) *StringFileInfo {
-    self := &StringFileInfo{Reader: reader}
+func NewIMAGE_IMPORT_DESCRIPTOR(reader io.ReaderAt) *IMAGE_IMPORT_DESCRIPTOR {
+    self := &IMAGE_IMPORT_DESCRIPTOR{Reader: reader}
     return self
 }
 
-func (self *StringFileInfo) Size() int {
-    return 0
+func (self *IMAGE_IMPORT_DESCRIPTOR) Size() int {
+    return 20
 }
 
-func (self *StringFileInfo) Length() uint16 {
-   return ParseUint16(self.Reader, self.Profile.Off_StringFileInfo_Length + self.Offset)
+func (self *IMAGE_IMPORT_DESCRIPTOR) Characteristics() uint32 {
+   return ParseUint32(self.Reader, self.Profile.Off_IMAGE_IMPORT_DESCRIPTOR_Characteristics + self.Offset)
 }
 
-func (self *StringFileInfo) ValueLength() uint16 {
-   return ParseUint16(self.Reader, self.Profile.Off_StringFileInfo_ValueLength + self.Offset)
+func (self *IMAGE_IMPORT_DESCRIPTOR) Name() uint32 {
+   return ParseUint32(self.Reader, self.Profile.Off_IMAGE_IMPORT_DESCRIPTOR_Name + self.Offset)
 }
 
-func (self *StringFileInfo) Type() uint16 {
-   return ParseUint16(self.Reader, self.Profile.Off_StringFileInfo_Type + self.Offset)
-}
-
-
-func (self *StringFileInfo) Key() string {
-  return ParseTerminatedUTF16String(self.Reader, self.Profile.Off_StringFileInfo_Key + self.Offset)
+func (self *IMAGE_IMPORT_DESCRIPTOR) OriginalFirstThunk() uint32 {
+   return ParseUint32(self.Reader, self.Profile.Off_IMAGE_IMPORT_DESCRIPTOR_OriginalFirstThunk + self.Offset)
 }
 
 type IMAGE_NT_HEADERS struct {
@@ -839,6 +658,324 @@ func (self *IMAGE_NT_HEADERS) Signature() uint32 {
    return ParseUint32(self.Reader, self.Profile.Off_IMAGE_NT_HEADERS_Signature + self.Offset)
 }
 
+type IMAGE_OPTIONAL_HEADER struct {
+    Reader io.ReaderAt
+    Offset int64
+    Profile *PeProfile
+}
+
+func NewIMAGE_OPTIONAL_HEADER(reader io.ReaderAt) *IMAGE_OPTIONAL_HEADER {
+    self := &IMAGE_OPTIONAL_HEADER{Reader: reader}
+    return self
+}
+
+func (self *IMAGE_OPTIONAL_HEADER) Size() int {
+    return 224
+}
+
+func (self *IMAGE_OPTIONAL_HEADER) DataDirectory() []*IMAGE_DATA_DIRECTORY {
+   return ParseArray_IMAGE_DATA_DIRECTORY(self.Profile, self.Reader, self.Profile.Off_IMAGE_OPTIONAL_HEADER_DataDirectory + self.Offset, 128)
+}
+
+func (self *IMAGE_OPTIONAL_HEADER) ImageBase() uint32 {
+   return ParseUint32(self.Reader, self.Profile.Off_IMAGE_OPTIONAL_HEADER_ImageBase + self.Offset)
+}
+
+func (self *IMAGE_OPTIONAL_HEADER) Magic() uint16 {
+   return ParseUint16(self.Reader, self.Profile.Off_IMAGE_OPTIONAL_HEADER_Magic + self.Offset)
+}
+
+type IMAGE_OPTIONAL_HEADER64 struct {
+    Reader io.ReaderAt
+    Offset int64
+    Profile *PeProfile
+}
+
+func NewIMAGE_OPTIONAL_HEADER64(reader io.ReaderAt) *IMAGE_OPTIONAL_HEADER64 {
+    self := &IMAGE_OPTIONAL_HEADER64{Reader: reader}
+    return self
+}
+
+func (self *IMAGE_OPTIONAL_HEADER64) Size() int {
+    return 240
+}
+
+func (self *IMAGE_OPTIONAL_HEADER64) DataDirectory() []*IMAGE_DATA_DIRECTORY {
+   return ParseArray_IMAGE_DATA_DIRECTORY(self.Profile, self.Reader, self.Profile.Off_IMAGE_OPTIONAL_HEADER64_DataDirectory + self.Offset, 128)
+}
+
+func (self *IMAGE_OPTIONAL_HEADER64) ImageBase() uint64 {
+    return ParseUint64(self.Reader, self.Profile.Off_IMAGE_OPTIONAL_HEADER64_ImageBase + self.Offset)
+}
+
+func (self *IMAGE_OPTIONAL_HEADER64) Magic() uint16 {
+   return ParseUint16(self.Reader, self.Profile.Off_IMAGE_OPTIONAL_HEADER64_Magic + self.Offset)
+}
+
+type IMAGE_RESOURCE_DATA_ENTRY struct {
+    Reader io.ReaderAt
+    Offset int64
+    Profile *PeProfile
+}
+
+func NewIMAGE_RESOURCE_DATA_ENTRY(reader io.ReaderAt) *IMAGE_RESOURCE_DATA_ENTRY {
+    self := &IMAGE_RESOURCE_DATA_ENTRY{Reader: reader}
+    return self
+}
+
+func (self *IMAGE_RESOURCE_DATA_ENTRY) Size() int {
+    return 16
+}
+
+func (self *IMAGE_RESOURCE_DATA_ENTRY) CodePage() uint32 {
+   return ParseUint32(self.Reader, self.Profile.Off_IMAGE_RESOURCE_DATA_ENTRY_CodePage + self.Offset)
+}
+
+func (self *IMAGE_RESOURCE_DATA_ENTRY) DataSize() uint32 {
+   return ParseUint32(self.Reader, self.Profile.Off_IMAGE_RESOURCE_DATA_ENTRY_DataSize + self.Offset)
+}
+
+func (self *IMAGE_RESOURCE_DATA_ENTRY) OffsetToData() uint32 {
+   return ParseUint32(self.Reader, self.Profile.Off_IMAGE_RESOURCE_DATA_ENTRY_OffsetToData + self.Offset)
+}
+
+type IMAGE_RESOURCE_DIRECTORY struct {
+    Reader io.ReaderAt
+    Offset int64
+    Profile *PeProfile
+}
+
+func NewIMAGE_RESOURCE_DIRECTORY(reader io.ReaderAt) *IMAGE_RESOURCE_DIRECTORY {
+    self := &IMAGE_RESOURCE_DIRECTORY{Reader: reader}
+    return self
+}
+
+func (self *IMAGE_RESOURCE_DIRECTORY) Size() int {
+    return 16
+}
+
+func (self *IMAGE_RESOURCE_DIRECTORY) NumberOfIdEntries() uint16 {
+   return ParseUint16(self.Reader, self.Profile.Off_IMAGE_RESOURCE_DIRECTORY_NumberOfIdEntries + self.Offset)
+}
+
+func (self *IMAGE_RESOURCE_DIRECTORY) NumberOfNamedEntries() uint16 {
+   return ParseUint16(self.Reader, self.Profile.Off_IMAGE_RESOURCE_DIRECTORY_NumberOfNamedEntries + self.Offset)
+}
+
+func (self *IMAGE_RESOURCE_DIRECTORY) _Entries() []*IMAGE_RESOURCE_DIRECTORY_ENTRY {
+   return ParseArray_IMAGE_RESOURCE_DIRECTORY_ENTRY(self.Profile, self.Reader, self.Profile.Off_IMAGE_RESOURCE_DIRECTORY__Entries + self.Offset, 0)
+}
+
+type IMAGE_RESOURCE_DIRECTORY_ENTRY struct {
+    Reader io.ReaderAt
+    Offset int64
+    Profile *PeProfile
+}
+
+func NewIMAGE_RESOURCE_DIRECTORY_ENTRY(reader io.ReaderAt) *IMAGE_RESOURCE_DIRECTORY_ENTRY {
+    self := &IMAGE_RESOURCE_DIRECTORY_ENTRY{Reader: reader}
+    return self
+}
+
+func (self *IMAGE_RESOURCE_DIRECTORY_ENTRY) Size() int {
+    return 8
+}
+
+func (self *IMAGE_RESOURCE_DIRECTORY_ENTRY) DataIsDirectory() uint64 {
+   value := ParseUint32(self.Reader, self.Profile.Off_IMAGE_RESOURCE_DIRECTORY_ENTRY_DataIsDirectory + self.Offset)
+   return (uint64(value) & 0x7fffffffffffffff) >> 0x1f
+}
+
+func (self *IMAGE_RESOURCE_DIRECTORY_ENTRY) NameIsString() uint64 {
+   value := ParseUint32(self.Reader, self.Profile.Off_IMAGE_RESOURCE_DIRECTORY_ENTRY_NameIsString + self.Offset)
+   return (uint64(value) & 0x7fffffffffffffff) >> 0x1f
+}
+
+func (self *IMAGE_RESOURCE_DIRECTORY_ENTRY) NameOffset() uint64 {
+   value := ParseUint32(self.Reader, self.Profile.Off_IMAGE_RESOURCE_DIRECTORY_ENTRY_NameOffset + self.Offset)
+   return (uint64(value) & 0x7fffffff) >> 0x0
+}
+
+func (self *IMAGE_RESOURCE_DIRECTORY_ENTRY) OffsetToData() uint64 {
+   value := ParseUint32(self.Reader, self.Profile.Off_IMAGE_RESOURCE_DIRECTORY_ENTRY_OffsetToData + self.Offset)
+   return (uint64(value) & 0x7fffffff) >> 0x0
+}
+
+func (self *IMAGE_RESOURCE_DIRECTORY_ENTRY) OffsetToDirectory() uint64 {
+   value := ParseUint32(self.Reader, self.Profile.Off_IMAGE_RESOURCE_DIRECTORY_ENTRY_OffsetToDirectory + self.Offset)
+   return (uint64(value) & 0x7fffffff) >> 0x0
+}
+
+func (self *IMAGE_RESOURCE_DIRECTORY_ENTRY) Type() *Enumeration {
+   value := ParseUint8(self.Reader, self.Profile.Off_IMAGE_RESOURCE_DIRECTORY_ENTRY_Type + self.Offset)
+   name := "Unknown"
+   switch value {
+
+      case 1:
+         name = "RT_CURSOR"
+
+      case 2:
+         name = "RT_BITMAP"
+
+      case 3:
+         name = "RT_ICON"
+
+      case 4:
+         name = "RT_MENU"
+
+      case 5:
+         name = "RT_DIALOG"
+
+      case 6:
+         name = "RT_STRING"
+
+      case 7:
+         name = "RT_FONTDIR"
+
+      case 8:
+         name = "RT_FONT"
+
+      case 9:
+         name = "RT_ACCELERATOR"
+
+      case 10:
+         name = "RT_RCDATA"
+
+      case 11:
+         name = "RT_MESSAGETABLE"
+
+      case 12:
+         name = "RT_GROUP_CURSOR"
+
+      case 14:
+         name = "RT_GROUP_ICON"
+
+      case 16:
+         name = "RT_VERSION"
+
+      case 17:
+         name = "RT_DLGINCLUDE"
+
+      case 19:
+         name = "RT_PLUGPLAY"
+
+      case 20:
+         name = "RT_VXD"
+
+      case 21:
+         name = "RT_ANICURSOR"
+
+      case 22:
+         name = "RT_ANIICON"
+
+      case 23:
+         name = "RT_HTML"
+
+      case 24:
+         name = "RT_MANIFEST"
+}
+   return &Enumeration{Value: uint64(value), Name: name}
+}
+
+
+type IMAGE_SECTION_HEADER struct {
+    Reader io.ReaderAt
+    Offset int64
+    Profile *PeProfile
+}
+
+func NewIMAGE_SECTION_HEADER(reader io.ReaderAt) *IMAGE_SECTION_HEADER {
+    self := &IMAGE_SECTION_HEADER{Reader: reader}
+    return self
+}
+
+func (self *IMAGE_SECTION_HEADER) Size() int {
+    return 40
+}
+
+func (self *IMAGE_SECTION_HEADER) Characteristics() uint32 {
+   return ParseUint32(self.Reader, self.Profile.Off_IMAGE_SECTION_HEADER_Characteristics + self.Offset)
+}
+
+
+func (self *IMAGE_SECTION_HEADER) Name() string {
+  return ParseTerminatedString(self.Reader, self.Profile.Off_IMAGE_SECTION_HEADER_Name + self.Offset)
+}
+
+func (self *IMAGE_SECTION_HEADER) PointerToRawData() uint32 {
+   return ParseUint32(self.Reader, self.Profile.Off_IMAGE_SECTION_HEADER_PointerToRawData + self.Offset)
+}
+
+func (self *IMAGE_SECTION_HEADER) SizeOfRawData() uint32 {
+   return ParseUint32(self.Reader, self.Profile.Off_IMAGE_SECTION_HEADER_SizeOfRawData + self.Offset)
+}
+
+func (self *IMAGE_SECTION_HEADER) VirtualAddress() uint32 {
+   return ParseUint32(self.Reader, self.Profile.Off_IMAGE_SECTION_HEADER_VirtualAddress + self.Offset)
+}
+
+type IMAGE_THUNK_DATA32 struct {
+    Reader io.ReaderAt
+    Offset int64
+    Profile *PeProfile
+}
+
+func NewIMAGE_THUNK_DATA32(reader io.ReaderAt) *IMAGE_THUNK_DATA32 {
+    self := &IMAGE_THUNK_DATA32{Reader: reader}
+    return self
+}
+
+func (self *IMAGE_THUNK_DATA32) Size() int {
+    return 4
+}
+
+func (self *IMAGE_THUNK_DATA32) AddressOfData() uint32 {
+   return ParseUint32(self.Reader, self.Profile.Off_IMAGE_THUNK_DATA32_AddressOfData + self.Offset)
+}
+
+func (self *IMAGE_THUNK_DATA32) ForwarderString() uint32 {
+   return ParseUint32(self.Reader, self.Profile.Off_IMAGE_THUNK_DATA32_ForwarderString + self.Offset)
+}
+
+func (self *IMAGE_THUNK_DATA32) Function() uint32 {
+   return ParseUint32(self.Reader, self.Profile.Off_IMAGE_THUNK_DATA32_Function + self.Offset)
+}
+
+func (self *IMAGE_THUNK_DATA32) Ordinal() uint32 {
+   return ParseUint32(self.Reader, self.Profile.Off_IMAGE_THUNK_DATA32_Ordinal + self.Offset)
+}
+
+type IMAGE_THUNK_DATA64 struct {
+    Reader io.ReaderAt
+    Offset int64
+    Profile *PeProfile
+}
+
+func NewIMAGE_THUNK_DATA64(reader io.ReaderAt) *IMAGE_THUNK_DATA64 {
+    self := &IMAGE_THUNK_DATA64{Reader: reader}
+    return self
+}
+
+func (self *IMAGE_THUNK_DATA64) Size() int {
+    return 8
+}
+
+func (self *IMAGE_THUNK_DATA64) AddressOfData() uint64 {
+    return ParseUint64(self.Reader, self.Profile.Off_IMAGE_THUNK_DATA64_AddressOfData + self.Offset)
+}
+
+func (self *IMAGE_THUNK_DATA64) ForwarderString() uint64 {
+    return ParseUint64(self.Reader, self.Profile.Off_IMAGE_THUNK_DATA64_ForwarderString + self.Offset)
+}
+
+func (self *IMAGE_THUNK_DATA64) Function() uint64 {
+    return ParseUint64(self.Reader, self.Profile.Off_IMAGE_THUNK_DATA64_Function + self.Offset)
+}
+
+func (self *IMAGE_THUNK_DATA64) Ordinal() uint64 {
+    return ParseUint64(self.Reader, self.Profile.Off_IMAGE_THUNK_DATA64_Ordinal + self.Offset)
+}
+
 type TagVS_FIXEDFILEINFO struct {
     Reader io.ReaderAt
     Offset int64
@@ -852,25 +989,6 @@ func NewTagVS_FIXEDFILEINFO(reader io.ReaderAt) *TagVS_FIXEDFILEINFO {
 
 func (self *TagVS_FIXEDFILEINFO) Size() int {
     return 52
-}
-
-func ParseArray_IMAGE_RESOURCE_DIRECTORY_ENTRY(profile *PeProfile, reader io.ReaderAt, offset int64, count int) []*IMAGE_RESOURCE_DIRECTORY_ENTRY {
-    result := []*IMAGE_RESOURCE_DIRECTORY_ENTRY{}
-    for i:=0; i<count; i++ {
-      value := profile.IMAGE_RESOURCE_DIRECTORY_ENTRY(reader, offset)
-      result = append(result, value)
-      offset += int64(value.Size())
-    }
-    return result
-}
-
-func ParseUint64(reader io.ReaderAt, offset int64) uint64 {
-    data := make([]byte, 8)
-    _, err := reader.ReadAt(data, offset)
-    if err != nil {
-       return 0
-    }
-    return binary.LittleEndian.Uint64(data)
 }
 
 type Enumeration struct {
@@ -893,6 +1011,35 @@ func ParseArray_IMAGE_DATA_DIRECTORY(profile *PeProfile, reader io.ReaderAt, off
     return result
 }
 
+func ParseArray_IMAGE_RESOURCE_DIRECTORY_ENTRY(profile *PeProfile, reader io.ReaderAt, offset int64, count int) []*IMAGE_RESOURCE_DIRECTORY_ENTRY {
+    result := []*IMAGE_RESOURCE_DIRECTORY_ENTRY{}
+    for i:=0; i<count; i++ {
+      value := profile.IMAGE_RESOURCE_DIRECTORY_ENTRY(reader, offset)
+      result = append(result, value)
+      offset += int64(value.Size())
+    }
+    return result
+}
+
+func ParseArray_byte(profile *PeProfile, reader io.ReaderAt, offset int64, count int) []byte {
+    result := []byte{}
+    for i:=0; i<count; i++ {
+      value := ParseUint8(reader, offset)
+      result = append(result, value)
+      offset += int64(1)
+    }
+    return result
+}
+
+func ParseUint16(reader io.ReaderAt, offset int64) uint16 {
+    data := make([]byte, 2)
+    _, err := reader.ReadAt(data, offset)
+    if err != nil {
+       return 0
+    }
+    return binary.LittleEndian.Uint16(data)
+}
+
 func ParseUint32(reader io.ReaderAt, offset int64) uint32 {
     data := make([]byte, 4)
     _, err := reader.ReadAt(data, offset)
@@ -902,10 +1049,28 @@ func ParseUint32(reader io.ReaderAt, offset int64) uint32 {
     return binary.LittleEndian.Uint32(data)
 }
 
+func ParseUint64(reader io.ReaderAt, offset int64) uint64 {
+    data := make([]byte, 8)
+    _, err := reader.ReadAt(data, offset)
+    if err != nil {
+       return 0
+    }
+    return binary.LittleEndian.Uint64(data)
+}
+
+func ParseUint8(reader io.ReaderAt, offset int64) byte {
+    result := make([]byte, 1)
+    _, err := reader.ReadAt(result, offset)
+    if err != nil {
+       return 0
+    }
+    return result[0]
+}
+
 func ParseTerminatedString(reader io.ReaderAt, offset int64) string {
    data := make([]byte, 1024)
    n, err := reader.ReadAt(data, offset)
-   if err != nil {
+   if err != nil && err != io.EOF {
      return ""
    }
    idx := bytes.Index(data[:n], []byte{0})
@@ -918,35 +1083,17 @@ func ParseTerminatedString(reader io.ReaderAt, offset int64) string {
 func ParseString(reader io.ReaderAt, offset int64, length int64) string {
    data := make([]byte, length)
    n, err := reader.ReadAt(data, offset)
-   if err != nil {
+   if err != nil && err != io.EOF {
       return ""
    }
    return string(data[:n])
 }
 
 
-func ParseUint8(reader io.ReaderAt, offset int64) byte {
-    result := make([]byte, 1)
-    _, err := reader.ReadAt(result, offset)
-    if err != nil {
-       return 0
-    }
-    return result[0]
-}
-
-func ParseUint16(reader io.ReaderAt, offset int64) uint16 {
-    data := make([]byte, 2)
-    _, err := reader.ReadAt(data, offset)
-    if err != nil {
-       return 0
-    }
-    return binary.LittleEndian.Uint16(data)
-}
-
 func ParseTerminatedUTF16String(reader io.ReaderAt, offset int64) string {
    data := make([]byte, 1024)
    n, err := reader.ReadAt(data, offset)
-   if err != nil {
+   if err != nil && err != io.EOF {
      return ""
    }
 
@@ -960,7 +1107,7 @@ func ParseTerminatedUTF16String(reader io.ReaderAt, offset int64) string {
 func ParseUTF16String(reader io.ReaderAt, offset int64, length int64) string {
    data := make([]byte, length)
    n, err := reader.ReadAt(data, offset)
-   if err != nil {
+   if err != nil && err != io.EOF {
      return ""
    }
    return UTF16BytesToUTF8(data[:n], binary.LittleEndian)
@@ -991,14 +1138,4 @@ func UTF16BytesToUTF8(b []byte, o binary.ByteOrder) string {
 	return string(utf16.Decode(utf))
 }
 
-
-func ParseArray_byte(profile *PeProfile, reader io.ReaderAt, offset int64, count int) []byte {
-    result := []byte{}
-    for i:=0; i<count; i++ {
-      value := ParseUint8(reader, offset)
-      result = append(result, value)
-      offset += int64(1)
-    }
-    return result
-}
 

@@ -8,11 +8,11 @@ import (
 // Exported API
 
 type Section struct {
-	Perm       string `json:"perm"`
-	Name       string `json:"name"`
-	FileOffset int64  `json:"file_offset"`
-	VMA        int64  `json:"vma"`
-	Size       int64  `json:"size"`
+	Perm       string `json:"Perm"`
+	Name       string `json:"Name"`
+	FileOffset int64  `json:"FileOffset"`
+	VMA        int64  `json:"VMA"`
+	Size       int64  `json:"Size"`
 }
 
 type PEFile struct {
@@ -24,13 +24,15 @@ type PEFile struct {
 	// The file offset to the resource section.
 	resource_base int64
 
-	Machine       string     `json:"machine"`
+	Machine       string     `json:"Machine"`
 	TimeDateStamp string     `json:"TimeDateStamp"`
 	GUIDAge       string     `json:"GUIDAge"`
 	PDB           string     `json:"PDB"`
-	Sections      []*Section `json:"sections"`
+	Sections      []*Section `json:"Sections"`
 
-	VersionInformation map[string]string `json:"version_information"`
+	VersionInformation map[string]string `json:"VersionInformation"`
+
+	Imports []string `json:"Imports"`
 }
 
 func GetVersionInformation(
@@ -99,6 +101,7 @@ func NewPEFile(reader io.ReaderAt) (*PEFile, error) {
 		PDB:           rsds.Filename(),
 		VersionInformation: GetVersionInformation(
 			nt_header, rva_resolver, resource_base),
+		Imports: GetImports(nt_header, rva_resolver),
 	}
 
 	for _, section := range nt_header.Sections() {
