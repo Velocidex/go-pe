@@ -2,33 +2,6 @@
 
 
 [[projects]]
-  branch = "master"
-  digest = "1:315c5f2f60c76d89b871c73f9bd5fe689cad96597afd50fb9992228ef80bdd34"
-  name = "github.com/alecthomas/template"
-  packages = [
-    ".",
-    "parse",
-  ]
-  pruneopts = "UT"
-  revision = "a0175ee3bccc567396460bf5acd36800cb10c49c"
-
-[[projects]]
-  branch = "master"
-  digest = "1:c198fdc381e898e8fb62b8eb62758195091c313ad18e52a3067366e1dda2fb3c"
-  name = "github.com/alecthomas/units"
-  packages = ["."]
-  pruneopts = "UT"
-  revision = "2efee857e7cfd4f3d0138cc3cbb1b4966962b93a"
-
-[[projects]]
-  digest = "1:c06d9e11d955af78ac3bbb26bd02e01d2f61f689e1a3bce2ef6fb683ef8a7f2d"
-  name = "gopkg.in/alecthomas/kingpin.v2"
-  packages = ["."]
-  pruneopts = "UT"
-  revision = "947dcec5ba9c011838740e680966fd7087a71d0d"
-  version = "v2.2.6"
-
-[[projects]]
   digest = "1:4d2e5a73dc1500038e504a8d78b986630e3626dc027bc030ba5c75da257cdb96"
   name = "gopkg.in/yaml.v2"
   packages = ["."]
@@ -37,21 +10,20 @@
   version = "v2.2.2"
 
 [[projects]]
-  branch = "master"
-  digest = "1:a7e72fffe0597aa44d85cb3123306b2371a2478e55bfaff50e886edd0f7cdd41"
+  digest = "1:1922aa3b7bd0478ae20524a87c6660361c4a0e92c36465be063baf9a83da1ca6"
   name = "www.velocidex.com/golang/binparsergen"
   packages = [
     ".",
     "reader",
   ]
   pruneopts = "UT"
-  revision = "49593555e5582bbcae994d0cc5e923164c80b5b6"
+  revision = "3c6c4cbb26c0b700f818fdfd3143c0d4005c3312"
+  version = "v0.1.0"
 
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
   input-imports = [
-    "gopkg.in/alecthomas/kingpin.v2",
     "www.velocidex.com/golang/binparsergen",
     "www.velocidex.com/golang/binparsergen/reader",
   ]
