@@ -10,7 +10,12 @@ type UnixTimeStamp struct {
 }
 
 func (self *UnixTimeStamp) DebugString() string {
-	return self.MarshalText()
+	return self.String()
+}
+
+func (self *UnixTimeStamp) String() string {
+	result, _ := self.UTC().MarshalText()
+	return string(result)
 }
 
 func (self *PeProfile) UnixTimeStamp(reader io.ReaderAt, offset int64) *UnixTimeStamp {
