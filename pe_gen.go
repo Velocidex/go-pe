@@ -8,6 +8,8 @@ import (
     "fmt"
     "bytes"
     "io"
+    "sort"
+    "strings"
     "unicode/utf16"
     "unicode/utf8"
 )
@@ -20,6 +22,8 @@ var (
    _ = utf16.Decode
    _ = binary.LittleEndian
    _ = utf8.RuneError
+   _ = sort.Strings
+   _ = strings.Join
 )
 
 type PeProfile struct {
@@ -27,6 +31,14 @@ type PeProfile struct {
     Off_CV_RSDS_HEADER_Filename int64
     Off_CV_RSDS_HEADER_GUID int64
     Off_CV_RSDS_HEADER_Signature int64
+    Off_MESSAGE_RESOURCE_BLOCK_HighId int64
+    Off_MESSAGE_RESOURCE_BLOCK_LowId int64
+    Off_MESSAGE_RESOURCE_BLOCK_OffsetToEntries int64
+    Off_MESSAGE_RESOURCE_DATA_NumberOfBlocks int64
+    Off_MESSAGE_RESOURCE_DATA__Blocks int64
+    Off_MESSAGE_RESOURCE_ENTRY_Flags int64
+    Off_MESSAGE_RESOURCE_ENTRY_Length int64
+    Off_MESSAGE_RESOURCE_ENTRY_Text int64
     Off_PrefixedString_Length int64
     Off_PrefixedString__Buffer int64
     Off_ResourceString_Key int64
@@ -102,12 +114,24 @@ type PeProfile struct {
 
 func NewPeProfile() *PeProfile {
     // Specific offsets can be tweaked to cater for slight version mismatches.
-    self := &PeProfile{20,24,4,0,0,2,6,0,4,2,6,0,4,2,6,0,4,2,0,4,2,6,0,4,6,8,4,0,20,4,12,60,0,0,2,16,4,2,0,12,0,4,24,0,96,28,0,112,24,0,8,4,0,14,12,16,4,0,0,4,4,0,36,0,20,16,12,0,0,0,0,0,0,0,0}
+    self := &PeProfile{20,24,4,0,4,0,8,0,4,2,0,4,0,2,6,0,4,2,6,0,4,2,6,0,4,2,0,4,2,6,0,4,6,8,4,0,20,4,12,60,0,0,2,16,4,2,0,12,0,4,24,0,96,28,0,112,24,0,8,4,0,14,12,16,4,0,0,4,4,0,36,0,20,16,12,0,0,0,0,0,0,0,0}
     return self
 }
 
 func (self *PeProfile) CV_RSDS_HEADER(reader io.ReaderAt, offset int64) *CV_RSDS_HEADER {
     return &CV_RSDS_HEADER{Reader: reader, Offset: offset, Profile: self}
+}
+
+func (self *PeProfile) MESSAGE_RESOURCE_BLOCK(reader io.ReaderAt, offset int64) *MESSAGE_RESOURCE_BLOCK {
+    return &MESSAGE_RESOURCE_BLOCK{Reader: reader, Offset: offset, Profile: self}
+}
+
+func (self *PeProfile) MESSAGE_RESOURCE_DATA(reader io.ReaderAt, offset int64) *MESSAGE_RESOURCE_DATA {
+    return &MESSAGE_RESOURCE_DATA{Reader: reader, Offset: offset, Profile: self}
+}
+
+func (self *PeProfile) MESSAGE_RESOURCE_ENTRY(reader io.ReaderAt, offset int64) *MESSAGE_RESOURCE_ENTRY {
+    return &MESSAGE_RESOURCE_ENTRY{Reader: reader, Offset: offset, Profile: self}
 }
 
 func (self *PeProfile) PrefixedString(reader io.ReaderAt, offset int64) *PrefixedString {
@@ -205,11 +229,6 @@ type CV_RSDS_HEADER struct {
     Profile *PeProfile
 }
 
-func NewCV_RSDS_HEADER(reader io.ReaderAt) *CV_RSDS_HEADER {
-    self := &CV_RSDS_HEADER{Reader: reader}
-    return self
-}
-
 func (self *CV_RSDS_HEADER) Size() int {
     return 28
 }
@@ -231,16 +250,101 @@ func (self *CV_RSDS_HEADER) GUID() *GUID {
 func (self *CV_RSDS_HEADER) Signature() string {
   return ParseString(self.Reader, self.Profile.Off_CV_RSDS_HEADER_Signature + self.Offset, 4)
 }
+func (self *CV_RSDS_HEADER) DebugString() string {
+    result := fmt.Sprintf("struct CV_RSDS_HEADER @ %#x:\n", self.Offset)
+    result += fmt.Sprintf("Age: %#0x\n", self.Age())
+    result += fmt.Sprintf("Filename: %v\n", string(self.Filename()))
+    result += fmt.Sprintf("GUID: {\n%v}\n", self.GUID().DebugString())
+    result += fmt.Sprintf("Signature: %v\n", string(self.Signature()))
+    return result
+}
 
-type PrefixedString struct {
+type MESSAGE_RESOURCE_BLOCK struct {
     Reader io.ReaderAt
     Offset int64
     Profile *PeProfile
 }
 
-func NewPrefixedString(reader io.ReaderAt) *PrefixedString {
-    self := &PrefixedString{Reader: reader}
-    return self
+func (self *MESSAGE_RESOURCE_BLOCK) Size() int {
+    return 12
+}
+
+func (self *MESSAGE_RESOURCE_BLOCK) HighId() uint32 {
+   return ParseUint32(self.Reader, self.Profile.Off_MESSAGE_RESOURCE_BLOCK_HighId + self.Offset)
+}
+
+func (self *MESSAGE_RESOURCE_BLOCK) LowId() uint32 {
+   return ParseUint32(self.Reader, self.Profile.Off_MESSAGE_RESOURCE_BLOCK_LowId + self.Offset)
+}
+
+func (self *MESSAGE_RESOURCE_BLOCK) OffsetToEntries() uint32 {
+   return ParseUint32(self.Reader, self.Profile.Off_MESSAGE_RESOURCE_BLOCK_OffsetToEntries + self.Offset)
+}
+func (self *MESSAGE_RESOURCE_BLOCK) DebugString() string {
+    result := fmt.Sprintf("struct MESSAGE_RESOURCE_BLOCK @ %#x:\n", self.Offset)
+    result += fmt.Sprintf("HighId: %#0x\n", self.HighId())
+    result += fmt.Sprintf("LowId: %#0x\n", self.LowId())
+    result += fmt.Sprintf("OffsetToEntries: %#0x\n", self.OffsetToEntries())
+    return result
+}
+
+type MESSAGE_RESOURCE_DATA struct {
+    Reader io.ReaderAt
+    Offset int64
+    Profile *PeProfile
+}
+
+func (self *MESSAGE_RESOURCE_DATA) Size() int {
+    return 0
+}
+
+func (self *MESSAGE_RESOURCE_DATA) NumberOfBlocks() uint32 {
+   return ParseUint32(self.Reader, self.Profile.Off_MESSAGE_RESOURCE_DATA_NumberOfBlocks + self.Offset)
+}
+
+func (self *MESSAGE_RESOURCE_DATA) _Blocks() []*MESSAGE_RESOURCE_BLOCK {
+   return ParseArray_MESSAGE_RESOURCE_BLOCK(self.Profile, self.Reader, self.Profile.Off_MESSAGE_RESOURCE_DATA__Blocks + self.Offset, 0)
+}
+func (self *MESSAGE_RESOURCE_DATA) DebugString() string {
+    result := fmt.Sprintf("struct MESSAGE_RESOURCE_DATA @ %#x:\n", self.Offset)
+    result += fmt.Sprintf("NumberOfBlocks: %#0x\n", self.NumberOfBlocks())
+    return result
+}
+
+type MESSAGE_RESOURCE_ENTRY struct {
+    Reader io.ReaderAt
+    Offset int64
+    Profile *PeProfile
+}
+
+func (self *MESSAGE_RESOURCE_ENTRY) Size() int {
+    return 0
+}
+
+func (self *MESSAGE_RESOURCE_ENTRY) Flags() uint16 {
+   return ParseUint16(self.Reader, self.Profile.Off_MESSAGE_RESOURCE_ENTRY_Flags + self.Offset)
+}
+
+func (self *MESSAGE_RESOURCE_ENTRY) Length() uint16 {
+   return ParseUint16(self.Reader, self.Profile.Off_MESSAGE_RESOURCE_ENTRY_Length + self.Offset)
+}
+
+
+func (self *MESSAGE_RESOURCE_ENTRY) Text() string {
+  return ParseTerminatedUTF16String(self.Reader, self.Profile.Off_MESSAGE_RESOURCE_ENTRY_Text + self.Offset)
+}
+func (self *MESSAGE_RESOURCE_ENTRY) DebugString() string {
+    result := fmt.Sprintf("struct MESSAGE_RESOURCE_ENTRY @ %#x:\n", self.Offset)
+    result += fmt.Sprintf("Flags: %#0x\n", self.Flags())
+    result += fmt.Sprintf("Length: %#0x\n", self.Length())
+    result += fmt.Sprintf("Text: %v\n", string(self.Text()))
+    return result
+}
+
+type PrefixedString struct {
+    Reader io.ReaderAt
+    Offset int64
+    Profile *PeProfile
 }
 
 func (self *PrefixedString) Size() int {
@@ -254,16 +358,17 @@ func (self *PrefixedString) Length() uint16 {
 func (self *PrefixedString) _Buffer() byte {
    return ParseUint8(self.Reader, self.Profile.Off_PrefixedString__Buffer + self.Offset)
 }
+func (self *PrefixedString) DebugString() string {
+    result := fmt.Sprintf("struct PrefixedString @ %#x:\n", self.Offset)
+    result += fmt.Sprintf("Length: %#0x\n", self.Length())
+    result += fmt.Sprintf("_Buffer: %#0x\n", self._Buffer())
+    return result
+}
 
 type ResourceString struct {
     Reader io.ReaderAt
     Offset int64
     Profile *PeProfile
-}
-
-func NewResourceString(reader io.ReaderAt) *ResourceString {
-    self := &ResourceString{Reader: reader}
-    return self
 }
 
 func (self *ResourceString) Size() int {
@@ -286,16 +391,19 @@ func (self *ResourceString) Type() uint16 {
 func (self *ResourceString) ValueLength() uint16 {
    return ParseUint16(self.Reader, self.Profile.Off_ResourceString_ValueLength + self.Offset)
 }
+func (self *ResourceString) DebugString() string {
+    result := fmt.Sprintf("struct ResourceString @ %#x:\n", self.Offset)
+    result += fmt.Sprintf("Key: %v\n", string(self.Key()))
+    result += fmt.Sprintf("Length: %#0x\n", self.Length())
+    result += fmt.Sprintf("Type: %#0x\n", self.Type())
+    result += fmt.Sprintf("ValueLength: %#0x\n", self.ValueLength())
+    return result
+}
 
 type StringFileInfo struct {
     Reader io.ReaderAt
     Offset int64
     Profile *PeProfile
-}
-
-func NewStringFileInfo(reader io.ReaderAt) *StringFileInfo {
-    self := &StringFileInfo{Reader: reader}
-    return self
 }
 
 func (self *StringFileInfo) Size() int {
@@ -318,16 +426,19 @@ func (self *StringFileInfo) Type() uint16 {
 func (self *StringFileInfo) ValueLength() uint16 {
    return ParseUint16(self.Reader, self.Profile.Off_StringFileInfo_ValueLength + self.Offset)
 }
+func (self *StringFileInfo) DebugString() string {
+    result := fmt.Sprintf("struct StringFileInfo @ %#x:\n", self.Offset)
+    result += fmt.Sprintf("Key: %v\n", string(self.Key()))
+    result += fmt.Sprintf("Length: %#0x\n", self.Length())
+    result += fmt.Sprintf("Type: %#0x\n", self.Type())
+    result += fmt.Sprintf("ValueLength: %#0x\n", self.ValueLength())
+    return result
+}
 
 type StringTable struct {
     Reader io.ReaderAt
     Offset int64
     Profile *PeProfile
-}
-
-func NewStringTable(reader io.ReaderAt) *StringTable {
-    self := &StringTable{Reader: reader}
-    return self
 }
 
 func (self *StringTable) Size() int {
@@ -350,16 +461,19 @@ func (self *StringTable) Type() uint16 {
 func (self *StringTable) ValueLength() uint16 {
    return ParseUint16(self.Reader, self.Profile.Off_StringTable_ValueLength + self.Offset)
 }
+func (self *StringTable) DebugString() string {
+    result := fmt.Sprintf("struct StringTable @ %#x:\n", self.Offset)
+    result += fmt.Sprintf("Key: %v\n", string(self.Key()))
+    result += fmt.Sprintf("Length: %#0x\n", self.Length())
+    result += fmt.Sprintf("Type: %#0x\n", self.Type())
+    result += fmt.Sprintf("ValueLength: %#0x\n", self.ValueLength())
+    return result
+}
 
 type VS_VERSIONINFO struct {
     Reader io.ReaderAt
     Offset int64
     Profile *PeProfile
-}
-
-func NewVS_VERSIONINFO(reader io.ReaderAt) *VS_VERSIONINFO {
-    self := &VS_VERSIONINFO{Reader: reader}
-    return self
 }
 
 func (self *VS_VERSIONINFO) Size() int {
@@ -393,16 +507,19 @@ func (self *VS_VERSIONINFO) ValueLength() uint16 {
 func (self *VS_VERSIONINFO) szKey() string {
   return ParseUTF16String(self.Reader, self.Profile.Off_VS_VERSIONINFO_szKey + self.Offset, 32)
 }
+func (self *VS_VERSIONINFO) DebugString() string {
+    result := fmt.Sprintf("struct VS_VERSIONINFO @ %#x:\n", self.Offset)
+    result += fmt.Sprintf("Length: %#0x\n", self.Length())
+    result += fmt.Sprintf("Type: %v\n", self.Type().DebugString())
+    result += fmt.Sprintf("ValueLength: %#0x\n", self.ValueLength())
+    result += fmt.Sprintf("szKey: %v\n", string(self.szKey()))
+    return result
+}
 
 type GUID struct {
     Reader io.ReaderAt
     Offset int64
     Profile *PeProfile
-}
-
-func NewGUID(reader io.ReaderAt) *GUID {
-    self := &GUID{Reader: reader}
-    return self
 }
 
 func (self *GUID) Size() int {
@@ -424,16 +541,18 @@ func (self *GUID) Data3() uint16 {
 func (self *GUID) Data4() []byte {
    return ParseArray_byte(self.Profile, self.Reader, self.Profile.Off_GUID_Data4 + self.Offset, 8)
 }
+func (self *GUID) DebugString() string {
+    result := fmt.Sprintf("struct GUID @ %#x:\n", self.Offset)
+    result += fmt.Sprintf("Data1: %#0x\n", self.Data1())
+    result += fmt.Sprintf("Data2: %#0x\n", self.Data2())
+    result += fmt.Sprintf("Data3: %#0x\n", self.Data3())
+    return result
+}
 
 type IMAGE_DATA_DIRECTORY struct {
     Reader io.ReaderAt
     Offset int64
     Profile *PeProfile
-}
-
-func NewIMAGE_DATA_DIRECTORY(reader io.ReaderAt) *IMAGE_DATA_DIRECTORY {
-    self := &IMAGE_DATA_DIRECTORY{Reader: reader}
-    return self
 }
 
 func (self *IMAGE_DATA_DIRECTORY) Size() int {
@@ -447,16 +566,17 @@ func (self *IMAGE_DATA_DIRECTORY) DirSize() uint32 {
 func (self *IMAGE_DATA_DIRECTORY) VirtualAddress() uint32 {
    return ParseUint32(self.Reader, self.Profile.Off_IMAGE_DATA_DIRECTORY_VirtualAddress + self.Offset)
 }
+func (self *IMAGE_DATA_DIRECTORY) DebugString() string {
+    result := fmt.Sprintf("struct IMAGE_DATA_DIRECTORY @ %#x:\n", self.Offset)
+    result += fmt.Sprintf("DirSize: %#0x\n", self.DirSize())
+    result += fmt.Sprintf("VirtualAddress: %#0x\n", self.VirtualAddress())
+    return result
+}
 
 type IMAGE_DEBUG_DIRECTORY struct {
     Reader io.ReaderAt
     Offset int64
     Profile *PeProfile
-}
-
-func NewIMAGE_DEBUG_DIRECTORY(reader io.ReaderAt) *IMAGE_DEBUG_DIRECTORY {
-    self := &IMAGE_DEBUG_DIRECTORY{Reader: reader}
-    return self
 }
 
 func (self *IMAGE_DEBUG_DIRECTORY) Size() int {
@@ -512,6 +632,13 @@ func (self *IMAGE_DEBUG_DIRECTORY) Type() *Enumeration {
    return &Enumeration{Value: uint64(value), Name: name}
 }
 
+func (self *IMAGE_DEBUG_DIRECTORY) DebugString() string {
+    result := fmt.Sprintf("struct IMAGE_DEBUG_DIRECTORY @ %#x:\n", self.Offset)
+    result += fmt.Sprintf("AddressOfRawData: %#0x\n", self.AddressOfRawData())
+    result += fmt.Sprintf("TimeDateStamp: {\n%v}\n", self.TimeDateStamp().DebugString())
+    result += fmt.Sprintf("Type: %v\n", self.Type().DebugString())
+    return result
+}
 
 type IMAGE_DOS_HEADER struct {
     Reader io.ReaderAt
@@ -519,32 +646,28 @@ type IMAGE_DOS_HEADER struct {
     Profile *PeProfile
 }
 
-func NewIMAGE_DOS_HEADER(reader io.ReaderAt) *IMAGE_DOS_HEADER {
-    self := &IMAGE_DOS_HEADER{Reader: reader}
-    return self
-}
-
 func (self *IMAGE_DOS_HEADER) Size() int {
     return 64
 }
 
-func (self *IMAGE_DOS_HEADER) E_lfanew() uint32 {
-   return ParseUint32(self.Reader, self.Profile.Off_IMAGE_DOS_HEADER_E_lfanew + self.Offset)
+func (self *IMAGE_DOS_HEADER) E_lfanew() int32 {
+   return ParseInt32(self.Reader, self.Profile.Off_IMAGE_DOS_HEADER_E_lfanew + self.Offset)
 }
 
 func (self *IMAGE_DOS_HEADER) E_magic() uint16 {
    return ParseUint16(self.Reader, self.Profile.Off_IMAGE_DOS_HEADER_E_magic + self.Offset)
+}
+func (self *IMAGE_DOS_HEADER) DebugString() string {
+    result := fmt.Sprintf("struct IMAGE_DOS_HEADER @ %#x:\n", self.Offset)
+    result += fmt.Sprintf("E_lfanew: %#0x\n", self.E_lfanew())
+    result += fmt.Sprintf("E_magic: %#0x\n", self.E_magic())
+    return result
 }
 
 type IMAGE_FILE_HEADER struct {
     Reader io.ReaderAt
     Offset int64
     Profile *PeProfile
-}
-
-func NewIMAGE_FILE_HEADER(reader io.ReaderAt) *IMAGE_FILE_HEADER {
-    self := &IMAGE_FILE_HEADER{Reader: reader}
-    return self
 }
 
 func (self *IMAGE_FILE_HEADER) Size() int {
@@ -583,16 +706,19 @@ func (self *IMAGE_FILE_HEADER) SizeOfOptionalHeader() uint16 {
 func (self *IMAGE_FILE_HEADER) TimeDateStamp() *UnixTimeStamp {
     return self.Profile.UnixTimeStamp(self.Reader, self.Profile.Off_IMAGE_FILE_HEADER_TimeDateStamp + self.Offset)
 }
+func (self *IMAGE_FILE_HEADER) DebugString() string {
+    result := fmt.Sprintf("struct IMAGE_FILE_HEADER @ %#x:\n", self.Offset)
+    result += fmt.Sprintf("Machine: %v\n", self.Machine().DebugString())
+    result += fmt.Sprintf("NumberOfSections: %#0x\n", self.NumberOfSections())
+    result += fmt.Sprintf("SizeOfOptionalHeader: %#0x\n", self.SizeOfOptionalHeader())
+    result += fmt.Sprintf("TimeDateStamp: {\n%v}\n", self.TimeDateStamp().DebugString())
+    return result
+}
 
 type IMAGE_IMPORT_BY_NAME struct {
     Reader io.ReaderAt
     Offset int64
     Profile *PeProfile
-}
-
-func NewIMAGE_IMPORT_BY_NAME(reader io.ReaderAt) *IMAGE_IMPORT_BY_NAME {
-    self := &IMAGE_IMPORT_BY_NAME{Reader: reader}
-    return self
 }
 
 func (self *IMAGE_IMPORT_BY_NAME) Size() int {
@@ -603,16 +729,16 @@ func (self *IMAGE_IMPORT_BY_NAME) Size() int {
 func (self *IMAGE_IMPORT_BY_NAME) Name() string {
   return ParseTerminatedString(self.Reader, self.Profile.Off_IMAGE_IMPORT_BY_NAME_Name + self.Offset)
 }
+func (self *IMAGE_IMPORT_BY_NAME) DebugString() string {
+    result := fmt.Sprintf("struct IMAGE_IMPORT_BY_NAME @ %#x:\n", self.Offset)
+    result += fmt.Sprintf("Name: %v\n", string(self.Name()))
+    return result
+}
 
 type IMAGE_IMPORT_DESCRIPTOR struct {
     Reader io.ReaderAt
     Offset int64
     Profile *PeProfile
-}
-
-func NewIMAGE_IMPORT_DESCRIPTOR(reader io.ReaderAt) *IMAGE_IMPORT_DESCRIPTOR {
-    self := &IMAGE_IMPORT_DESCRIPTOR{Reader: reader}
-    return self
 }
 
 func (self *IMAGE_IMPORT_DESCRIPTOR) Size() int {
@@ -630,16 +756,18 @@ func (self *IMAGE_IMPORT_DESCRIPTOR) Name() uint32 {
 func (self *IMAGE_IMPORT_DESCRIPTOR) OriginalFirstThunk() uint32 {
    return ParseUint32(self.Reader, self.Profile.Off_IMAGE_IMPORT_DESCRIPTOR_OriginalFirstThunk + self.Offset)
 }
+func (self *IMAGE_IMPORT_DESCRIPTOR) DebugString() string {
+    result := fmt.Sprintf("struct IMAGE_IMPORT_DESCRIPTOR @ %#x:\n", self.Offset)
+    result += fmt.Sprintf("Characteristics: %#0x\n", self.Characteristics())
+    result += fmt.Sprintf("Name: %#0x\n", self.Name())
+    result += fmt.Sprintf("OriginalFirstThunk: %#0x\n", self.OriginalFirstThunk())
+    return result
+}
 
 type IMAGE_NT_HEADERS struct {
     Reader io.ReaderAt
     Offset int64
     Profile *PeProfile
-}
-
-func NewIMAGE_NT_HEADERS(reader io.ReaderAt) *IMAGE_NT_HEADERS {
-    self := &IMAGE_NT_HEADERS{Reader: reader}
-    return self
 }
 
 func (self *IMAGE_NT_HEADERS) Size() int {
@@ -657,16 +785,18 @@ func (self *IMAGE_NT_HEADERS) OptionalHeader() *IMAGE_OPTIONAL_HEADER {
 func (self *IMAGE_NT_HEADERS) Signature() uint32 {
    return ParseUint32(self.Reader, self.Profile.Off_IMAGE_NT_HEADERS_Signature + self.Offset)
 }
+func (self *IMAGE_NT_HEADERS) DebugString() string {
+    result := fmt.Sprintf("struct IMAGE_NT_HEADERS @ %#x:\n", self.Offset)
+    result += fmt.Sprintf("FileHeader: {\n%v}\n", self.FileHeader().DebugString())
+    result += fmt.Sprintf("OptionalHeader: {\n%v}\n", self.OptionalHeader().DebugString())
+    result += fmt.Sprintf("Signature: %#0x\n", self.Signature())
+    return result
+}
 
 type IMAGE_OPTIONAL_HEADER struct {
     Reader io.ReaderAt
     Offset int64
     Profile *PeProfile
-}
-
-func NewIMAGE_OPTIONAL_HEADER(reader io.ReaderAt) *IMAGE_OPTIONAL_HEADER {
-    self := &IMAGE_OPTIONAL_HEADER{Reader: reader}
-    return self
 }
 
 func (self *IMAGE_OPTIONAL_HEADER) Size() int {
@@ -684,16 +814,17 @@ func (self *IMAGE_OPTIONAL_HEADER) ImageBase() uint32 {
 func (self *IMAGE_OPTIONAL_HEADER) Magic() uint16 {
    return ParseUint16(self.Reader, self.Profile.Off_IMAGE_OPTIONAL_HEADER_Magic + self.Offset)
 }
+func (self *IMAGE_OPTIONAL_HEADER) DebugString() string {
+    result := fmt.Sprintf("struct IMAGE_OPTIONAL_HEADER @ %#x:\n", self.Offset)
+    result += fmt.Sprintf("ImageBase: %#0x\n", self.ImageBase())
+    result += fmt.Sprintf("Magic: %#0x\n", self.Magic())
+    return result
+}
 
 type IMAGE_OPTIONAL_HEADER64 struct {
     Reader io.ReaderAt
     Offset int64
     Profile *PeProfile
-}
-
-func NewIMAGE_OPTIONAL_HEADER64(reader io.ReaderAt) *IMAGE_OPTIONAL_HEADER64 {
-    self := &IMAGE_OPTIONAL_HEADER64{Reader: reader}
-    return self
 }
 
 func (self *IMAGE_OPTIONAL_HEADER64) Size() int {
@@ -711,16 +842,17 @@ func (self *IMAGE_OPTIONAL_HEADER64) ImageBase() uint64 {
 func (self *IMAGE_OPTIONAL_HEADER64) Magic() uint16 {
    return ParseUint16(self.Reader, self.Profile.Off_IMAGE_OPTIONAL_HEADER64_Magic + self.Offset)
 }
+func (self *IMAGE_OPTIONAL_HEADER64) DebugString() string {
+    result := fmt.Sprintf("struct IMAGE_OPTIONAL_HEADER64 @ %#x:\n", self.Offset)
+    result += fmt.Sprintf("ImageBase: %#0x\n", self.ImageBase())
+    result += fmt.Sprintf("Magic: %#0x\n", self.Magic())
+    return result
+}
 
 type IMAGE_RESOURCE_DATA_ENTRY struct {
     Reader io.ReaderAt
     Offset int64
     Profile *PeProfile
-}
-
-func NewIMAGE_RESOURCE_DATA_ENTRY(reader io.ReaderAt) *IMAGE_RESOURCE_DATA_ENTRY {
-    self := &IMAGE_RESOURCE_DATA_ENTRY{Reader: reader}
-    return self
 }
 
 func (self *IMAGE_RESOURCE_DATA_ENTRY) Size() int {
@@ -738,16 +870,18 @@ func (self *IMAGE_RESOURCE_DATA_ENTRY) DataSize() uint32 {
 func (self *IMAGE_RESOURCE_DATA_ENTRY) OffsetToData() uint32 {
    return ParseUint32(self.Reader, self.Profile.Off_IMAGE_RESOURCE_DATA_ENTRY_OffsetToData + self.Offset)
 }
+func (self *IMAGE_RESOURCE_DATA_ENTRY) DebugString() string {
+    result := fmt.Sprintf("struct IMAGE_RESOURCE_DATA_ENTRY @ %#x:\n", self.Offset)
+    result += fmt.Sprintf("CodePage: %#0x\n", self.CodePage())
+    result += fmt.Sprintf("DataSize: %#0x\n", self.DataSize())
+    result += fmt.Sprintf("OffsetToData: %#0x\n", self.OffsetToData())
+    return result
+}
 
 type IMAGE_RESOURCE_DIRECTORY struct {
     Reader io.ReaderAt
     Offset int64
     Profile *PeProfile
-}
-
-func NewIMAGE_RESOURCE_DIRECTORY(reader io.ReaderAt) *IMAGE_RESOURCE_DIRECTORY {
-    self := &IMAGE_RESOURCE_DIRECTORY{Reader: reader}
-    return self
 }
 
 func (self *IMAGE_RESOURCE_DIRECTORY) Size() int {
@@ -765,16 +899,17 @@ func (self *IMAGE_RESOURCE_DIRECTORY) NumberOfNamedEntries() uint16 {
 func (self *IMAGE_RESOURCE_DIRECTORY) _Entries() []*IMAGE_RESOURCE_DIRECTORY_ENTRY {
    return ParseArray_IMAGE_RESOURCE_DIRECTORY_ENTRY(self.Profile, self.Reader, self.Profile.Off_IMAGE_RESOURCE_DIRECTORY__Entries + self.Offset, 0)
 }
+func (self *IMAGE_RESOURCE_DIRECTORY) DebugString() string {
+    result := fmt.Sprintf("struct IMAGE_RESOURCE_DIRECTORY @ %#x:\n", self.Offset)
+    result += fmt.Sprintf("NumberOfIdEntries: %#0x\n", self.NumberOfIdEntries())
+    result += fmt.Sprintf("NumberOfNamedEntries: %#0x\n", self.NumberOfNamedEntries())
+    return result
+}
 
 type IMAGE_RESOURCE_DIRECTORY_ENTRY struct {
     Reader io.ReaderAt
     Offset int64
     Profile *PeProfile
-}
-
-func NewIMAGE_RESOURCE_DIRECTORY_ENTRY(reader io.ReaderAt) *IMAGE_RESOURCE_DIRECTORY_ENTRY {
-    self := &IMAGE_RESOURCE_DIRECTORY_ENTRY{Reader: reader}
-    return self
 }
 
 func (self *IMAGE_RESOURCE_DIRECTORY_ENTRY) Size() int {
@@ -877,16 +1012,21 @@ func (self *IMAGE_RESOURCE_DIRECTORY_ENTRY) Type() *Enumeration {
    return &Enumeration{Value: uint64(value), Name: name}
 }
 
+func (self *IMAGE_RESOURCE_DIRECTORY_ENTRY) DebugString() string {
+    result := fmt.Sprintf("struct IMAGE_RESOURCE_DIRECTORY_ENTRY @ %#x:\n", self.Offset)
+    result += fmt.Sprintf("DataIsDirectory: %#0x\n", self.DataIsDirectory())
+    result += fmt.Sprintf("NameIsString: %#0x\n", self.NameIsString())
+    result += fmt.Sprintf("NameOffset: %#0x\n", self.NameOffset())
+    result += fmt.Sprintf("OffsetToData: %#0x\n", self.OffsetToData())
+    result += fmt.Sprintf("OffsetToDirectory: %#0x\n", self.OffsetToDirectory())
+    result += fmt.Sprintf("Type: %v\n", self.Type().DebugString())
+    return result
+}
 
 type IMAGE_SECTION_HEADER struct {
     Reader io.ReaderAt
     Offset int64
     Profile *PeProfile
-}
-
-func NewIMAGE_SECTION_HEADER(reader io.ReaderAt) *IMAGE_SECTION_HEADER {
-    self := &IMAGE_SECTION_HEADER{Reader: reader}
-    return self
 }
 
 func (self *IMAGE_SECTION_HEADER) Size() int {
@@ -913,16 +1053,20 @@ func (self *IMAGE_SECTION_HEADER) SizeOfRawData() uint32 {
 func (self *IMAGE_SECTION_HEADER) VirtualAddress() uint32 {
    return ParseUint32(self.Reader, self.Profile.Off_IMAGE_SECTION_HEADER_VirtualAddress + self.Offset)
 }
+func (self *IMAGE_SECTION_HEADER) DebugString() string {
+    result := fmt.Sprintf("struct IMAGE_SECTION_HEADER @ %#x:\n", self.Offset)
+    result += fmt.Sprintf("Characteristics: %#0x\n", self.Characteristics())
+    result += fmt.Sprintf("Name: %v\n", string(self.Name()))
+    result += fmt.Sprintf("PointerToRawData: %#0x\n", self.PointerToRawData())
+    result += fmt.Sprintf("SizeOfRawData: %#0x\n", self.SizeOfRawData())
+    result += fmt.Sprintf("VirtualAddress: %#0x\n", self.VirtualAddress())
+    return result
+}
 
 type IMAGE_THUNK_DATA32 struct {
     Reader io.ReaderAt
     Offset int64
     Profile *PeProfile
-}
-
-func NewIMAGE_THUNK_DATA32(reader io.ReaderAt) *IMAGE_THUNK_DATA32 {
-    self := &IMAGE_THUNK_DATA32{Reader: reader}
-    return self
 }
 
 func (self *IMAGE_THUNK_DATA32) Size() int {
@@ -944,16 +1088,19 @@ func (self *IMAGE_THUNK_DATA32) Function() uint32 {
 func (self *IMAGE_THUNK_DATA32) Ordinal() uint32 {
    return ParseUint32(self.Reader, self.Profile.Off_IMAGE_THUNK_DATA32_Ordinal + self.Offset)
 }
+func (self *IMAGE_THUNK_DATA32) DebugString() string {
+    result := fmt.Sprintf("struct IMAGE_THUNK_DATA32 @ %#x:\n", self.Offset)
+    result += fmt.Sprintf("AddressOfData: %#0x\n", self.AddressOfData())
+    result += fmt.Sprintf("ForwarderString: %#0x\n", self.ForwarderString())
+    result += fmt.Sprintf("Function: %#0x\n", self.Function())
+    result += fmt.Sprintf("Ordinal: %#0x\n", self.Ordinal())
+    return result
+}
 
 type IMAGE_THUNK_DATA64 struct {
     Reader io.ReaderAt
     Offset int64
     Profile *PeProfile
-}
-
-func NewIMAGE_THUNK_DATA64(reader io.ReaderAt) *IMAGE_THUNK_DATA64 {
-    self := &IMAGE_THUNK_DATA64{Reader: reader}
-    return self
 }
 
 func (self *IMAGE_THUNK_DATA64) Size() int {
@@ -975,6 +1122,14 @@ func (self *IMAGE_THUNK_DATA64) Function() uint64 {
 func (self *IMAGE_THUNK_DATA64) Ordinal() uint64 {
     return ParseUint64(self.Reader, self.Profile.Off_IMAGE_THUNK_DATA64_Ordinal + self.Offset)
 }
+func (self *IMAGE_THUNK_DATA64) DebugString() string {
+    result := fmt.Sprintf("struct IMAGE_THUNK_DATA64 @ %#x:\n", self.Offset)
+    result += fmt.Sprintf("AddressOfData: %#0x\n", self.AddressOfData())
+    result += fmt.Sprintf("ForwarderString: %#0x\n", self.ForwarderString())
+    result += fmt.Sprintf("Function: %#0x\n", self.Function())
+    result += fmt.Sprintf("Ordinal: %#0x\n", self.Ordinal())
+    return result
+}
 
 type TagVS_FIXEDFILEINFO struct {
     Reader io.ReaderAt
@@ -982,13 +1137,12 @@ type TagVS_FIXEDFILEINFO struct {
     Profile *PeProfile
 }
 
-func NewTagVS_FIXEDFILEINFO(reader io.ReaderAt) *TagVS_FIXEDFILEINFO {
-    self := &TagVS_FIXEDFILEINFO{Reader: reader}
-    return self
-}
-
 func (self *TagVS_FIXEDFILEINFO) Size() int {
     return 52
+}
+func (self *TagVS_FIXEDFILEINFO) DebugString() string {
+    result := fmt.Sprintf("struct TagVS_FIXEDFILEINFO @ %#x:\n", self.Offset)
+    return result
 }
 
 type Enumeration struct {
@@ -1021,6 +1175,16 @@ func ParseArray_IMAGE_RESOURCE_DIRECTORY_ENTRY(profile *PeProfile, reader io.Rea
     return result
 }
 
+func ParseArray_MESSAGE_RESOURCE_BLOCK(profile *PeProfile, reader io.ReaderAt, offset int64, count int) []*MESSAGE_RESOURCE_BLOCK {
+    result := []*MESSAGE_RESOURCE_BLOCK{}
+    for i:=0; i<count; i++ {
+      value := profile.MESSAGE_RESOURCE_BLOCK(reader, offset)
+      result = append(result, value)
+      offset += int64(value.Size())
+    }
+    return result
+}
+
 func ParseArray_byte(profile *PeProfile, reader io.ReaderAt, offset int64, count int) []byte {
     result := []byte{}
     for i:=0; i<count; i++ {
@@ -1029,6 +1193,15 @@ func ParseArray_byte(profile *PeProfile, reader io.ReaderAt, offset int64, count
       offset += int64(1)
     }
     return result
+}
+
+func ParseInt32(reader io.ReaderAt, offset int64) int32 {
+    data := make([]byte, 4)
+    _, err := reader.ReadAt(data, offset)
+    if err != nil {
+       return 0
+    }
+    return int32(binary.LittleEndian.Uint32(data))
 }
 
 func ParseUint16(reader io.ReaderAt, offset int64) uint16 {

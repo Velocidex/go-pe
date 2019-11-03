@@ -7,7 +7,7 @@
 Module: pe
 Profile: PeProfile
 Filename: pe_profile.json
-GenerateDebugString: false
+GenerateDebugString: true
 Structs:
   - _IMAGE_DOS_HEADER
   - _IMAGE_NT_HEADERS
@@ -43,6 +43,10 @@ Structs:
   - StringTable
   # https://docs.microsoft.com/en-au/windows/desktop/menurc/string-str
   - ResourceString
+
+  - MESSAGE_RESOURCE_DATA
+  - MESSAGE_RESOURCE_BLOCK
+  - MESSAGE_RESOURCE_ENTRY
 
 # We only use specific fields in many structs. For efficiency, this
 # code will only generate bindings for the fields we actually use.

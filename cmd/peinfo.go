@@ -2,10 +2,10 @@ package main
 
 import (
 	"encoding/json"
-	"flag"
 	"fmt"
 	"os"
 
+	kingpin "gopkg.in/alecthomas/kingpin.v2"
 	"www.velocidex.com/golang/binparsergen/reader"
 	pe "www.velocidex.com/golang/go-pe"
 
@@ -13,32 +13,34 @@ import (
 	_ "www.velocidex.com/golang/binparsergen"
 )
 
-func Fatalf(err error, format string, args ...interface{}) {
-	if err != nil {
-		fmt.Printf(format+"\n", args...)
-		os.Exit(1)
-	}
+var (
+	app               = kingpin.New("go-pe", "PE parser and extractor.")
+	info_command      = app.Command("info", "Displays info about a pe file.")
+	info_command_file = info_command.Arg("file", "").Required().
+				OpenFile(os.O_RDONLY, 0600)
+)
+
+func doInfo() {
+	reader, err := reader.NewPagedReader(*info_command_file, 4096, 100)
+	kingpin.FatalIfError(err, "Can not open file %s: %v", *info_command_file, err)
+
+	pe_file, err := pe.NewPEFile(reader)
+	kingpin.FatalIfError(err, "Can not open file %s: %v", *info_command_file, err)
+
+	serialized, _ := json.MarshalIndent(pe_file, "", "  ")
+	fmt.Println(string(serialized))
 }
 
 func main() {
-	flag.Parse()
+	app.HelpFlag.Short('h')
+	app.UsageTemplate(kingpin.CompactUsageTemplate)
+	command := kingpin.MustParse(app.Parse(os.Args[1:]))
+	switch command {
 
-	if len(flag.Args()) == 0 {
-		fmt.Println("You must specify one or more exe files.")
-		os.Exit(1)
-	}
+	case info_command.FullCommand():
+		doInfo()
 
-	for _, filename := range flag.Args() {
-		fd, err := os.Open(filename)
-		Fatalf(err, "Can not open file %s: %v", filename, err)
-
-		reader, err := reader.NewPagedReader(fd, 4096, 100)
-		Fatalf(err, "Can not open file %s: %v", filename, err)
-
-		pe_file, err := pe.NewPEFile(reader)
-		Fatalf(err, "Can not open file %s: %v", filename, err)
-
-		serialized, _ := json.MarshalIndent(pe_file, "", "  ")
-		fmt.Println(string(serialized))
+	case messages_command.FullCommand():
+		doMessages()
 	}
 }

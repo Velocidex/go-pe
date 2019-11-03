@@ -384,5 +384,22 @@
         "GUID": [4, ["_GUID"]],
         "Age": [20, ["unsigned long"]],
         "Filename": [24, ["String"]]
-    }]
+    }],
+
+  "MESSAGE_RESOURCE_DATA": [0, {
+    "NumberOfBlocks": [0, ["unsigned long"]],
+    "_Blocks": [4, ["Array", {"target": "MESSAGE_RESOURCE_BLOCK"}]]
+  }],
+
+  "MESSAGE_RESOURCE_BLOCK": [12, {
+    "LowId": [0, ["unsigned long"]],
+    "HighId": [4, ["unsigned long"]],
+    "OffsetToEntries": [8, ["unsigned long"]]
+  }],
+
+  "MESSAGE_RESOURCE_ENTRY": [0, {
+    "Length": [0, ["unsigned short"]],
+    "Flags":  [2, ["unsigned short"]],
+    "Text": [4, ["UnicodeString"]]
+  }]
 }

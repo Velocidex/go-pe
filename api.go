@@ -2,6 +2,7 @@ package pe
 
 import (
 	"errors"
+	"fmt"
 	"io"
 )
 
@@ -33,6 +34,36 @@ type PEFile struct {
 	VersionInformation map[string]string `json:"VersionInformation"`
 
 	Imports []string `json:"Imports"`
+}
+
+func parseMessageFile(entry *IMAGE_RESOURCE_DIRECTORY_ENTRY) error {
+	fmt.Printf("%v\n", entry)
+	return nil
+}
+
+func (self *PEFile) GetMessages() []*Message {
+	resource_section := self.nt_header.SectionByName(".rsrc")
+	if resource_section != nil {
+		resource_base := int64(resource_section.PointerToRawData())
+		for _, entry := range self.nt_header.ResourceDirectory(
+			self.rva_resolver).Entries() {
+			if entry.NameString(resource_base) == "RT_MESSAGETABLE" {
+				for _, child := range entry.Traverse(resource_base) {
+					// Rebase the reader on the resource.
+					reader := io.NewSectionReader(child.Reader,
+						int64(self.rva_resolver.GetFileAddress(
+							child.OffsetToData())),
+						int64(child.DataSize()))
+
+					header := child.Profile.MESSAGE_RESOURCE_DATA(
+						reader, 0)
+
+					return header.Messages()
+				}
+			}
+		}
+	}
+	return nil
 }
 
 func GetVersionInformation(
@@ -110,6 +141,7 @@ func NewPEFile(reader io.ReaderAt) (*PEFile, error) {
 			Name:       section.Name(),
 			FileOffset: int64(section.PointerToRawData()),
 			VMA:        int64(section.VirtualAddress()),
+			Size:       int64(section.SizeOfRawData()),
 		})
 
 	}
