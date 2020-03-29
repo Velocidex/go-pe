@@ -7,6 +7,11 @@ const (
 func (self *IMAGE_NT_HEADERS) ExportDirectory(
 	rva_resolver *RVAResolver) *IMAGE_EXPORT_DIRECTORY {
 	dir := self.DataDirectory(IMAGE_DIRECTORY_ENTRY_EXPORT)
+	if dir.DirSize() == 0 {
+		// No Export Directory
+		return nil
+	}
+
 	offset := rva_resolver.GetFileAddress(dir.VirtualAddress())
 
 	return self.Profile.IMAGE_EXPORT_DIRECTORY(self.Reader, int64(offset))
@@ -19,6 +24,9 @@ func (self *IMAGE_EXPORT_DIRECTORY) DLLName(rva_resolver *RVAResolver) string {
 
 func GetExports(nt_header *IMAGE_NT_HEADERS, rva_resolver *RVAResolver) []string {
 	ed := nt_header.ExportDirectory(rva_resolver)
+	if ed == nil {
+		return nil
+	}
 
 	result := make([]string, ed.NumberOfNames())
 	startOfNamesOffset := rva_resolver.GetFileAddress(ed.AddressOfNames())
