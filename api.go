@@ -34,7 +34,7 @@ type PEFile struct {
 	VersionInformation map[string]string `json:"VersionInformation"`
 
 	Imports []string `json:"Imports"`
-	Exports []string `json:"exports"`
+	Exports []string `json:"Exports"`
 }
 
 func parseMessageFile(entry *IMAGE_RESOURCE_DIRECTORY_ENTRY) error {
