@@ -11,7 +11,7 @@ GenerateDebugString: true
 Structs:
   - _IMAGE_DOS_HEADER
   - _IMAGE_NT_HEADERS
-  #- _IMAGE_EXPORT_DIRECTORY
+  - _IMAGE_EXPORT_DIRECTORY
   - _IMAGE_IMPORT_DESCRIPTOR
   - _IMAGE_IMPORT_BY_NAME
   - _IMAGE_FILE_HEADER
@@ -56,7 +56,7 @@ FieldWhiteList:
        Characteristics, SizeOfRawData, Name]
   _IMAGE_FILE_HEADER: [SizeOfOptionalHeader, TimeDateStamp,
        NumberOfSections, Machine]
-  _IMAGE_EXPORT_DIRECTORY: []
+  _IMAGE_EXPORT_DIRECTORY: [Name, Base, NumberOfFunctions, NumberOfNames, AddressOfFunctions, AddressOfNames, AddressOfNameOrdinals]
   _IMAGE_RESOURCE_DIRECTORY: [_Entries, NumberOfIdEntries, NumberOfNamedEntries]
   _IMAGE_RESOURCE_DIRECTORY_ENTRY: [NameIsString, NameOffset, Type,
        DataIsDirectory, OffsetToDirectory, OffsetToData]
