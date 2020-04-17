@@ -16,6 +16,12 @@ type Section struct {
 	Size       int64  `json:"Size"`
 }
 
+type FileHeader struct {
+	Machine         string `json:"Machine"`
+	TimeDateStamp   string `json:"TimeDateStamp"`
+	Characteristics uint16 `json:"Characteristics"`
+}
+
 type PEFile struct {
 	nt_header *IMAGE_NT_HEADERS
 
@@ -25,11 +31,10 @@ type PEFile struct {
 	// The file offset to the resource section.
 	resource_base int64
 
-	Machine       string     `json:"Machine"`
-	TimeDateStamp string     `json:"TimeDateStamp"`
-	GUIDAge       string     `json:"GUIDAge"`
-	PDB           string     `json:"PDB"`
-	Sections      []*Section `json:"Sections"`
+	FileHeader FileHeader `json:"FileHeader"`
+	GUIDAge    string     `json:"GUIDAge"`
+	PDB        string     `json:"PDB"`
+	Sections   []*Section `json:"Sections"`
 
 	VersionInformation map[string]string `json:"VersionInformation"`
 
@@ -127,10 +132,13 @@ func NewPEFile(reader io.ReaderAt) (*PEFile, error) {
 		nt_header:     nt_header,
 		rva_resolver:  rva_resolver,
 		resource_base: resource_base,
-		Machine:       file_header.Machine().Name,
-		TimeDateStamp: file_header.TimeDateStamp().String(),
-		GUIDAge:       rsds.GUIDAge(),
-		PDB:           rsds.Filename(),
+		FileHeader: FileHeader{
+			Machine:         file_header.Machine().Name,
+			TimeDateStamp:   file_header.TimeDateStamp().String(),
+			Characteristics: file_header.Characteristics(),
+		},
+		GUIDAge: rsds.GUIDAge(),
+		PDB:     rsds.Filename(),
 		VersionInformation: GetVersionInformation(
 			nt_header, rva_resolver, resource_base),
 		Imports: GetImports(nt_header, rva_resolver),
