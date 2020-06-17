@@ -24,38 +24,49 @@ var (
    _ = utf8.RuneError
    _ = sort.Strings
    _ = strings.Join
+   _ = io.Copy
 )
 
+func indent(text string) string {
+    result := []string{}
+    lines := strings.Split(text,"\n")
+    for _, line := range lines {
+         result = append(result, "  " + line)
+    }
+    return strings.Join(result, "\n")
+}
+
+
 type PeProfile struct {
+    Off_CV_RSDS_HEADER_Signature int64
+    Off_CV_RSDS_HEADER_GUID int64
     Off_CV_RSDS_HEADER_Age int64
     Off_CV_RSDS_HEADER_Filename int64
-    Off_CV_RSDS_HEADER_GUID int64
-    Off_CV_RSDS_HEADER_Signature int64
-    Off_MESSAGE_RESOURCE_BLOCK_HighId int64
     Off_MESSAGE_RESOURCE_BLOCK_LowId int64
+    Off_MESSAGE_RESOURCE_BLOCK_HighId int64
     Off_MESSAGE_RESOURCE_BLOCK_OffsetToEntries int64
     Off_MESSAGE_RESOURCE_DATA_NumberOfBlocks int64
     Off_MESSAGE_RESOURCE_DATA__Blocks int64
-    Off_MESSAGE_RESOURCE_ENTRY_Flags int64
     Off_MESSAGE_RESOURCE_ENTRY_Length int64
+    Off_MESSAGE_RESOURCE_ENTRY_Flags int64
     Off_MESSAGE_RESOURCE_ENTRY_Text int64
     Off_PrefixedString_Length int64
     Off_PrefixedString__Buffer int64
-    Off_ResourceString_Key int64
     Off_ResourceString_Length int64
-    Off_ResourceString_Type int64
     Off_ResourceString_ValueLength int64
-    Off_StringFileInfo_Key int64
+    Off_ResourceString_Type int64
+    Off_ResourceString_Key int64
     Off_StringFileInfo_Length int64
-    Off_StringFileInfo_Type int64
     Off_StringFileInfo_ValueLength int64
-    Off_StringTable_Key int64
+    Off_StringFileInfo_Type int64
+    Off_StringFileInfo_Key int64
     Off_StringTable_Length int64
-    Off_StringTable_Type int64
     Off_StringTable_ValueLength int64
+    Off_StringTable_Type int64
+    Off_StringTable_Key int64
     Off_VS_VERSIONINFO_Length int64
-    Off_VS_VERSIONINFO_Type int64
     Off_VS_VERSIONINFO_ValueLength int64
+    Off_VS_VERSIONINFO_Type int64
     Off_VS_VERSIONINFO_szKey int64
     Off_GUID_Data1 int64
     Off_GUID_Data2 int64
@@ -68,6 +79,20 @@ type PeProfile struct {
     Off_IMAGE_DEBUG_DIRECTORY_Type int64
     Off_IMAGE_DOS_HEADER_E_lfanew int64
     Off_IMAGE_DOS_HEADER_E_magic int64
+    Off_IMAGE_EXPORT_DIRECTORY_AddressOfFunctions int64
+    Off_IMAGE_EXPORT_DIRECTORY_AddressOfNameOrdinals int64
+    Off_IMAGE_EXPORT_DIRECTORY_AddressOfNames int64
+    Off_IMAGE_EXPORT_DIRECTORY_Base int64
+    Off_IMAGE_EXPORT_DIRECTORY_Characteristics int64
+    Off_IMAGE_EXPORT_DIRECTORY_MajorVersion int64
+    Off_IMAGE_EXPORT_DIRECTORY_MinorVersion int64
+    Off_IMAGE_EXPORT_DIRECTORY_Name int64
+    Off_IMAGE_EXPORT_DIRECTORY_NumberOfFunctions int64
+    Off_IMAGE_EXPORT_DIRECTORY_NumberOfNames int64
+    Off_IMAGE_EXPORT_DIRECTORY_TimeDateStamp int64
+    Off_IMAGE_EXPORT_DIRECTORY_ordinals int64
+    Off_IMAGE_EXPORT_DIRECTORY_names int64
+    Off_IMAGE_EXPORT_DIRECTORY_funcs64 int64
     Off_IMAGE_FILE_HEADER_Machine int64
     Off_IMAGE_FILE_HEADER_NumberOfSections int64
     Off_IMAGE_FILE_HEADER_SizeOfOptionalHeader int64
@@ -85,18 +110,18 @@ type PeProfile struct {
     Off_IMAGE_OPTIONAL_HEADER64_DataDirectory int64
     Off_IMAGE_OPTIONAL_HEADER64_ImageBase int64
     Off_IMAGE_OPTIONAL_HEADER64_Magic int64
-    Off_IMAGE_RESOURCE_DATA_ENTRY_CodePage int64
-    Off_IMAGE_RESOURCE_DATA_ENTRY_DataSize int64
     Off_IMAGE_RESOURCE_DATA_ENTRY_OffsetToData int64
+    Off_IMAGE_RESOURCE_DATA_ENTRY_DataSize int64
+    Off_IMAGE_RESOURCE_DATA_ENTRY_CodePage int64
     Off_IMAGE_RESOURCE_DIRECTORY_NumberOfIdEntries int64
     Off_IMAGE_RESOURCE_DIRECTORY_NumberOfNamedEntries int64
     Off_IMAGE_RESOURCE_DIRECTORY__Entries int64
+    Off_IMAGE_RESOURCE_DIRECTORY_ENTRY_Type int64
     Off_IMAGE_RESOURCE_DIRECTORY_ENTRY_DataIsDirectory int64
     Off_IMAGE_RESOURCE_DIRECTORY_ENTRY_NameIsString int64
     Off_IMAGE_RESOURCE_DIRECTORY_ENTRY_NameOffset int64
     Off_IMAGE_RESOURCE_DIRECTORY_ENTRY_OffsetToData int64
     Off_IMAGE_RESOURCE_DIRECTORY_ENTRY_OffsetToDirectory int64
-    Off_IMAGE_RESOURCE_DIRECTORY_ENTRY_Type int64
     Off_IMAGE_SECTION_HEADER_Characteristics int64
     Off_IMAGE_SECTION_HEADER_Name int64
     Off_IMAGE_SECTION_HEADER_PointerToRawData int64
@@ -114,7 +139,7 @@ type PeProfile struct {
 
 func NewPeProfile() *PeProfile {
     // Specific offsets can be tweaked to cater for slight version mismatches.
-    self := &PeProfile{20,24,4,0,4,0,8,0,4,2,0,4,0,2,6,0,4,2,6,0,4,2,6,0,4,2,0,4,2,6,0,4,6,8,4,0,20,4,12,60,0,0,2,16,4,2,0,12,0,4,24,0,96,28,0,112,24,0,8,4,0,14,12,16,4,0,0,4,4,0,36,0,20,16,12,0,0,0,0,0,0,0,0}
+    self := &PeProfile{0,4,20,24,0,4,8,0,4,0,2,4,0,2,0,2,4,6,0,2,4,6,0,2,4,6,0,2,4,6,0,4,6,8,4,0,20,4,12,60,0,28,36,32,16,0,8,10,12,20,24,4,0,0,0,0,2,16,4,2,0,12,0,4,24,0,96,28,0,112,24,0,0,4,8,14,12,16,0,4,0,0,4,4,36,0,20,16,12,0,0,0,0,0,0,0,0}
     return self
 }
 
@@ -168,6 +193,10 @@ func (self *PeProfile) IMAGE_DEBUG_DIRECTORY(reader io.ReaderAt, offset int64) *
 
 func (self *PeProfile) IMAGE_DOS_HEADER(reader io.ReaderAt, offset int64) *IMAGE_DOS_HEADER {
     return &IMAGE_DOS_HEADER{Reader: reader, Offset: offset, Profile: self}
+}
+
+func (self *PeProfile) IMAGE_EXPORT_DIRECTORY(reader io.ReaderAt, offset int64) *IMAGE_EXPORT_DIRECTORY {
+    return &IMAGE_EXPORT_DIRECTORY{Reader: reader, Offset: offset, Profile: self}
 }
 
 func (self *PeProfile) IMAGE_FILE_HEADER(reader io.ReaderAt, offset int64) *IMAGE_FILE_HEADER {
@@ -233,6 +262,15 @@ func (self *CV_RSDS_HEADER) Size() int {
     return 28
 }
 
+
+func (self *CV_RSDS_HEADER) Signature() string {
+  return ParseString(self.Reader, self.Profile.Off_CV_RSDS_HEADER_Signature + self.Offset, 4)
+}
+
+func (self *CV_RSDS_HEADER) GUID() *GUID {
+    return self.Profile.GUID(self.Reader, self.Profile.Off_CV_RSDS_HEADER_GUID + self.Offset)
+}
+
 func (self *CV_RSDS_HEADER) Age() uint32 {
    return ParseUint32(self.Reader, self.Profile.Off_CV_RSDS_HEADER_Age + self.Offset)
 }
@@ -241,21 +279,12 @@ func (self *CV_RSDS_HEADER) Age() uint32 {
 func (self *CV_RSDS_HEADER) Filename() string {
   return ParseTerminatedString(self.Reader, self.Profile.Off_CV_RSDS_HEADER_Filename + self.Offset)
 }
-
-func (self *CV_RSDS_HEADER) GUID() *GUID {
-    return self.Profile.GUID(self.Reader, self.Profile.Off_CV_RSDS_HEADER_GUID + self.Offset)
-}
-
-
-func (self *CV_RSDS_HEADER) Signature() string {
-  return ParseString(self.Reader, self.Profile.Off_CV_RSDS_HEADER_Signature + self.Offset, 4)
-}
 func (self *CV_RSDS_HEADER) DebugString() string {
     result := fmt.Sprintf("struct CV_RSDS_HEADER @ %#x:\n", self.Offset)
-    result += fmt.Sprintf("Age: %#0x\n", self.Age())
-    result += fmt.Sprintf("Filename: %v\n", string(self.Filename()))
-    result += fmt.Sprintf("GUID: {\n%v}\n", self.GUID().DebugString())
-    result += fmt.Sprintf("Signature: %v\n", string(self.Signature()))
+    result += fmt.Sprintf("  Signature: %v\n", string(self.Signature()))
+    result += fmt.Sprintf("  GUID: {\n%v}\n", indent(self.GUID().DebugString()))
+    result += fmt.Sprintf("  Age: %#0x\n", self.Age())
+    result += fmt.Sprintf("  Filename: %v\n", string(self.Filename()))
     return result
 }
 
@@ -269,12 +298,12 @@ func (self *MESSAGE_RESOURCE_BLOCK) Size() int {
     return 12
 }
 
-func (self *MESSAGE_RESOURCE_BLOCK) HighId() uint32 {
-   return ParseUint32(self.Reader, self.Profile.Off_MESSAGE_RESOURCE_BLOCK_HighId + self.Offset)
-}
-
 func (self *MESSAGE_RESOURCE_BLOCK) LowId() uint32 {
    return ParseUint32(self.Reader, self.Profile.Off_MESSAGE_RESOURCE_BLOCK_LowId + self.Offset)
+}
+
+func (self *MESSAGE_RESOURCE_BLOCK) HighId() uint32 {
+   return ParseUint32(self.Reader, self.Profile.Off_MESSAGE_RESOURCE_BLOCK_HighId + self.Offset)
 }
 
 func (self *MESSAGE_RESOURCE_BLOCK) OffsetToEntries() uint32 {
@@ -282,9 +311,9 @@ func (self *MESSAGE_RESOURCE_BLOCK) OffsetToEntries() uint32 {
 }
 func (self *MESSAGE_RESOURCE_BLOCK) DebugString() string {
     result := fmt.Sprintf("struct MESSAGE_RESOURCE_BLOCK @ %#x:\n", self.Offset)
-    result += fmt.Sprintf("HighId: %#0x\n", self.HighId())
-    result += fmt.Sprintf("LowId: %#0x\n", self.LowId())
-    result += fmt.Sprintf("OffsetToEntries: %#0x\n", self.OffsetToEntries())
+    result += fmt.Sprintf("  LowId: %#0x\n", self.LowId())
+    result += fmt.Sprintf("  HighId: %#0x\n", self.HighId())
+    result += fmt.Sprintf("  OffsetToEntries: %#0x\n", self.OffsetToEntries())
     return result
 }
 
@@ -307,7 +336,7 @@ func (self *MESSAGE_RESOURCE_DATA) _Blocks() []*MESSAGE_RESOURCE_BLOCK {
 }
 func (self *MESSAGE_RESOURCE_DATA) DebugString() string {
     result := fmt.Sprintf("struct MESSAGE_RESOURCE_DATA @ %#x:\n", self.Offset)
-    result += fmt.Sprintf("NumberOfBlocks: %#0x\n", self.NumberOfBlocks())
+    result += fmt.Sprintf("  NumberOfBlocks: %#0x\n", self.NumberOfBlocks())
     return result
 }
 
@@ -321,12 +350,12 @@ func (self *MESSAGE_RESOURCE_ENTRY) Size() int {
     return 0
 }
 
-func (self *MESSAGE_RESOURCE_ENTRY) Flags() uint16 {
-   return ParseUint16(self.Reader, self.Profile.Off_MESSAGE_RESOURCE_ENTRY_Flags + self.Offset)
-}
-
 func (self *MESSAGE_RESOURCE_ENTRY) Length() uint16 {
    return ParseUint16(self.Reader, self.Profile.Off_MESSAGE_RESOURCE_ENTRY_Length + self.Offset)
+}
+
+func (self *MESSAGE_RESOURCE_ENTRY) Flags() uint16 {
+   return ParseUint16(self.Reader, self.Profile.Off_MESSAGE_RESOURCE_ENTRY_Flags + self.Offset)
 }
 
 
@@ -335,9 +364,9 @@ func (self *MESSAGE_RESOURCE_ENTRY) Text() string {
 }
 func (self *MESSAGE_RESOURCE_ENTRY) DebugString() string {
     result := fmt.Sprintf("struct MESSAGE_RESOURCE_ENTRY @ %#x:\n", self.Offset)
-    result += fmt.Sprintf("Flags: %#0x\n", self.Flags())
-    result += fmt.Sprintf("Length: %#0x\n", self.Length())
-    result += fmt.Sprintf("Text: %v\n", string(self.Text()))
+    result += fmt.Sprintf("  Length: %#0x\n", self.Length())
+    result += fmt.Sprintf("  Flags: %#0x\n", self.Flags())
+    result += fmt.Sprintf("  Text: %v\n", string(self.Text()))
     return result
 }
 
@@ -360,8 +389,8 @@ func (self *PrefixedString) _Buffer() byte {
 }
 func (self *PrefixedString) DebugString() string {
     result := fmt.Sprintf("struct PrefixedString @ %#x:\n", self.Offset)
-    result += fmt.Sprintf("Length: %#0x\n", self.Length())
-    result += fmt.Sprintf("_Buffer: %#0x\n", self._Buffer())
+    result += fmt.Sprintf("  Length: %#0x\n", self.Length())
+    result += fmt.Sprintf("  _Buffer: %#0x\n", self._Buffer())
     return result
 }
 
@@ -375,28 +404,28 @@ func (self *ResourceString) Size() int {
     return 0
 }
 
-
-func (self *ResourceString) Key() string {
-  return ParseTerminatedUTF16String(self.Reader, self.Profile.Off_ResourceString_Key + self.Offset)
-}
-
 func (self *ResourceString) Length() uint16 {
    return ParseUint16(self.Reader, self.Profile.Off_ResourceString_Length + self.Offset)
+}
+
+func (self *ResourceString) ValueLength() uint16 {
+   return ParseUint16(self.Reader, self.Profile.Off_ResourceString_ValueLength + self.Offset)
 }
 
 func (self *ResourceString) Type() uint16 {
    return ParseUint16(self.Reader, self.Profile.Off_ResourceString_Type + self.Offset)
 }
 
-func (self *ResourceString) ValueLength() uint16 {
-   return ParseUint16(self.Reader, self.Profile.Off_ResourceString_ValueLength + self.Offset)
+
+func (self *ResourceString) Key() string {
+  return ParseTerminatedUTF16String(self.Reader, self.Profile.Off_ResourceString_Key + self.Offset)
 }
 func (self *ResourceString) DebugString() string {
     result := fmt.Sprintf("struct ResourceString @ %#x:\n", self.Offset)
-    result += fmt.Sprintf("Key: %v\n", string(self.Key()))
-    result += fmt.Sprintf("Length: %#0x\n", self.Length())
-    result += fmt.Sprintf("Type: %#0x\n", self.Type())
-    result += fmt.Sprintf("ValueLength: %#0x\n", self.ValueLength())
+    result += fmt.Sprintf("  Length: %#0x\n", self.Length())
+    result += fmt.Sprintf("  ValueLength: %#0x\n", self.ValueLength())
+    result += fmt.Sprintf("  Type: %#0x\n", self.Type())
+    result += fmt.Sprintf("  Key: %v\n", string(self.Key()))
     return result
 }
 
@@ -410,28 +439,28 @@ func (self *StringFileInfo) Size() int {
     return 0
 }
 
-
-func (self *StringFileInfo) Key() string {
-  return ParseTerminatedUTF16String(self.Reader, self.Profile.Off_StringFileInfo_Key + self.Offset)
-}
-
 func (self *StringFileInfo) Length() uint16 {
    return ParseUint16(self.Reader, self.Profile.Off_StringFileInfo_Length + self.Offset)
+}
+
+func (self *StringFileInfo) ValueLength() uint16 {
+   return ParseUint16(self.Reader, self.Profile.Off_StringFileInfo_ValueLength + self.Offset)
 }
 
 func (self *StringFileInfo) Type() uint16 {
    return ParseUint16(self.Reader, self.Profile.Off_StringFileInfo_Type + self.Offset)
 }
 
-func (self *StringFileInfo) ValueLength() uint16 {
-   return ParseUint16(self.Reader, self.Profile.Off_StringFileInfo_ValueLength + self.Offset)
+
+func (self *StringFileInfo) Key() string {
+  return ParseTerminatedUTF16String(self.Reader, self.Profile.Off_StringFileInfo_Key + self.Offset)
 }
 func (self *StringFileInfo) DebugString() string {
     result := fmt.Sprintf("struct StringFileInfo @ %#x:\n", self.Offset)
-    result += fmt.Sprintf("Key: %v\n", string(self.Key()))
-    result += fmt.Sprintf("Length: %#0x\n", self.Length())
-    result += fmt.Sprintf("Type: %#0x\n", self.Type())
-    result += fmt.Sprintf("ValueLength: %#0x\n", self.ValueLength())
+    result += fmt.Sprintf("  Length: %#0x\n", self.Length())
+    result += fmt.Sprintf("  ValueLength: %#0x\n", self.ValueLength())
+    result += fmt.Sprintf("  Type: %#0x\n", self.Type())
+    result += fmt.Sprintf("  Key: %v\n", string(self.Key()))
     return result
 }
 
@@ -445,28 +474,28 @@ func (self *StringTable) Size() int {
     return 0
 }
 
-
-func (self *StringTable) Key() string {
-  return ParseUTF16String(self.Reader, self.Profile.Off_StringTable_Key + self.Offset, 16)
-}
-
 func (self *StringTable) Length() uint16 {
    return ParseUint16(self.Reader, self.Profile.Off_StringTable_Length + self.Offset)
+}
+
+func (self *StringTable) ValueLength() uint16 {
+   return ParseUint16(self.Reader, self.Profile.Off_StringTable_ValueLength + self.Offset)
 }
 
 func (self *StringTable) Type() uint16 {
    return ParseUint16(self.Reader, self.Profile.Off_StringTable_Type + self.Offset)
 }
 
-func (self *StringTable) ValueLength() uint16 {
-   return ParseUint16(self.Reader, self.Profile.Off_StringTable_ValueLength + self.Offset)
+
+func (self *StringTable) Key() string {
+  return ParseUTF16String(self.Reader, self.Profile.Off_StringTable_Key + self.Offset, 16)
 }
 func (self *StringTable) DebugString() string {
     result := fmt.Sprintf("struct StringTable @ %#x:\n", self.Offset)
-    result += fmt.Sprintf("Key: %v\n", string(self.Key()))
-    result += fmt.Sprintf("Length: %#0x\n", self.Length())
-    result += fmt.Sprintf("Type: %#0x\n", self.Type())
-    result += fmt.Sprintf("ValueLength: %#0x\n", self.ValueLength())
+    result += fmt.Sprintf("  Length: %#0x\n", self.Length())
+    result += fmt.Sprintf("  ValueLength: %#0x\n", self.ValueLength())
+    result += fmt.Sprintf("  Type: %#0x\n", self.Type())
+    result += fmt.Sprintf("  Key: %v\n", string(self.Key()))
     return result
 }
 
@@ -484,6 +513,10 @@ func (self *VS_VERSIONINFO) Length() uint16 {
    return ParseUint16(self.Reader, self.Profile.Off_VS_VERSIONINFO_Length + self.Offset)
 }
 
+func (self *VS_VERSIONINFO) ValueLength() uint16 {
+   return ParseUint16(self.Reader, self.Profile.Off_VS_VERSIONINFO_ValueLength + self.Offset)
+}
+
 func (self *VS_VERSIONINFO) Type() *Enumeration {
    value := ParseUint16(self.Reader, self.Profile.Off_VS_VERSIONINFO_Type + self.Offset)
    name := "Unknown"
@@ -499,20 +532,16 @@ func (self *VS_VERSIONINFO) Type() *Enumeration {
 }
 
 
-func (self *VS_VERSIONINFO) ValueLength() uint16 {
-   return ParseUint16(self.Reader, self.Profile.Off_VS_VERSIONINFO_ValueLength + self.Offset)
-}
-
 
 func (self *VS_VERSIONINFO) szKey() string {
   return ParseUTF16String(self.Reader, self.Profile.Off_VS_VERSIONINFO_szKey + self.Offset, 32)
 }
 func (self *VS_VERSIONINFO) DebugString() string {
     result := fmt.Sprintf("struct VS_VERSIONINFO @ %#x:\n", self.Offset)
-    result += fmt.Sprintf("Length: %#0x\n", self.Length())
-    result += fmt.Sprintf("Type: %v\n", self.Type().DebugString())
-    result += fmt.Sprintf("ValueLength: %#0x\n", self.ValueLength())
-    result += fmt.Sprintf("szKey: %v\n", string(self.szKey()))
+    result += fmt.Sprintf("  Length: %#0x\n", self.Length())
+    result += fmt.Sprintf("  ValueLength: %#0x\n", self.ValueLength())
+    result += fmt.Sprintf("  Type: %v\n", self.Type().DebugString())
+    result += fmt.Sprintf("  szKey: %v\n", string(self.szKey()))
     return result
 }
 
@@ -543,9 +572,9 @@ func (self *GUID) Data4() []byte {
 }
 func (self *GUID) DebugString() string {
     result := fmt.Sprintf("struct GUID @ %#x:\n", self.Offset)
-    result += fmt.Sprintf("Data1: %#0x\n", self.Data1())
-    result += fmt.Sprintf("Data2: %#0x\n", self.Data2())
-    result += fmt.Sprintf("Data3: %#0x\n", self.Data3())
+    result += fmt.Sprintf("  Data1: %#0x\n", self.Data1())
+    result += fmt.Sprintf("  Data2: %#0x\n", self.Data2())
+    result += fmt.Sprintf("  Data3: %#0x\n", self.Data3())
     return result
 }
 
@@ -568,8 +597,8 @@ func (self *IMAGE_DATA_DIRECTORY) VirtualAddress() uint32 {
 }
 func (self *IMAGE_DATA_DIRECTORY) DebugString() string {
     result := fmt.Sprintf("struct IMAGE_DATA_DIRECTORY @ %#x:\n", self.Offset)
-    result += fmt.Sprintf("DirSize: %#0x\n", self.DirSize())
-    result += fmt.Sprintf("VirtualAddress: %#0x\n", self.VirtualAddress())
+    result += fmt.Sprintf("  DirSize: %#0x\n", self.DirSize())
+    result += fmt.Sprintf("  VirtualAddress: %#0x\n", self.VirtualAddress())
     return result
 }
 
@@ -634,9 +663,9 @@ func (self *IMAGE_DEBUG_DIRECTORY) Type() *Enumeration {
 
 func (self *IMAGE_DEBUG_DIRECTORY) DebugString() string {
     result := fmt.Sprintf("struct IMAGE_DEBUG_DIRECTORY @ %#x:\n", self.Offset)
-    result += fmt.Sprintf("AddressOfRawData: %#0x\n", self.AddressOfRawData())
-    result += fmt.Sprintf("TimeDateStamp: {\n%v}\n", self.TimeDateStamp().DebugString())
-    result += fmt.Sprintf("Type: %v\n", self.Type().DebugString())
+    result += fmt.Sprintf("  AddressOfRawData: %#0x\n", self.AddressOfRawData())
+    result += fmt.Sprintf("  TimeDateStamp: {\n%v}\n", indent(self.TimeDateStamp().DebugString()))
+    result += fmt.Sprintf("  Type: %v\n", self.Type().DebugString())
     return result
 }
 
@@ -659,8 +688,89 @@ func (self *IMAGE_DOS_HEADER) E_magic() uint16 {
 }
 func (self *IMAGE_DOS_HEADER) DebugString() string {
     result := fmt.Sprintf("struct IMAGE_DOS_HEADER @ %#x:\n", self.Offset)
-    result += fmt.Sprintf("E_lfanew: %#0x\n", self.E_lfanew())
-    result += fmt.Sprintf("E_magic: %#0x\n", self.E_magic())
+    result += fmt.Sprintf("  E_lfanew: %#0x\n", self.E_lfanew())
+    result += fmt.Sprintf("  E_magic: %#0x\n", self.E_magic())
+    return result
+}
+
+type IMAGE_EXPORT_DIRECTORY struct {
+    Reader io.ReaderAt
+    Offset int64
+    Profile *PeProfile
+}
+
+func (self *IMAGE_EXPORT_DIRECTORY) Size() int {
+    return 40
+}
+
+func (self *IMAGE_EXPORT_DIRECTORY) AddressOfFunctions() uint32 {
+   return ParseUint32(self.Reader, self.Profile.Off_IMAGE_EXPORT_DIRECTORY_AddressOfFunctions + self.Offset)
+}
+
+func (self *IMAGE_EXPORT_DIRECTORY) AddressOfNameOrdinals() uint32 {
+   return ParseUint32(self.Reader, self.Profile.Off_IMAGE_EXPORT_DIRECTORY_AddressOfNameOrdinals + self.Offset)
+}
+
+func (self *IMAGE_EXPORT_DIRECTORY) AddressOfNames() uint32 {
+   return ParseUint32(self.Reader, self.Profile.Off_IMAGE_EXPORT_DIRECTORY_AddressOfNames + self.Offset)
+}
+
+func (self *IMAGE_EXPORT_DIRECTORY) Base() uint32 {
+   return ParseUint32(self.Reader, self.Profile.Off_IMAGE_EXPORT_DIRECTORY_Base + self.Offset)
+}
+
+func (self *IMAGE_EXPORT_DIRECTORY) Characteristics() uint32 {
+   return ParseUint32(self.Reader, self.Profile.Off_IMAGE_EXPORT_DIRECTORY_Characteristics + self.Offset)
+}
+
+func (self *IMAGE_EXPORT_DIRECTORY) MajorVersion() uint16 {
+   return ParseUint16(self.Reader, self.Profile.Off_IMAGE_EXPORT_DIRECTORY_MajorVersion + self.Offset)
+}
+
+func (self *IMAGE_EXPORT_DIRECTORY) MinorVersion() uint16 {
+   return ParseUint16(self.Reader, self.Profile.Off_IMAGE_EXPORT_DIRECTORY_MinorVersion + self.Offset)
+}
+
+func (self *IMAGE_EXPORT_DIRECTORY) Name() uint32 {
+   return ParseUint32(self.Reader, self.Profile.Off_IMAGE_EXPORT_DIRECTORY_Name + self.Offset)
+}
+
+func (self *IMAGE_EXPORT_DIRECTORY) NumberOfFunctions() uint32 {
+   return ParseUint32(self.Reader, self.Profile.Off_IMAGE_EXPORT_DIRECTORY_NumberOfFunctions + self.Offset)
+}
+
+func (self *IMAGE_EXPORT_DIRECTORY) NumberOfNames() uint32 {
+   return ParseUint32(self.Reader, self.Profile.Off_IMAGE_EXPORT_DIRECTORY_NumberOfNames + self.Offset)
+}
+
+func (self *IMAGE_EXPORT_DIRECTORY) TimeDateStamp() uint32 {
+   return ParseUint32(self.Reader, self.Profile.Off_IMAGE_EXPORT_DIRECTORY_TimeDateStamp + self.Offset)
+}
+
+func (self *IMAGE_EXPORT_DIRECTORY) ordinals() []uint16 {
+   return ParseArray_uint16(self.Profile, self.Reader, self.Profile.Off_IMAGE_EXPORT_DIRECTORY_ordinals + self.Offset, 0)
+}
+
+func (self *IMAGE_EXPORT_DIRECTORY) names() []uint32 {
+   return ParseArray_uint32(self.Profile, self.Reader, self.Profile.Off_IMAGE_EXPORT_DIRECTORY_names + self.Offset, 0)
+}
+
+func (self *IMAGE_EXPORT_DIRECTORY) funcs64() []uint64 {
+   return ParseArray_uint64(self.Profile, self.Reader, self.Profile.Off_IMAGE_EXPORT_DIRECTORY_funcs64 + self.Offset, 0)
+}
+func (self *IMAGE_EXPORT_DIRECTORY) DebugString() string {
+    result := fmt.Sprintf("struct IMAGE_EXPORT_DIRECTORY @ %#x:\n", self.Offset)
+    result += fmt.Sprintf("  AddressOfFunctions: %#0x\n", self.AddressOfFunctions())
+    result += fmt.Sprintf("  AddressOfNameOrdinals: %#0x\n", self.AddressOfNameOrdinals())
+    result += fmt.Sprintf("  AddressOfNames: %#0x\n", self.AddressOfNames())
+    result += fmt.Sprintf("  Base: %#0x\n", self.Base())
+    result += fmt.Sprintf("  Characteristics: %#0x\n", self.Characteristics())
+    result += fmt.Sprintf("  MajorVersion: %#0x\n", self.MajorVersion())
+    result += fmt.Sprintf("  MinorVersion: %#0x\n", self.MinorVersion())
+    result += fmt.Sprintf("  Name: %#0x\n", self.Name())
+    result += fmt.Sprintf("  NumberOfFunctions: %#0x\n", self.NumberOfFunctions())
+    result += fmt.Sprintf("  NumberOfNames: %#0x\n", self.NumberOfNames())
+    result += fmt.Sprintf("  TimeDateStamp: %#0x\n", self.TimeDateStamp())
     return result
 }
 
@@ -708,10 +818,10 @@ func (self *IMAGE_FILE_HEADER) TimeDateStamp() *UnixTimeStamp {
 }
 func (self *IMAGE_FILE_HEADER) DebugString() string {
     result := fmt.Sprintf("struct IMAGE_FILE_HEADER @ %#x:\n", self.Offset)
-    result += fmt.Sprintf("Machine: %v\n", self.Machine().DebugString())
-    result += fmt.Sprintf("NumberOfSections: %#0x\n", self.NumberOfSections())
-    result += fmt.Sprintf("SizeOfOptionalHeader: %#0x\n", self.SizeOfOptionalHeader())
-    result += fmt.Sprintf("TimeDateStamp: {\n%v}\n", self.TimeDateStamp().DebugString())
+    result += fmt.Sprintf("  Machine: %v\n", self.Machine().DebugString())
+    result += fmt.Sprintf("  NumberOfSections: %#0x\n", self.NumberOfSections())
+    result += fmt.Sprintf("  SizeOfOptionalHeader: %#0x\n", self.SizeOfOptionalHeader())
+    result += fmt.Sprintf("  TimeDateStamp: {\n%v}\n", indent(self.TimeDateStamp().DebugString()))
     return result
 }
 
@@ -731,7 +841,7 @@ func (self *IMAGE_IMPORT_BY_NAME) Name() string {
 }
 func (self *IMAGE_IMPORT_BY_NAME) DebugString() string {
     result := fmt.Sprintf("struct IMAGE_IMPORT_BY_NAME @ %#x:\n", self.Offset)
-    result += fmt.Sprintf("Name: %v\n", string(self.Name()))
+    result += fmt.Sprintf("  Name: %v\n", string(self.Name()))
     return result
 }
 
@@ -758,9 +868,9 @@ func (self *IMAGE_IMPORT_DESCRIPTOR) OriginalFirstThunk() uint32 {
 }
 func (self *IMAGE_IMPORT_DESCRIPTOR) DebugString() string {
     result := fmt.Sprintf("struct IMAGE_IMPORT_DESCRIPTOR @ %#x:\n", self.Offset)
-    result += fmt.Sprintf("Characteristics: %#0x\n", self.Characteristics())
-    result += fmt.Sprintf("Name: %#0x\n", self.Name())
-    result += fmt.Sprintf("OriginalFirstThunk: %#0x\n", self.OriginalFirstThunk())
+    result += fmt.Sprintf("  Characteristics: %#0x\n", self.Characteristics())
+    result += fmt.Sprintf("  Name: %#0x\n", self.Name())
+    result += fmt.Sprintf("  OriginalFirstThunk: %#0x\n", self.OriginalFirstThunk())
     return result
 }
 
@@ -787,9 +897,9 @@ func (self *IMAGE_NT_HEADERS) Signature() uint32 {
 }
 func (self *IMAGE_NT_HEADERS) DebugString() string {
     result := fmt.Sprintf("struct IMAGE_NT_HEADERS @ %#x:\n", self.Offset)
-    result += fmt.Sprintf("FileHeader: {\n%v}\n", self.FileHeader().DebugString())
-    result += fmt.Sprintf("OptionalHeader: {\n%v}\n", self.OptionalHeader().DebugString())
-    result += fmt.Sprintf("Signature: %#0x\n", self.Signature())
+    result += fmt.Sprintf("  FileHeader: {\n%v}\n", indent(self.FileHeader().DebugString()))
+    result += fmt.Sprintf("  OptionalHeader: {\n%v}\n", indent(self.OptionalHeader().DebugString()))
+    result += fmt.Sprintf("  Signature: %#0x\n", self.Signature())
     return result
 }
 
@@ -816,8 +926,8 @@ func (self *IMAGE_OPTIONAL_HEADER) Magic() uint16 {
 }
 func (self *IMAGE_OPTIONAL_HEADER) DebugString() string {
     result := fmt.Sprintf("struct IMAGE_OPTIONAL_HEADER @ %#x:\n", self.Offset)
-    result += fmt.Sprintf("ImageBase: %#0x\n", self.ImageBase())
-    result += fmt.Sprintf("Magic: %#0x\n", self.Magic())
+    result += fmt.Sprintf("  ImageBase: %#0x\n", self.ImageBase())
+    result += fmt.Sprintf("  Magic: %#0x\n", self.Magic())
     return result
 }
 
@@ -844,8 +954,8 @@ func (self *IMAGE_OPTIONAL_HEADER64) Magic() uint16 {
 }
 func (self *IMAGE_OPTIONAL_HEADER64) DebugString() string {
     result := fmt.Sprintf("struct IMAGE_OPTIONAL_HEADER64 @ %#x:\n", self.Offset)
-    result += fmt.Sprintf("ImageBase: %#0x\n", self.ImageBase())
-    result += fmt.Sprintf("Magic: %#0x\n", self.Magic())
+    result += fmt.Sprintf("  ImageBase: %#0x\n", self.ImageBase())
+    result += fmt.Sprintf("  Magic: %#0x\n", self.Magic())
     return result
 }
 
@@ -859,22 +969,22 @@ func (self *IMAGE_RESOURCE_DATA_ENTRY) Size() int {
     return 16
 }
 
-func (self *IMAGE_RESOURCE_DATA_ENTRY) CodePage() uint32 {
-   return ParseUint32(self.Reader, self.Profile.Off_IMAGE_RESOURCE_DATA_ENTRY_CodePage + self.Offset)
+func (self *IMAGE_RESOURCE_DATA_ENTRY) OffsetToData() uint32 {
+   return ParseUint32(self.Reader, self.Profile.Off_IMAGE_RESOURCE_DATA_ENTRY_OffsetToData + self.Offset)
 }
 
 func (self *IMAGE_RESOURCE_DATA_ENTRY) DataSize() uint32 {
    return ParseUint32(self.Reader, self.Profile.Off_IMAGE_RESOURCE_DATA_ENTRY_DataSize + self.Offset)
 }
 
-func (self *IMAGE_RESOURCE_DATA_ENTRY) OffsetToData() uint32 {
-   return ParseUint32(self.Reader, self.Profile.Off_IMAGE_RESOURCE_DATA_ENTRY_OffsetToData + self.Offset)
+func (self *IMAGE_RESOURCE_DATA_ENTRY) CodePage() uint32 {
+   return ParseUint32(self.Reader, self.Profile.Off_IMAGE_RESOURCE_DATA_ENTRY_CodePage + self.Offset)
 }
 func (self *IMAGE_RESOURCE_DATA_ENTRY) DebugString() string {
     result := fmt.Sprintf("struct IMAGE_RESOURCE_DATA_ENTRY @ %#x:\n", self.Offset)
-    result += fmt.Sprintf("CodePage: %#0x\n", self.CodePage())
-    result += fmt.Sprintf("DataSize: %#0x\n", self.DataSize())
-    result += fmt.Sprintf("OffsetToData: %#0x\n", self.OffsetToData())
+    result += fmt.Sprintf("  OffsetToData: %#0x\n", self.OffsetToData())
+    result += fmt.Sprintf("  DataSize: %#0x\n", self.DataSize())
+    result += fmt.Sprintf("  CodePage: %#0x\n", self.CodePage())
     return result
 }
 
@@ -901,8 +1011,8 @@ func (self *IMAGE_RESOURCE_DIRECTORY) _Entries() []*IMAGE_RESOURCE_DIRECTORY_ENT
 }
 func (self *IMAGE_RESOURCE_DIRECTORY) DebugString() string {
     result := fmt.Sprintf("struct IMAGE_RESOURCE_DIRECTORY @ %#x:\n", self.Offset)
-    result += fmt.Sprintf("NumberOfIdEntries: %#0x\n", self.NumberOfIdEntries())
-    result += fmt.Sprintf("NumberOfNamedEntries: %#0x\n", self.NumberOfNamedEntries())
+    result += fmt.Sprintf("  NumberOfIdEntries: %#0x\n", self.NumberOfIdEntries())
+    result += fmt.Sprintf("  NumberOfNamedEntries: %#0x\n", self.NumberOfNamedEntries())
     return result
 }
 
@@ -914,31 +1024,6 @@ type IMAGE_RESOURCE_DIRECTORY_ENTRY struct {
 
 func (self *IMAGE_RESOURCE_DIRECTORY_ENTRY) Size() int {
     return 8
-}
-
-func (self *IMAGE_RESOURCE_DIRECTORY_ENTRY) DataIsDirectory() uint64 {
-   value := ParseUint32(self.Reader, self.Profile.Off_IMAGE_RESOURCE_DIRECTORY_ENTRY_DataIsDirectory + self.Offset)
-   return (uint64(value) & 0x7fffffffffffffff) >> 0x1f
-}
-
-func (self *IMAGE_RESOURCE_DIRECTORY_ENTRY) NameIsString() uint64 {
-   value := ParseUint32(self.Reader, self.Profile.Off_IMAGE_RESOURCE_DIRECTORY_ENTRY_NameIsString + self.Offset)
-   return (uint64(value) & 0x7fffffffffffffff) >> 0x1f
-}
-
-func (self *IMAGE_RESOURCE_DIRECTORY_ENTRY) NameOffset() uint64 {
-   value := ParseUint32(self.Reader, self.Profile.Off_IMAGE_RESOURCE_DIRECTORY_ENTRY_NameOffset + self.Offset)
-   return (uint64(value) & 0x7fffffff) >> 0x0
-}
-
-func (self *IMAGE_RESOURCE_DIRECTORY_ENTRY) OffsetToData() uint64 {
-   value := ParseUint32(self.Reader, self.Profile.Off_IMAGE_RESOURCE_DIRECTORY_ENTRY_OffsetToData + self.Offset)
-   return (uint64(value) & 0x7fffffff) >> 0x0
-}
-
-func (self *IMAGE_RESOURCE_DIRECTORY_ENTRY) OffsetToDirectory() uint64 {
-   value := ParseUint32(self.Reader, self.Profile.Off_IMAGE_RESOURCE_DIRECTORY_ENTRY_OffsetToDirectory + self.Offset)
-   return (uint64(value) & 0x7fffffff) >> 0x0
 }
 
 func (self *IMAGE_RESOURCE_DIRECTORY_ENTRY) Type() *Enumeration {
@@ -1012,14 +1097,39 @@ func (self *IMAGE_RESOURCE_DIRECTORY_ENTRY) Type() *Enumeration {
    return &Enumeration{Value: uint64(value), Name: name}
 }
 
+
+func (self *IMAGE_RESOURCE_DIRECTORY_ENTRY) DataIsDirectory() uint64 {
+   value := ParseUint32(self.Reader, self.Profile.Off_IMAGE_RESOURCE_DIRECTORY_ENTRY_DataIsDirectory + self.Offset)
+   return (uint64(value) & 0x7fffffffffffffff) >> 0x1f
+}
+
+func (self *IMAGE_RESOURCE_DIRECTORY_ENTRY) NameIsString() uint64 {
+   value := ParseUint32(self.Reader, self.Profile.Off_IMAGE_RESOURCE_DIRECTORY_ENTRY_NameIsString + self.Offset)
+   return (uint64(value) & 0x7fffffffffffffff) >> 0x1f
+}
+
+func (self *IMAGE_RESOURCE_DIRECTORY_ENTRY) NameOffset() uint64 {
+   value := ParseUint32(self.Reader, self.Profile.Off_IMAGE_RESOURCE_DIRECTORY_ENTRY_NameOffset + self.Offset)
+   return (uint64(value) & 0x7fffffff) >> 0x0
+}
+
+func (self *IMAGE_RESOURCE_DIRECTORY_ENTRY) OffsetToData() uint64 {
+   value := ParseUint32(self.Reader, self.Profile.Off_IMAGE_RESOURCE_DIRECTORY_ENTRY_OffsetToData + self.Offset)
+   return (uint64(value) & 0x7fffffff) >> 0x0
+}
+
+func (self *IMAGE_RESOURCE_DIRECTORY_ENTRY) OffsetToDirectory() uint64 {
+   value := ParseUint32(self.Reader, self.Profile.Off_IMAGE_RESOURCE_DIRECTORY_ENTRY_OffsetToDirectory + self.Offset)
+   return (uint64(value) & 0x7fffffff) >> 0x0
+}
 func (self *IMAGE_RESOURCE_DIRECTORY_ENTRY) DebugString() string {
     result := fmt.Sprintf("struct IMAGE_RESOURCE_DIRECTORY_ENTRY @ %#x:\n", self.Offset)
-    result += fmt.Sprintf("DataIsDirectory: %#0x\n", self.DataIsDirectory())
-    result += fmt.Sprintf("NameIsString: %#0x\n", self.NameIsString())
-    result += fmt.Sprintf("NameOffset: %#0x\n", self.NameOffset())
-    result += fmt.Sprintf("OffsetToData: %#0x\n", self.OffsetToData())
-    result += fmt.Sprintf("OffsetToDirectory: %#0x\n", self.OffsetToDirectory())
-    result += fmt.Sprintf("Type: %v\n", self.Type().DebugString())
+    result += fmt.Sprintf("  Type: %v\n", self.Type().DebugString())
+    result += fmt.Sprintf("  DataIsDirectory: %#0x\n", self.DataIsDirectory())
+    result += fmt.Sprintf("  NameIsString: %#0x\n", self.NameIsString())
+    result += fmt.Sprintf("  NameOffset: %#0x\n", self.NameOffset())
+    result += fmt.Sprintf("  OffsetToData: %#0x\n", self.OffsetToData())
+    result += fmt.Sprintf("  OffsetToDirectory: %#0x\n", self.OffsetToDirectory())
     return result
 }
 
@@ -1055,11 +1165,11 @@ func (self *IMAGE_SECTION_HEADER) VirtualAddress() uint32 {
 }
 func (self *IMAGE_SECTION_HEADER) DebugString() string {
     result := fmt.Sprintf("struct IMAGE_SECTION_HEADER @ %#x:\n", self.Offset)
-    result += fmt.Sprintf("Characteristics: %#0x\n", self.Characteristics())
-    result += fmt.Sprintf("Name: %v\n", string(self.Name()))
-    result += fmt.Sprintf("PointerToRawData: %#0x\n", self.PointerToRawData())
-    result += fmt.Sprintf("SizeOfRawData: %#0x\n", self.SizeOfRawData())
-    result += fmt.Sprintf("VirtualAddress: %#0x\n", self.VirtualAddress())
+    result += fmt.Sprintf("  Characteristics: %#0x\n", self.Characteristics())
+    result += fmt.Sprintf("  Name: %v\n", string(self.Name()))
+    result += fmt.Sprintf("  PointerToRawData: %#0x\n", self.PointerToRawData())
+    result += fmt.Sprintf("  SizeOfRawData: %#0x\n", self.SizeOfRawData())
+    result += fmt.Sprintf("  VirtualAddress: %#0x\n", self.VirtualAddress())
     return result
 }
 
@@ -1090,10 +1200,10 @@ func (self *IMAGE_THUNK_DATA32) Ordinal() uint32 {
 }
 func (self *IMAGE_THUNK_DATA32) DebugString() string {
     result := fmt.Sprintf("struct IMAGE_THUNK_DATA32 @ %#x:\n", self.Offset)
-    result += fmt.Sprintf("AddressOfData: %#0x\n", self.AddressOfData())
-    result += fmt.Sprintf("ForwarderString: %#0x\n", self.ForwarderString())
-    result += fmt.Sprintf("Function: %#0x\n", self.Function())
-    result += fmt.Sprintf("Ordinal: %#0x\n", self.Ordinal())
+    result += fmt.Sprintf("  AddressOfData: %#0x\n", self.AddressOfData())
+    result += fmt.Sprintf("  ForwarderString: %#0x\n", self.ForwarderString())
+    result += fmt.Sprintf("  Function: %#0x\n", self.Function())
+    result += fmt.Sprintf("  Ordinal: %#0x\n", self.Ordinal())
     return result
 }
 
@@ -1124,10 +1234,10 @@ func (self *IMAGE_THUNK_DATA64) Ordinal() uint64 {
 }
 func (self *IMAGE_THUNK_DATA64) DebugString() string {
     result := fmt.Sprintf("struct IMAGE_THUNK_DATA64 @ %#x:\n", self.Offset)
-    result += fmt.Sprintf("AddressOfData: %#0x\n", self.AddressOfData())
-    result += fmt.Sprintf("ForwarderString: %#0x\n", self.ForwarderString())
-    result += fmt.Sprintf("Function: %#0x\n", self.Function())
-    result += fmt.Sprintf("Ordinal: %#0x\n", self.Ordinal())
+    result += fmt.Sprintf("  AddressOfData: %#0x\n", self.AddressOfData())
+    result += fmt.Sprintf("  ForwarderString: %#0x\n", self.ForwarderString())
+    result += fmt.Sprintf("  Function: %#0x\n", self.Function())
+    result += fmt.Sprintf("  Ordinal: %#0x\n", self.Ordinal())
     return result
 }
 
@@ -1191,6 +1301,36 @@ func ParseArray_byte(profile *PeProfile, reader io.ReaderAt, offset int64, count
       value := ParseUint8(reader, offset)
       result = append(result, value)
       offset += int64(1)
+    }
+    return result
+}
+
+func ParseArray_uint16(profile *PeProfile, reader io.ReaderAt, offset int64, count int) []uint16 {
+    result := []uint16{}
+    for i:=0; i<count; i++ {
+      value := ParseUint16(reader, offset)
+      result = append(result, value)
+      offset += int64(2)
+    }
+    return result
+}
+
+func ParseArray_uint32(profile *PeProfile, reader io.ReaderAt, offset int64, count int) []uint32 {
+    result := []uint32{}
+    for i:=0; i<count; i++ {
+      value := ParseUint32(reader, offset)
+      result = append(result, value)
+      offset += int64(4)
+    }
+    return result
+}
+
+func ParseArray_uint64(profile *PeProfile, reader io.ReaderAt, offset int64, count int) []uint64 {
+    result := []uint64{}
+    for i:=0; i<count; i++ {
+      value := ParseUint64(reader, offset)
+      result = append(result, value)
+      offset += int64(8)
     }
     return result
 }

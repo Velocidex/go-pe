@@ -34,6 +34,7 @@ type PEFile struct {
 	VersionInformation map[string]string `json:"VersionInformation"`
 
 	Imports []string `json:"Imports"`
+	Exports []string `json:"Exports"`
 }
 
 func parseMessageFile(entry *IMAGE_RESOURCE_DIRECTORY_ENTRY) error {
@@ -133,6 +134,7 @@ func NewPEFile(reader io.ReaderAt) (*PEFile, error) {
 		VersionInformation: GetVersionInformation(
 			nt_header, rva_resolver, resource_base),
 		Imports: GetImports(nt_header, rva_resolver),
+		Exports: GetExports(nt_header, rva_resolver),
 	}
 
 	for _, section := range nt_header.Sections() {
