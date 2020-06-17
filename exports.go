@@ -16,6 +16,11 @@ func (self *IMAGE_NT_HEADERS) ExportDirectory(
 	rva_resolver *RVAResolver) *IMAGE_EXPORT_DIRECTORY {
 
 	dir := self.DataDirectory(IMAGE_DIRECTORY_ENTRY_EXPORT)
+	if dir.DirSize() == 0 {
+		// No Export Directory
+		return nil
+	}
+
 	offset := rva_resolver.GetFileAddress(dir.VirtualAddress())
 	return self.Profile.IMAGE_EXPORT_DIRECTORY(
 		self.Reader, int64(offset))
@@ -25,6 +30,9 @@ func (self *IMAGE_NT_HEADERS) ExportTable(
 	rva_resolver *RVAResolver) []*IMAGE_EXPORT_DESCRIPTOR {
 	result := []*IMAGE_EXPORT_DESCRIPTOR{}
 	desc := self.ExportDirectory(rva_resolver)
+	if desc == nil {
+		return nil
+	}
 
 	number_of_names := int(desc.NumberOfNames())
 	number_of_funcs := desc.NumberOfFunctions()
@@ -80,7 +88,7 @@ func (self *IMAGE_NT_HEADERS) ExportTable(
 	return result
 }
 
-func (self *IMAGE_EXPORT_DIRECTORY) GetName(rva_resolver *RVAResolver) string {
+func (self *IMAGE_EXPORT_DIRECTORY) DLLName(rva_resolver *RVAResolver) string {
 	offset := int64(rva_resolver.GetFileAddress(self.Name()))
 	result := ParseTerminatedString(self.Reader, offset)
 	return result
@@ -90,7 +98,12 @@ func GetExports(nt_header *IMAGE_NT_HEADERS, rva_resolver *RVAResolver) []string
 	result := []string{}
 
 	desc := nt_header.ExportDirectory(rva_resolver)
-	dll_name := desc.GetName(rva_resolver)
+	if desc == nil {
+		// No Export Directory
+		return nil
+	}
+
+	dll_name := desc.DLLName(rva_resolver)
 
 	for _, desc := range nt_header.ExportTable(rva_resolver) {
 		if desc.Name == "" {

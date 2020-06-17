@@ -83,16 +83,13 @@ type PeProfile struct {
     Off_IMAGE_EXPORT_DIRECTORY_AddressOfNameOrdinals int64
     Off_IMAGE_EXPORT_DIRECTORY_AddressOfNames int64
     Off_IMAGE_EXPORT_DIRECTORY_Base int64
-    Off_IMAGE_EXPORT_DIRECTORY_Characteristics int64
-    Off_IMAGE_EXPORT_DIRECTORY_MajorVersion int64
-    Off_IMAGE_EXPORT_DIRECTORY_MinorVersion int64
     Off_IMAGE_EXPORT_DIRECTORY_Name int64
     Off_IMAGE_EXPORT_DIRECTORY_NumberOfFunctions int64
     Off_IMAGE_EXPORT_DIRECTORY_NumberOfNames int64
-    Off_IMAGE_EXPORT_DIRECTORY_TimeDateStamp int64
     Off_IMAGE_EXPORT_DIRECTORY_ordinals int64
     Off_IMAGE_EXPORT_DIRECTORY_names int64
     Off_IMAGE_EXPORT_DIRECTORY_funcs64 int64
+    Off_IMAGE_FILE_HEADER_Characteristics int64
     Off_IMAGE_FILE_HEADER_Machine int64
     Off_IMAGE_FILE_HEADER_NumberOfSections int64
     Off_IMAGE_FILE_HEADER_SizeOfOptionalHeader int64
@@ -140,7 +137,7 @@ type PeProfile struct {
 
 func NewPeProfile() *PeProfile {
     // Specific offsets can be tweaked to cater for slight version mismatches.
-    self := &PeProfile{0,4,20,24,0,4,8,0,4,0,2,4,0,2,0,2,4,6,0,2,4,6,0,2,4,6,0,2,4,6,0,4,6,8,4,0,20,4,12,60,0,28,36,32,16,0,8,10,12,20,24,4,0,0,0,0,2,16,4,4,2,0,12,0,4,24,0,96,28,0,112,24,0,0,4,8,14,12,16,0,4,0,0,4,4,36,0,20,16,12,0,0,0,0,0,0,0,0}
+    self := &PeProfile{0,4,20,24,0,4,8,0,4,0,2,4,0,2,0,2,4,6,0,2,4,6,0,2,4,6,0,2,4,6,0,4,6,8,4,0,20,4,12,60,0,28,36,32,16,12,20,24,0,0,0,18,0,2,16,4,4,2,0,12,0,4,24,0,96,28,0,112,24,0,0,4,8,14,12,16,0,4,0,0,4,4,36,0,20,16,12,0,0,0,0,0,0,0,0}
     return self
 }
 
@@ -720,18 +717,6 @@ func (self *IMAGE_EXPORT_DIRECTORY) Base() uint32 {
    return ParseUint32(self.Reader, self.Profile.Off_IMAGE_EXPORT_DIRECTORY_Base + self.Offset)
 }
 
-func (self *IMAGE_EXPORT_DIRECTORY) Characteristics() uint32 {
-   return ParseUint32(self.Reader, self.Profile.Off_IMAGE_EXPORT_DIRECTORY_Characteristics + self.Offset)
-}
-
-func (self *IMAGE_EXPORT_DIRECTORY) MajorVersion() uint16 {
-   return ParseUint16(self.Reader, self.Profile.Off_IMAGE_EXPORT_DIRECTORY_MajorVersion + self.Offset)
-}
-
-func (self *IMAGE_EXPORT_DIRECTORY) MinorVersion() uint16 {
-   return ParseUint16(self.Reader, self.Profile.Off_IMAGE_EXPORT_DIRECTORY_MinorVersion + self.Offset)
-}
-
 func (self *IMAGE_EXPORT_DIRECTORY) Name() uint32 {
    return ParseUint32(self.Reader, self.Profile.Off_IMAGE_EXPORT_DIRECTORY_Name + self.Offset)
 }
@@ -742,10 +727,6 @@ func (self *IMAGE_EXPORT_DIRECTORY) NumberOfFunctions() uint32 {
 
 func (self *IMAGE_EXPORT_DIRECTORY) NumberOfNames() uint32 {
    return ParseUint32(self.Reader, self.Profile.Off_IMAGE_EXPORT_DIRECTORY_NumberOfNames + self.Offset)
-}
-
-func (self *IMAGE_EXPORT_DIRECTORY) TimeDateStamp() uint32 {
-   return ParseUint32(self.Reader, self.Profile.Off_IMAGE_EXPORT_DIRECTORY_TimeDateStamp + self.Offset)
 }
 
 func (self *IMAGE_EXPORT_DIRECTORY) ordinals() []uint16 {
@@ -765,13 +746,9 @@ func (self *IMAGE_EXPORT_DIRECTORY) DebugString() string {
     result += fmt.Sprintf("  AddressOfNameOrdinals: %#0x\n", self.AddressOfNameOrdinals())
     result += fmt.Sprintf("  AddressOfNames: %#0x\n", self.AddressOfNames())
     result += fmt.Sprintf("  Base: %#0x\n", self.Base())
-    result += fmt.Sprintf("  Characteristics: %#0x\n", self.Characteristics())
-    result += fmt.Sprintf("  MajorVersion: %#0x\n", self.MajorVersion())
-    result += fmt.Sprintf("  MinorVersion: %#0x\n", self.MinorVersion())
     result += fmt.Sprintf("  Name: %#0x\n", self.Name())
     result += fmt.Sprintf("  NumberOfFunctions: %#0x\n", self.NumberOfFunctions())
     result += fmt.Sprintf("  NumberOfNames: %#0x\n", self.NumberOfNames())
-    result += fmt.Sprintf("  TimeDateStamp: %#0x\n", self.TimeDateStamp())
     return result
 }
 
@@ -783,6 +760,10 @@ type IMAGE_FILE_HEADER struct {
 
 func (self *IMAGE_FILE_HEADER) Size() int {
     return 20
+}
+
+func (self *IMAGE_FILE_HEADER) Characteristics() uint16 {
+   return ParseUint16(self.Reader, self.Profile.Off_IMAGE_FILE_HEADER_Characteristics + self.Offset)
 }
 
 func (self *IMAGE_FILE_HEADER) Machine() *Enumeration {
@@ -823,6 +804,7 @@ func (self *IMAGE_FILE_HEADER) TimeDateStampRaw() uint32 {
 }
 func (self *IMAGE_FILE_HEADER) DebugString() string {
     result := fmt.Sprintf("struct IMAGE_FILE_HEADER @ %#x:\n", self.Offset)
+    result += fmt.Sprintf("  Characteristics: %#0x\n", self.Characteristics())
     result += fmt.Sprintf("  Machine: %v\n", self.Machine().DebugString())
     result += fmt.Sprintf("  NumberOfSections: %#0x\n", self.NumberOfSections())
     result += fmt.Sprintf("  SizeOfOptionalHeader: %#0x\n", self.SizeOfOptionalHeader())
