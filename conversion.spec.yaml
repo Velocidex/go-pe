@@ -54,7 +54,7 @@ FieldWhiteList:
   _IMAGE_DOS_HEADER: [E_magic, E_lfanew]
   _IMAGE_SECTION_HEADER: [PointerToRawData, VirtualAddress,
        Characteristics, SizeOfRawData, Name]
-  _IMAGE_FILE_HEADER: [SizeOfOptionalHeader, TimeDateStamp,
+  _IMAGE_FILE_HEADER: [SizeOfOptionalHeader, TimeDateStamp, TimeDateStampRaw,
        NumberOfSections, Machine]
   _IMAGE_RESOURCE_DIRECTORY: [_Entries, NumberOfIdEntries, NumberOfNamedEntries]
   _IMAGE_RESOURCE_DIRECTORY_ENTRY: [NameIsString, NameOffset, Type,

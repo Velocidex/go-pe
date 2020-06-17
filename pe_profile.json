@@ -66,7 +66,8 @@
         "NumberOfSymbols": [12, ["unsigned long", {}]],
         "PointerToSymbolTable": [8, ["unsigned long", {}]],
         "SizeOfOptionalHeader": [16, ["unsigned short", {}]],
-        "TimeDateStamp": [4, ["UnixTimeStamp", {}]]
+        "TimeDateStamp": [4, ["UnixTimeStamp", {}]],
+        "TimeDateStampRaw": [4, ["unsigned long", {}]]
     }],
     "_IMAGE_IMPORT_BY_NAME": [4, {
         "Hint": [0, ["unsigned short", {}]],
