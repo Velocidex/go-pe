@@ -54,9 +54,9 @@ FieldWhiteList:
   _IMAGE_DOS_HEADER: [E_magic, E_lfanew]
   _IMAGE_SECTION_HEADER: [PointerToRawData, VirtualAddress,
        Characteristics, SizeOfRawData, Name]
-  _IMAGE_FILE_HEADER: [SizeOfOptionalHeader, TimeDateStamp,
+  _IMAGE_FILE_HEADER: [SizeOfOptionalHeader, TimeDateStamp, TimeDateStampRaw,
        NumberOfSections, Machine, Characteristics]
-  _IMAGE_EXPORT_DIRECTORY: [Name, Base, NumberOfFunctions, NumberOfNames, AddressOfFunctions, AddressOfNames, AddressOfNameOrdinals]
+  _IMAGE_EXPORT_DIRECTORY: [Name, Base, NumberOfFunctions, NumberOfNames, AddressOfFunctions, AddressOfNames, AddressOfNameOrdinals, ordinals, names, funcs64]
   _IMAGE_RESOURCE_DIRECTORY: [_Entries, NumberOfIdEntries, NumberOfNamedEntries]
   _IMAGE_RESOURCE_DIRECTORY_ENTRY: [NameIsString, NameOffset, Type,
        DataIsDirectory, OffsetToDirectory, OffsetToData]

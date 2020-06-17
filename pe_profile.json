@@ -37,7 +37,19 @@
         "Name": [12, ["unsigned long", {}]],
         "NumberOfFunctions": [20, ["unsigned long", {}]],
         "NumberOfNames": [24, ["unsigned long", {}]],
-        "TimeDateStamp": [4, ["unsigned long", {}]]
+        "TimeDateStamp": [4, ["unsigned long", {}]],
+        "ordinals": [0, ["Array", {
+            "count": 0,
+            "target": "unsigned short"
+        }]],
+        "names": [0, ["Array", {
+            "count": 0,
+            "target": "unsigned long"
+        }]],
+        "funcs64": [0, ["Array", {
+            "count": 0,
+            "target": "unsigned long long"
+        }]]
     }],
     "_IMAGE_FILE_HEADER": [20, {
         "Characteristics": [18, ["unsigned short", {}]],
@@ -54,7 +66,8 @@
         "NumberOfSymbols": [12, ["unsigned long", {}]],
         "PointerToSymbolTable": [8, ["unsigned long", {}]],
         "SizeOfOptionalHeader": [16, ["unsigned short", {}]],
-        "TimeDateStamp": [4, ["UnixTimeStamp", {}]]
+        "TimeDateStamp": [4, ["UnixTimeStamp", {}]],
+        "TimeDateStampRaw": [4, ["unsigned long", {}]]
     }],
     "_IMAGE_IMPORT_BY_NAME": [4, {
         "Hint": [0, ["unsigned short", {}]],

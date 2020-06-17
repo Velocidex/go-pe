@@ -17,9 +17,10 @@ type Section struct {
 }
 
 type FileHeader struct {
-	Machine         string `json:"Machine"`
-	TimeDateStamp   string `json:"TimeDateStamp"`
-	Characteristics uint16 `json:"Characteristics"`
+	Machine          string `json:"Machine"`
+	TimeDateStamp    string `json:"TimeDateStamp"`
+	TimeDateStampRaw uint32 `json:"TimeDateStampRaw"`
+	Characteristics  uint16 `json:"Characteristics"`
 }
 
 type PEFile struct {
@@ -133,9 +134,10 @@ func NewPEFile(reader io.ReaderAt) (*PEFile, error) {
 		rva_resolver:  rva_resolver,
 		resource_base: resource_base,
 		FileHeader: FileHeader{
-			Machine:         file_header.Machine().Name,
-			TimeDateStamp:   file_header.TimeDateStamp().String(),
-			Characteristics: file_header.Characteristics(),
+			Machine:          file_header.Machine().Name,
+			TimeDateStamp:    file_header.TimeDateStamp().String(),
+			Characteristics:  file_header.Characteristics(),
+			TimeDateStampRaw: file_header.TimeDateStampRaw(),
 		},
 		GUIDAge: rsds.GUIDAge(),
 		PDB:     rsds.Filename(),
