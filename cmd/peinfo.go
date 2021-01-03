@@ -22,10 +22,12 @@ var (
 
 func doInfo() {
 	reader, err := reader.NewPagedReader(*info_command_file, 4096, 100)
-	kingpin.FatalIfError(err, "Can not open file %s: %v", *info_command_file, err)
+	kingpin.FatalIfError(err, "Can not open file %s: %v",
+		(*info_command_file).Name(), err)
 
 	pe_file, err := pe.NewPEFile(reader)
-	kingpin.FatalIfError(err, "Can not open file %s: %v", *info_command_file, err)
+	kingpin.FatalIfError(err, "Can not open file %s: %v",
+		(*info_command_file).Name(), err)
 
 	serialized, _ := json.MarshalIndent(pe_file, "", "  ")
 	fmt.Println(string(serialized))

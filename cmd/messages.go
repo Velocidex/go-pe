@@ -18,10 +18,12 @@ var (
 
 func doMessages() {
 	reader, err := reader.NewPagedReader(*messages_command_file, 4096, 100)
-	kingpin.FatalIfError(err, "Can not open file %s: %v", *messages_command_file, err)
+	kingpin.FatalIfError(err, "Can not open file %s: %v",
+		(*messages_command_file).Name(), err)
 
 	pe_file, err := pe.NewPEFile(reader)
-	kingpin.FatalIfError(err, "Can not open file %s: %v", *messages_command_file, err)
+	kingpin.FatalIfError(err, "Can not open file %s: %v",
+		(*messages_command_file).Name(), err)
 
 	messages := pe_file.GetMessages()
 	serialized, _ := json.MarshalIndent(messages, "", "  ")

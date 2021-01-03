@@ -1,15 +1,31 @@
 package pe
 
-import "fmt"
-
 const (
 	IMAGE_DIRECTORY_ENTRY_EXPORT = 0
 )
 
 type IMAGE_EXPORT_DESCRIPTOR struct {
-	Ordinal int
-	Name    string
-	RVA     int64
+	Ordinal   int
+	Name      string
+	RVA       int64
+	Forwarder string
+	DLLName   string
+}
+
+/* Is the virtual address within the export directory.
+
+   https://docs.microsoft.com/en-us/windows/win32/debug/pe-format#the-edata-section-image-only
+
+   Each entry in the export address table is a field that uses one of
+   two formats in the following table. If the address specified is not
+   within the export section (as defined by the address and length
+   that are indicated in the optional header), the field is an export
+   RVA, which is an actual address in code or data. Otherwise, the
+   field is a forwarder RVA, which names a symbol in another DLL.
+*/
+func IsInExportDir(dir *IMAGE_DATA_DIRECTORY, va uint32) bool {
+	start := dir.VirtualAddress()
+	return va > start && va < start+dir.DirSize()
 }
 
 func (self *IMAGE_NT_HEADERS) ExportDirectory(
@@ -34,6 +50,16 @@ func (self *IMAGE_NT_HEADERS) ExportTable(
 		return nil
 	}
 
+	dir := self.DataDirectory(IMAGE_DIRECTORY_ENTRY_EXPORT)
+	if dir.DirSize() == 0 {
+		return nil
+	}
+
+	dll_name := ""
+	if !IsInExportDir(dir, desc.Name()) {
+		dll_name = desc.DLLName(rva_resolver)
+	}
+
 	number_of_names := int(desc.NumberOfNames())
 	number_of_funcs := desc.NumberOfFunctions()
 
@@ -52,34 +78,64 @@ func (self *IMAGE_NT_HEADERS) ExportTable(
 
 	seen := make(map[uint32]bool)
 
+	// Get forwarders: Each entry in the export address table is
+	// a field that uses one of two formats in the following
+	// table. If the address specified is not within the export
+	// section (as defined by the address and length that are
+	// indicated in the optional header), the field is an export
+	// RVA, which is an actual address in code or data. Otherwise,
+	// the field is a forwarder RVA, which names a symbol in
+	// another DLL.
+	for i, func_addr := range func_table {
+		if IsInExportDir(dir, func_addr) {
+			ordinal := ordinal_table[i]
+			seen[uint32(ordinal)] = true
+
+			name := ParseTerminatedString(self.Reader,
+				int64(rva_resolver.GetFileAddress(func_addr)))
+			result = append(result, &IMAGE_EXPORT_DESCRIPTOR{
+				Ordinal:   int(ordinal),
+				Name:      name,
+				Forwarder: name,
+				DLLName:   dll_name,
+			})
+		}
+	}
+
 	for i := 0; i < number_of_names; i++ {
 		name := ParseTerminatedString(self.Reader,
 			int64(rva_resolver.GetFileAddress(name_table[i])))
-		ordinal := ordinal_table[i]
+		ordinal := uint32(ordinal_table[i])
 		func_rva := uint32(0)
 
 		if int(ordinal) < len(func_table) {
 			func_rva = func_table[ordinal]
 		}
 
-		seen[uint32(ordinal)] = true
+		_, pres := seen[ordinal]
+		if pres {
+			continue
+		}
+		seen[ordinal] = true
 
 		result = append(result, &IMAGE_EXPORT_DESCRIPTOR{
 			Ordinal: int(ordinal),
 			Name:    name,
+			DLLName: dll_name,
 			RVA:     int64(func_rva),
 		})
 	}
 
 	// Now list exported functions without a name (by ordinal)
 	base := desc.Base()
-	for i := uint32(0); i < number_of_funcs; i++ {
+	for i := uint32(0); i < number_of_funcs-1; i++ {
 		ordinal := base + i
 		_, pres := seen[ordinal]
 		if !pres {
 			seen[ordinal] = true
 			result = append(result, &IMAGE_EXPORT_DESCRIPTOR{
 				Ordinal: int(ordinal),
+				DLLName: dll_name,
 				RVA:     int64(func_table[i]),
 			})
 		}
@@ -91,27 +147,5 @@ func (self *IMAGE_NT_HEADERS) ExportTable(
 func (self *IMAGE_EXPORT_DIRECTORY) DLLName(rva_resolver *RVAResolver) string {
 	offset := int64(rva_resolver.GetFileAddress(self.Name()))
 	result := ParseTerminatedString(self.Reader, offset)
-	return result
-}
-
-func GetExports(nt_header *IMAGE_NT_HEADERS, rva_resolver *RVAResolver) []string {
-	result := []string{}
-
-	desc := nt_header.ExportDirectory(rva_resolver)
-	if desc == nil {
-		// No Export Directory
-		return nil
-	}
-
-	dll_name := desc.DLLName(rva_resolver)
-
-	for _, desc := range nt_header.ExportTable(rva_resolver) {
-		if desc.Name == "" {
-			result = append(result, fmt.Sprintf("%s:#%d", dll_name, desc.Ordinal))
-		} else {
-			result = append(result, fmt.Sprintf("%s:%s", dll_name, desc.Name))
-		}
-	}
-
 	return result
 }

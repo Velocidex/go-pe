@@ -30,18 +30,20 @@ func (self *RVAResolver) GetFileAddress(offset uint32) uint32 {
 }
 
 func NewRVAResolver(header *IMAGE_NT_HEADERS) *RVAResolver {
-	runs := []*Run{}
+	result := &RVAResolver{}
 	for _, section := range header.Sections() {
 		if section.SizeOfRawData() == 0 {
 			continue
 		}
 
-		runs = append(runs, &Run{
+		run := &Run{
 			VirtualAddress:  section.VirtualAddress(),
 			VirtualEnd:      section.VirtualAddress() + section.SizeOfRawData(),
 			PhysicalAddress: section.PointerToRawData(),
-		})
+		}
+
+		result.Runs = append(result.Runs, run)
 	}
 
-	return &RVAResolver{runs}
+	return result
 }

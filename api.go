@@ -39,8 +39,9 @@ type PEFile struct {
 
 	VersionInformation map[string]string `json:"VersionInformation"`
 
-	Imports []string `json:"Imports"`
-	Exports []string `json:"Exports"`
+	Imports  []string `json:"Imports"`
+	Exports  []string `json:"Exports"`
+	Forwards []string `json:"Forwards"`
 }
 
 func parseMessageFile(entry *IMAGE_RESOURCE_DIRECTORY_ENTRY) error {
@@ -143,8 +144,24 @@ func NewPEFile(reader io.ReaderAt) (*PEFile, error) {
 		PDB:     rsds.Filename(),
 		VersionInformation: GetVersionInformation(
 			nt_header, rva_resolver, resource_base),
-		Imports: GetImports(nt_header, rva_resolver),
-		Exports: GetExports(nt_header, rva_resolver),
+		Imports:  GetImports(nt_header, rva_resolver),
+		Exports:  []string{},
+		Forwards: []string{},
+	}
+
+	export_desc := nt_header.ExportDirectory(rva_resolver)
+	if export_desc != nil {
+		for _, desc := range nt_header.ExportTable(rva_resolver) {
+			if desc.Forwarder != "" {
+				result.Forwards = append(result.Forwards, desc.Forwarder)
+			} else if desc.Name == "" {
+				result.Exports = append(result.Exports,
+					fmt.Sprintf("%s:#%d", desc.DLLName, desc.Ordinal))
+			} else {
+				result.Exports = append(result.Exports,
+					fmt.Sprintf("%s:%s", desc.DLLName, desc.Name))
+			}
+		}
 	}
 
 	for _, section := range nt_header.Sections() {
