@@ -1,9 +1,12 @@
 package pe
 
 import (
+	"crypto/md5"
 	"errors"
 	"fmt"
 	"io"
+	"regexp"
+	"strings"
 )
 
 // Exported API
@@ -42,6 +45,31 @@ type PEFile struct {
 	Imports  []string `json:"Imports"`
 	Exports  []string `json:"Exports"`
 	Forwards []string `json:"Forwards"`
+}
+
+var _sanitized_imp_name = regexp.MustCompile("(.ocx|.sys|.dll)$")
+
+// Calculate the import table hash
+// https://www.fireeye.com/blog/threat-research/2014/01/tracking-malware-import-hashing.html
+func (self *PEFile) ImpHash() string {
+	normalized_imports := make([]string, 0, len(self.Imports))
+
+	for _, imp := range self.Imports {
+		imp = strings.ToLower(imp)
+		parts := strings.SplitN(imp, "!", 2)
+		if len(parts) == 0 {
+			continue
+		}
+
+		// Remove extensions
+		dll := _sanitized_imp_name.ReplaceAllString(parts[0], "")
+		normalized_imports = append(normalized_imports,
+			fmt.Sprintf("%s.%s", dll, parts[1]))
+	}
+
+	// Join all the imports with a , and take their hash.
+	data := strings.Join(normalized_imports, ",")
+	return fmt.Sprintf("%x", md5.Sum([]byte(data)))
 }
 
 func parseMessageFile(entry *IMAGE_RESOURCE_DIRECTORY_ENTRY) error {
