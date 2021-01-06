@@ -7,6 +7,9 @@ import (
 	"io"
 	"regexp"
 	"strings"
+	"sync"
+
+	"github.com/Velocidex/ordereddict"
 )
 
 // Exported API
@@ -27,6 +30,8 @@ type FileHeader struct {
 }
 
 type PEFile struct {
+	mu sync.Mutex
+
 	nt_header *IMAGE_NT_HEADERS
 
 	// Used to resolve RVA to file offsets.
@@ -40,11 +45,72 @@ type PEFile struct {
 	PDB        string     `json:"PDB"`
 	Sections   []*Section `json:"Sections"`
 
-	VersionInformation map[string]string `json:"VersionInformation"`
+	imports  []string
+	exports  []string
+	forwards []string
+}
 
-	Imports  []string `json:"Imports"`
-	Exports  []string `json:"Exports"`
-	Forwards []string `json:"Forwards"`
+func (self *PEFile) VersionInformation() *ordereddict.Dict {
+	return GetVersionInformation(self.nt_header, self.rva_resolver,
+		self.resource_base)
+}
+
+// Delay calculating these until absolutely necessary.
+func (self *PEFile) Imports() []string {
+	self.mu.Lock()
+	defer self.mu.Unlock()
+
+	if self.imports == nil {
+		self.imports = GetImports(self.nt_header, self.rva_resolver)
+	}
+	return self.imports
+}
+
+// Delay calculating these until absolutely necessary.
+func (self *PEFile) Exports() []string {
+	self.mu.Lock()
+	defer self.mu.Unlock()
+
+	if self.exports == nil {
+		self.forwards = []string{}
+		self.exports = []string{}
+
+		export_desc := self.nt_header.ExportDirectory(self.rva_resolver)
+		if export_desc != nil {
+			for _, desc := range self.nt_header.ExportTable(self.rva_resolver) {
+				if desc.Forwarder != "" {
+					self.forwards = append(self.forwards, desc.Forwarder)
+				} else if desc.Name == "" {
+					self.exports = append(self.exports,
+						fmt.Sprintf("%s:#%d", desc.DLLName, desc.Ordinal))
+				} else {
+					self.exports = append(self.exports,
+						fmt.Sprintf("%s:%s", desc.DLLName, desc.Name))
+				}
+			}
+		}
+	}
+	return self.exports
+}
+
+func (self *PEFile) Forwards() []string {
+	self.mu.Lock()
+	defer self.mu.Unlock()
+
+	if self.forwards == nil {
+		self.mu.Unlock()
+		self.Exports()
+		self.mu.Lock()
+	}
+
+	return self.forwards
+}
+
+func (self PEFile) Members() []string {
+	return []string{
+		"FileHeader", "GUIDAge", "PDB", "Sections", "VersionInformation",
+		"Imports", "Exports", "Forwards",
+	}
 }
 
 var _sanitized_imp_name = regexp.MustCompile("(.ocx|.sys|.dll)$")
@@ -52,9 +118,10 @@ var _sanitized_imp_name = regexp.MustCompile("(.ocx|.sys|.dll)$")
 // Calculate the import table hash
 // https://www.fireeye.com/blog/threat-research/2014/01/tracking-malware-import-hashing.html
 func (self *PEFile) ImpHash() string {
-	normalized_imports := make([]string, 0, len(self.Imports))
+	imports := self.Imports()
+	normalized_imports := make([]string, 0, len(imports))
 
-	for _, imp := range self.Imports {
+	for _, imp := range imports {
 		imp = strings.ToLower(imp)
 		parts := strings.SplitN(imp, "!", 2)
 		if len(parts) == 0 {
@@ -70,11 +137,6 @@ func (self *PEFile) ImpHash() string {
 	// Join all the imports with a , and take their hash.
 	data := strings.Join(normalized_imports, ",")
 	return fmt.Sprintf("%x", md5.Sum([]byte(data)))
-}
-
-func parseMessageFile(entry *IMAGE_RESOURCE_DIRECTORY_ENTRY) error {
-	fmt.Printf("%v\n", entry)
-	return nil
 }
 
 func (self *PEFile) GetMessages() []*Message {
@@ -105,8 +167,8 @@ func (self *PEFile) GetMessages() []*Message {
 func GetVersionInformation(
 	nt_header *IMAGE_NT_HEADERS,
 	rva_resolver *RVAResolver,
-	resource_base int64) map[string]string {
-	result := make(map[string]string)
+	resource_base int64) *ordereddict.Dict {
+	result := ordereddict.NewDict()
 
 	// Find the RT_VERSION resource.
 	for _, entry := range nt_header.
@@ -123,7 +185,8 @@ func GetVersionInformation(
 					for _, string_table := range child.StringTable() {
 						for _, resource_string := range string_table.
 							ResourceStrings() {
-							result[resource_string.Key()] = resource_string.Value()
+							result.Set(resource_string.Key(),
+								resource_string.Value())
 						}
 
 					}
@@ -170,26 +233,6 @@ func NewPEFile(reader io.ReaderAt) (*PEFile, error) {
 		},
 		GUIDAge: rsds.GUIDAge(),
 		PDB:     rsds.Filename(),
-		VersionInformation: GetVersionInformation(
-			nt_header, rva_resolver, resource_base),
-		Imports:  GetImports(nt_header, rva_resolver),
-		Exports:  []string{},
-		Forwards: []string{},
-	}
-
-	export_desc := nt_header.ExportDirectory(rva_resolver)
-	if export_desc != nil {
-		for _, desc := range nt_header.ExportTable(rva_resolver) {
-			if desc.Forwarder != "" {
-				result.Forwards = append(result.Forwards, desc.Forwarder)
-			} else if desc.Name == "" {
-				result.Exports = append(result.Exports,
-					fmt.Sprintf("%s:#%d", desc.DLLName, desc.Ordinal))
-			} else {
-				result.Exports = append(result.Exports,
-					fmt.Sprintf("%s:%s", desc.DLLName, desc.Name))
-			}
-		}
 	}
 
 	for _, section := range nt_header.Sections() {
