@@ -5,8 +5,6 @@
     "TimeDateStampRaw": 4135026960,
     "Characteristics": 8226
   },
-  "GUIDAge": "5C270EB7BB44B86C2A84F6B60F3DA65D1",
-  "PDB": "wkscli.pdb",
   "Sections": [
     {
       "Perm": "xr-",
@@ -157,5 +155,6 @@
     "c:\\Windows\\System32\\dnshc.DllGetClassObject",
     "c:\\Windows\\System32\\dnshc.DllRegisterServer",
     "c:\\Windows\\System32\\dnshc.DllUnregisterServer"
-  ]
+  ],
+  "ImpHash": "2c66cd20f0ece47502db44e1e16cee7b"
 }
