@@ -88,6 +88,10 @@ func (self *IMAGE_NT_HEADERS) ExportTable(
 	// another DLL.
 	for i, func_addr := range func_table {
 		if IsInExportDir(dir, func_addr) {
+			if i >= len(ordinal_table) {
+				continue
+			}
+
 			ordinal := ordinal_table[i]
 			seen[uint32(ordinal)] = true
 
@@ -129,6 +133,10 @@ func (self *IMAGE_NT_HEADERS) ExportTable(
 	// Now list exported functions without a name (by ordinal)
 	base := desc.Base()
 	for i := uint32(0); i < number_of_funcs-1; i++ {
+		if i >= uint32(len(func_table)) {
+			break
+		}
+
 		ordinal := base + i
 		_, pres := seen[ordinal]
 		if !pres {
