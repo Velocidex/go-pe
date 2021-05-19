@@ -6,6 +6,8 @@ import (
 	"fmt"
 	"os"
 	"strings"
+
+	"github.com/davecgh/go-spew/spew"
 )
 
 var (
@@ -56,4 +58,8 @@ func DebugPrint(fmt_str string, v ...interface{}) {
 	if *PE_DEBUG {
 		fmt.Printf(fmt_str, v...)
 	}
+}
+
+func Debug(arg interface{}) {
+	spew.Dump(arg)
 }

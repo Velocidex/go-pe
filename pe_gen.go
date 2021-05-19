@@ -68,6 +68,9 @@ type PeProfile struct {
     Off_VS_VERSIONINFO_ValueLength int64
     Off_VS_VERSIONINFO_Type int64
     Off_VS_VERSIONINFO_szKey int64
+    Off_WIN_CERTIFICATE_Length int64
+    Off_WIN_CERTIFICATE_Revision int64
+    Off_WIN_CERTIFICATE_CertificateType int64
     Off_GUID_Data1 int64
     Off_GUID_Data2 int64
     Off_GUID_Data3 int64
@@ -102,12 +105,15 @@ type PeProfile struct {
     Off_IMAGE_NT_HEADERS_FileHeader int64
     Off_IMAGE_NT_HEADERS_OptionalHeader int64
     Off_IMAGE_NT_HEADERS_Signature int64
+    Off_IMAGE_OPTIONAL_HEADER_CheckSum int64
     Off_IMAGE_OPTIONAL_HEADER_DataDirectory int64
     Off_IMAGE_OPTIONAL_HEADER_ImageBase int64
     Off_IMAGE_OPTIONAL_HEADER_Magic int64
+    Off_IMAGE_OPTIONAL_HEADER_SizeOfHeaders int64
     Off_IMAGE_OPTIONAL_HEADER64_DataDirectory int64
     Off_IMAGE_OPTIONAL_HEADER64_ImageBase int64
     Off_IMAGE_OPTIONAL_HEADER64_Magic int64
+    Off_IMAGE_OPTIONAL_HEADER64_SizeOfHeaders int64
     Off_IMAGE_RESOURCE_DATA_ENTRY_OffsetToData int64
     Off_IMAGE_RESOURCE_DATA_ENTRY_DataSize int64
     Off_IMAGE_RESOURCE_DATA_ENTRY_CodePage int64
@@ -137,7 +143,7 @@ type PeProfile struct {
 
 func NewPeProfile() *PeProfile {
     // Specific offsets can be tweaked to cater for slight version mismatches.
-    self := &PeProfile{0,4,20,24,0,4,8,0,4,0,2,4,0,2,0,2,4,6,0,2,4,6,0,2,4,6,0,2,4,6,0,4,6,8,4,0,20,4,12,60,0,28,36,32,16,12,20,24,0,0,0,18,0,2,16,4,4,2,0,12,0,4,24,0,96,28,0,112,24,0,0,4,8,14,12,16,0,4,0,0,4,4,36,0,20,16,12,0,0,0,0,0,0,0,0}
+    self := &PeProfile{0,4,20,24,0,4,8,0,4,0,2,4,0,2,0,2,4,6,0,2,4,6,0,2,4,6,0,2,4,6,0,4,6,0,4,6,8,4,0,20,4,12,60,0,28,36,32,16,12,20,24,0,0,0,18,0,2,16,4,4,2,0,12,0,4,24,0,64,96,28,0,60,112,24,0,60,0,4,8,14,12,16,0,4,0,0,4,4,36,0,20,16,12,0,0,0,0,0,0,0,0}
     return self
 }
 
@@ -175,6 +181,10 @@ func (self *PeProfile) StringTable(reader io.ReaderAt, offset int64) *StringTabl
 
 func (self *PeProfile) VS_VERSIONINFO(reader io.ReaderAt, offset int64) *VS_VERSIONINFO {
     return &VS_VERSIONINFO{Reader: reader, Offset: offset, Profile: self}
+}
+
+func (self *PeProfile) WIN_CERTIFICATE(reader io.ReaderAt, offset int64) *WIN_CERTIFICATE {
+    return &WIN_CERTIFICATE{Reader: reader, Offset: offset, Profile: self}
 }
 
 func (self *PeProfile) GUID(reader io.ReaderAt, offset int64) *GUID {
@@ -543,6 +553,35 @@ func (self *VS_VERSIONINFO) DebugString() string {
     return result
 }
 
+type WIN_CERTIFICATE struct {
+    Reader io.ReaderAt
+    Offset int64
+    Profile *PeProfile
+}
+
+func (self *WIN_CERTIFICATE) Size() int {
+    return 8
+}
+
+func (self *WIN_CERTIFICATE) Length() uint32 {
+   return ParseUint32(self.Reader, self.Profile.Off_WIN_CERTIFICATE_Length + self.Offset)
+}
+
+func (self *WIN_CERTIFICATE) Revision() uint16 {
+   return ParseUint16(self.Reader, self.Profile.Off_WIN_CERTIFICATE_Revision + self.Offset)
+}
+
+func (self *WIN_CERTIFICATE) CertificateType() uint16 {
+   return ParseUint16(self.Reader, self.Profile.Off_WIN_CERTIFICATE_CertificateType + self.Offset)
+}
+func (self *WIN_CERTIFICATE) DebugString() string {
+    result := fmt.Sprintf("struct WIN_CERTIFICATE @ %#x:\n", self.Offset)
+    result += fmt.Sprintf("  Length: %#0x\n", self.Length())
+    result += fmt.Sprintf("  Revision: %#0x\n", self.Revision())
+    result += fmt.Sprintf("  CertificateType: %#0x\n", self.CertificateType())
+    return result
+}
+
 type GUID struct {
     Reader io.ReaderAt
     Offset int64
@@ -901,6 +940,10 @@ func (self *IMAGE_OPTIONAL_HEADER) Size() int {
     return 224
 }
 
+func (self *IMAGE_OPTIONAL_HEADER) CheckSum() uint32 {
+   return ParseUint32(self.Reader, self.Profile.Off_IMAGE_OPTIONAL_HEADER_CheckSum + self.Offset)
+}
+
 func (self *IMAGE_OPTIONAL_HEADER) DataDirectory() []*IMAGE_DATA_DIRECTORY {
    return ParseArray_IMAGE_DATA_DIRECTORY(self.Profile, self.Reader, self.Profile.Off_IMAGE_OPTIONAL_HEADER_DataDirectory + self.Offset, 128)
 }
@@ -912,10 +955,16 @@ func (self *IMAGE_OPTIONAL_HEADER) ImageBase() uint32 {
 func (self *IMAGE_OPTIONAL_HEADER) Magic() uint16 {
    return ParseUint16(self.Reader, self.Profile.Off_IMAGE_OPTIONAL_HEADER_Magic + self.Offset)
 }
+
+func (self *IMAGE_OPTIONAL_HEADER) SizeOfHeaders() uint32 {
+   return ParseUint32(self.Reader, self.Profile.Off_IMAGE_OPTIONAL_HEADER_SizeOfHeaders + self.Offset)
+}
 func (self *IMAGE_OPTIONAL_HEADER) DebugString() string {
     result := fmt.Sprintf("struct IMAGE_OPTIONAL_HEADER @ %#x:\n", self.Offset)
+    result += fmt.Sprintf("  CheckSum: %#0x\n", self.CheckSum())
     result += fmt.Sprintf("  ImageBase: %#0x\n", self.ImageBase())
     result += fmt.Sprintf("  Magic: %#0x\n", self.Magic())
+    result += fmt.Sprintf("  SizeOfHeaders: %#0x\n", self.SizeOfHeaders())
     return result
 }
 
@@ -940,10 +989,15 @@ func (self *IMAGE_OPTIONAL_HEADER64) ImageBase() uint64 {
 func (self *IMAGE_OPTIONAL_HEADER64) Magic() uint16 {
    return ParseUint16(self.Reader, self.Profile.Off_IMAGE_OPTIONAL_HEADER64_Magic + self.Offset)
 }
+
+func (self *IMAGE_OPTIONAL_HEADER64) SizeOfHeaders() uint32 {
+   return ParseUint32(self.Reader, self.Profile.Off_IMAGE_OPTIONAL_HEADER64_SizeOfHeaders + self.Offset)
+}
 func (self *IMAGE_OPTIONAL_HEADER64) DebugString() string {
     result := fmt.Sprintf("struct IMAGE_OPTIONAL_HEADER64 @ %#x:\n", self.Offset)
     result += fmt.Sprintf("  ImageBase: %#0x\n", self.ImageBase())
     result += fmt.Sprintf("  Magic: %#0x\n", self.Magic())
+    result += fmt.Sprintf("  SizeOfHeaders: %#0x\n", self.SizeOfHeaders())
     return result
 }
 
@@ -1088,12 +1142,12 @@ func (self *IMAGE_RESOURCE_DIRECTORY_ENTRY) Type() *Enumeration {
 
 func (self *IMAGE_RESOURCE_DIRECTORY_ENTRY) DataIsDirectory() uint64 {
    value := ParseUint32(self.Reader, self.Profile.Off_IMAGE_RESOURCE_DIRECTORY_ENTRY_DataIsDirectory + self.Offset)
-   return (uint64(value) & 0x7fffffffffffffff) >> 0x1f
+   return (uint64(value) & 0xffffffff) >> 0x1f
 }
 
 func (self *IMAGE_RESOURCE_DIRECTORY_ENTRY) NameIsString() uint64 {
    value := ParseUint32(self.Reader, self.Profile.Off_IMAGE_RESOURCE_DIRECTORY_ENTRY_NameIsString + self.Offset)
-   return (uint64(value) & 0x7fffffffffffffff) >> 0x1f
+   return (uint64(value) & 0xffffffff) >> 0x1f
 }
 
 func (self *IMAGE_RESOURCE_DIRECTORY_ENTRY) NameOffset() uint64 {
