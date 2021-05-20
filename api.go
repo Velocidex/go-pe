@@ -171,9 +171,13 @@ func GetVersionInformation(
 	resource_base int64) *ordereddict.Dict {
 	result := ordereddict.NewDict()
 
+	resourceDirectory := nt_header.ResourceDirectory(rva_resolver)
+	if resource_base == 0 {
+		resource_base = resourceDirectory.Offset
+	}
+
 	// Find the RT_VERSION resource.
-	for _, entry := range nt_header.
-		ResourceDirectory(rva_resolver).Entries() {
+	for _, entry := range resourceDirectory.Entries() {
 
 		if entry.NameString(resource_base) == "RT_VERSION" {
 			for _, child := range entry.Traverse(resource_base) {
