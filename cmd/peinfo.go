@@ -44,5 +44,11 @@ func main() {
 
 	case messages_command.FullCommand():
 		doMessages()
+
+	case authenticode_command.FullCommand():
+		doAuthenticode()
+
+	case cat_command.FullCommand():
+		doCat()
 	}
 }

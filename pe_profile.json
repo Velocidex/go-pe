@@ -414,5 +414,11 @@
     "Length": [0, ["unsigned short"]],
     "Flags":  [2, ["unsigned short"]],
     "Text": [4, ["UnicodeString"]]
-  }]
+  }],
+
+    "WIN_CERTIFICATE": [8, {
+        "Length": [0, ["unsigned long"]],
+        "Revision": [4, ["unsigned short"]],
+        "CertificateType": [6, ["unsigned short"]]
+    }]
 }

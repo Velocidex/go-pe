@@ -47,6 +47,7 @@ Structs:
   - MESSAGE_RESOURCE_DATA
   - MESSAGE_RESOURCE_BLOCK
   - MESSAGE_RESOURCE_ENTRY
+  - WIN_CERTIFICATE
 
 # We only use specific fields in many structs. For efficiency, this
 # code will only generate bindings for the fields we actually use.
@@ -60,8 +61,8 @@ FieldWhiteList:
   _IMAGE_RESOURCE_DIRECTORY: [_Entries, NumberOfIdEntries, NumberOfNamedEntries]
   _IMAGE_RESOURCE_DIRECTORY_ENTRY: [NameIsString, NameOffset, Type,
        DataIsDirectory, OffsetToDirectory, OffsetToData]
-  _IMAGE_OPTIONAL_HEADER: [Magic, DataDirectory, ImageBase]
-  _IMAGE_OPTIONAL_HEADER64: [Magic, DataDirectory, ImageBase]
+  _IMAGE_OPTIONAL_HEADER: [Magic, DataDirectory, ImageBase, CheckSum, SizeOfHeaders]
+  _IMAGE_OPTIONAL_HEADER64: [Magic, DataDirectory, ImageBase, SizeOfHeaders]
   tagVS_FIXEDFILEINFO: []
   _IMAGE_IMPORT_DESCRIPTOR: [Name, Characteristics, OriginalFirstThunk]
   _IMAGE_IMPORT_BY_NAME: [Name]

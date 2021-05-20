@@ -32,7 +32,8 @@ type FileHeader struct {
 type PEFile struct {
 	mu sync.Mutex
 
-	nt_header *IMAGE_NT_HEADERS
+	dos_header *IMAGE_DOS_HEADER
+	nt_header  *IMAGE_NT_HEADERS
 
 	// Used to resolve RVA to file offsets.
 	rva_resolver *RVAResolver
@@ -222,6 +223,7 @@ func NewPEFile(reader io.ReaderAt) (*PEFile, error) {
 	rsds := nt_header.RSDS(rva_resolver)
 
 	result := &PEFile{
+		dos_header:    dos_header,
 		nt_header:     nt_header,
 		rva_resolver:  rva_resolver,
 		resource_base: resource_base,
