@@ -1,0 +1,108 @@
+{
+  "Signer": {
+    "IssuerName": "C=US, ST=Washington, L=Redmond, O=Microsoft Corporation, CN=Microsoft Windows Production PCA 2011",
+    "SerialNumber": "33000001c422b2f79b793dacb20000000001c4",
+    "DigestAlgorithm": "SHA256",
+    "AuthenticatedAttributes": {
+      "ContentType": "1.3.6.1.4.1.311.2.1.4",
+      "MessageDigest": "Pxh8yeRg4LgsgjKxRGLnKtEVBSkX+fHR8UgH3DgTlLg=",
+      "MessageDigestHex": "3f187cc9e460e0b82c8232b14462e72ad115052917f9f1d1f14807dc381394b8",
+      "Oid: 1.3.6.1.4.1.311.10.3.28": "Unknown",
+      "ProgramName": "Microsoft Windows",
+      "MoreInfo": "http://www.microsoft.com/windows"
+    },
+    "UnauthenticatedAttributes": {},
+    "Subject": "C=US, ST=Washington, L=Redmond, O=Microsoft Corporation, CN=Microsoft Windows"
+  },
+  "Certificates": [
+    {
+      "SerialNumber": "33000001c422b2f79b793dacb20000000001c4",
+      "SignatureAlgorithm": "SHA256-RSA",
+      "Subject": "C=US, ST=Washington, L=Redmond, O=Microsoft Corporation, CN=Microsoft Windows",
+      "Issuer": "C=US, ST=Washington, L=Redmond, O=Microsoft Corporation, CN=Microsoft Windows Production PCA 2011",
+      "NotBefore": "2018-07-03T20:45:50Z",
+      "NotAfter": "2019-07-26T20:45:50Z",
+      "PublicKey": "RSA\n                Public-Key: (2048 bit)\n                Modulus:\n                    c1:f5:ad:8c:70:a7:bd:d3:e9:da:54:04:aa:43:3a:\n                    28:4e:98:2c:a4:d2:59:e7:98:ce:19:66:93:c7:dc:\n                    85:b5:65:4a:b4:ab:c9:15:68:eb:38:dd:17:89:19:\n                    3c:80:0c:22:6f:3b:6c:93:60:f6:02:d3:9c:49:b9:\n                    e3:a5:c1:19:5b:4e:10:22:08:6c:95:e5:4f:ab:0c:\n                    d6:42:85:e5:bd:c6:f0:e9:80:f3:f6:2e:39:5e:a1:\n                    da:38:92:7c:db:b3:aa:9e:59:6e:d7:05:13:6f:26:\n                    fe:09:33:f9:eb:38:ee:a4:86:55:a2:f3:b5:34:51:\n                    6d:11:c8:75:98:b9:09:46:2d:7d:7e:ea:c1:02:db:\n                    a9:b2:45:c5:20:43:4d:ec:c5:9a:ef:73:c0:20:e1:\n                    f3:f0:d5:f0:ea:9f:84:a0:1f:ab:89:2d:49:88:01:\n                    00:30:6f:1d:10:02:a4:22:a2:80:6b:28:91:29:d5:\n                    50:1b:58:22:23:ee:be:5b:d2:6e:d4:8d:f3:09:d3:\n                    86:a0:e9:1f:85:fa:c5:47:d2:18:a7:5c:64:ef:58:\n                    19:f0:74:c7:24:70:4e:18:b0:8e:7a:f3:76:b1:e2:\n                    87:02:50:f6:87:07:b3:63:9f:11:fa:e7:27:08:1a:\n                    00:a7:7a:bc:eb:07:84:59:2c:8e:3b:37:25:09:9d:\n                    77\n                Exponent: 65537 (0x10001)\n",
+      "Extensions": {
+        "Extended Key Usage": {
+          "Critical": false,
+          "KeyUsage": [
+            "Code Signing"
+          ]
+        },
+        "SubjectKeyId": {
+          "Critical": false,
+          "Value": "71:12:02:72:C8:0C:EB:B1:35:1F:DC:6F:31:EF:21:FC:B3:BB:41:31"
+        },
+        "SubjectAlternativeName": {
+          "Critical": false,
+          "DNS": null,
+          "Email": null,
+          "IP": null
+        },
+        "AuthorityKeyIdentifier": {
+          "Critical": false,
+          "KeyId": ""
+        },
+        "CRLDistributionPoints": {
+          "Critical": false,
+          "URI": [
+            "http://www.microsoft.com/pkiops/crl/MicWinProPCA2011_2011-10-19.crl"
+          ]
+        },
+        "BasicConstraints": {
+          "Critical": true,
+          "IsCA": false,
+          "MaxPathLen": -1
+        }
+      }
+    },
+    {
+      "SerialNumber": "61077656000000000008",
+      "SignatureAlgorithm": "SHA256-RSA",
+      "Subject": "C=US, ST=Washington, L=Redmond, O=Microsoft Corporation, CN=Microsoft Windows Production PCA 2011",
+      "Issuer": "C=US, ST=Washington, L=Redmond, O=Microsoft Corporation, CN=Microsoft Root Certificate Authority 2010",
+      "NotBefore": "2011-10-19T18:41:42Z",
+      "NotAfter": "2026-10-19T18:51:42Z",
+      "PublicKey": "RSA\n                Public-Key: (2048 bit)\n                Modulus:\n                    dd:0c:bb:a2:e4:2e:09:e3:e7:c5:f7:96:69:bc:00:\n                    21:bd:69:33:33:ef:ad:04:cb:54:80:ee:06:83:bb:\n                    c5:20:84:d9:f7:d2:8b:f3:38:b0:ab:a4:ad:2d:7c:\n                    62:79:05:ff:e3:4a:3f:04:35:20:70:e3:c4:e7:6b:\n                    e0:9c:c0:36:75:e9:8a:31:dd:8d:70:e5:dc:37:b5:\n                    74:46:96:28:5b:87:60:23:2c:bf:dc:47:a5:67:f7:\n                    51:27:9e:72:eb:07:a6:c9:b9:1e:3b:53:35:7c:e5:\n                    d3:ec:27:b9:87:1c:fe:b9:c9:23:09:6f:a8:46:91:\n                    c1:6e:96:3c:41:d3:cb:a3:3f:5d:02:6a:4d:ec:69:\n                    1f:25:28:5c:36:ff:fd:43:15:0a:94:e0:19:b4:cf:\n                    df:c2:12:e2:c2:5b:27:ee:27:78:30:8b:5b:2a:09:\n                    6b:22:89:53:60:16:2c:c0:68:1d:53:ba:ec:49:f3:\n                    9d:61:8c:85:68:09:73:44:5d:7d:a2:54:2b:dd:79:\n                    f7:15:cf:35:5d:6c:1c:2b:5c:ce:bc:9c:23:8b:6f:\n                    6e:b5:26:d9:36:13:c3:4f:d6:27:ae:b9:32:3b:41:\n                    92:2c:e1:c7:cd:77:e8:aa:54:4e:f7:5c:0b:04:87:\n                    65:b4:43:18:a8:b2:e0:6d:19:77:ec:5a:24:fa:48:\n                    03\n                Exponent: 65537 (0x10001)\n",
+      "Extensions": {
+        "SubjectKeyId": {
+          "Critical": false,
+          "Value": "A9:29:02:39:8E:16:C4:97:78:CD:90:F9:9E:4F:9A:E1:7C:55:AF:53"
+        },
+        "KeyUsage": {
+          "Critical": false,
+          "KeyUsage": [
+            "Digital Signature",
+            "Certificate Sign",
+            "CRL Sign"
+          ]
+        },
+        "BasicConstraints": {
+          "Critical": true,
+          "IsCA": true,
+          "MaxPathLen": -1
+        },
+        "AuthorityKeyIdentifier": {
+          "Critical": false,
+          "KeyId": ""
+        },
+        "CRLDistributionPoints": {
+          "Critical": false,
+          "URI": [
+            "http://crl.microsoft.com/pki/crl/products/MicRooCerAut_2010-06-23.crl"
+          ]
+        }
+      }
+    }
+  ],
+  "HashType": "SHA256",
+  "ExpectedHash": "oT1/UQGuHwuiBtoIbbD4/AYBAK1zIHdWBIAmlXo1esU=",
+  "ExpectedHashHex": "a13d7f5101ae1f0ba206da086db0f8fc060100ad73207756048026957a357ac5",
+  "CalculatedHash": {
+    "MD5": "61d36116089e04535ccf99e5821dfca8",
+    "SHA1": "d6655dae2c6cd265203075ca9dcca071b711da7f",
+    "SHA256": "a13d7f5101ae1f0ba206da086db0f8fc060100ad73207756048026957a357ac5",
+    "HashMatches": true
+  }
+}

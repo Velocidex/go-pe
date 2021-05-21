@@ -44,6 +44,19 @@ var (
 	oidSPC_STATEMENT_TYPE_OBJID = []int{1, 3, 6, 1, 4, 1, 311, 2, 1, 11}
 	oidMessageDigest            = []int{1, 2, 840, 113549, 1, 9, 4}
 	oidSPC_SP_OPUS_INFO_OBJID   = []int{1, 3, 6, 1, 4, 1, 311, 2, 1, 12}
+	OIDSPC_PE_IMAGE_DATA_OBJID  = []int{1, 3, 6, 1, 4, 1, 311, 2, 1, 15}
+
+	oidCertificateTrustList = []int{1, 3, 6, 1, 4, 1, 311, 10, 1}
+
+	// Reference https://datatracker.ietf.org/doc/html/rfc2315
+	OIDIndirectData            = asn1.ObjectIdentifier{1, 3, 6, 1, 4, 1, 311, 2, 1, 4}
+	OIDSPC_CAB_DATA_OBJID      = asn1.ObjectIdentifier{1, 3, 6, 1, 4, 1, 311, 2, 1, 25}
+	OIDCounterSignature        = asn1.ObjectIdentifier{1, 2, 840, 113549, 1, 9, 6}
+	OIDCatalogList             = asn1.ObjectIdentifier{1, 3, 6, 1, 4, 1, 311, 12, 1, 1}
+	OIDCAT_MEMBERINFO_OBJID    = asn1.ObjectIdentifier{1, 3, 6, 1, 4, 1, 311, 12, 2, 2}
+	OIDCAT_MEMBERINFO2_OBJID   = asn1.ObjectIdentifier{1, 3, 6, 1, 4, 1, 311, 12, 2, 3}
+	OIDNameValueObjId          = asn1.ObjectIdentifier{1, 3, 6, 1, 4, 1, 311, 12, 2, 1}
+	OID_CATALOG_LIST_MEMBER_V2 = asn1.ObjectIdentifier{1, 3, 6, 1, 4, 1, 311, 12, 1, 3}
 )
 
 func (self *IMAGE_NT_HEADERS) ParseSecurityInfo() (*pkcs7.PKCS7, error) {
@@ -89,7 +102,11 @@ func (self *PEFile) CalcHashToDict() *ordereddict.Dict {
 	var hash_matches bool
 	authenticode_info, err := ParseAuthenticode(self)
 	if err == nil {
-		indirect_data := parseIndirectData(authenticode_info)
+		indirect_data, err := parseIndirectData(authenticode_info)
+		if err != nil {
+			return result
+		}
+
 		expected_hash := fmt.Sprintf("%0x", indirect_data.MessageDigest.Digest)
 		_, hash, _ := getHashForOID(indirect_data.MessageDigest.DigestAlgorithm.Algorithm)
 		switch hash {
@@ -189,14 +206,16 @@ type rawCertificates struct {
 
 func getSignedData(pkcs7 *pkcs7.PKCS7, result *ordereddict.Dict) {
 	if pkcs7.SignedData.ContentInfo.ContentType.Equal(OIDIndirectData) {
-		indirect_data := parseIndirectData(pkcs7)
-		if indirect_data != nil {
+		indirect_data, err := parseIndirectData(pkcs7)
+		if indirect_data != nil && err == nil {
 			_, hash, _ := getHashForOID(indirect_data.MessageDigest.DigestAlgorithm.Algorithm)
 
 			result.Set("HashType", hash)
 			result.Set("ExpectedHash", indirect_data.MessageDigest.Digest)
 			result.Set("ExpectedHashHex", fmt.Sprintf("%x", indirect_data.MessageDigest.Digest))
 		}
+	} else if pkcs7.SignedData.ContentInfo.ContentType.Equal(oidCertificateTrustList) {
+		parseCertificateTrustList(pkcs7, result)
 	}
 }
 
@@ -232,14 +251,23 @@ func getSignerInfo(signer_info *pkcs7.SignerInfo) *ordereddict.Dict {
 			authenticated_attributes.
 				Set("ProgramName", program_info.ProgramName).
 				Set("MoreInfo", program_info.MoreInfo)
+		} else if attr.Type.Equal(oidSPC_STATEMENT_TYPE_OBJID) {
+
 		} else if attr.Type.Equal(oidSigningTime) {
 			authenticated_attributes.
 				Set("SigningTime", parseTimestamp(attr.Value.Bytes))
+
 		} else if attr.Type.Equal(oidMessageDigest) {
 			md := parseMessageDigest(attr.Value.Bytes)
 			authenticated_attributes.
 				Set("MessageDigest", md).
 				Set("MessageDigestHex", fmt.Sprintf("%x", md))
+		} else if attr.Type.Equal(oidContentType) {
+			authenticated_attributes.
+				Set("ContentType", getContentTypeString(attr.Value.Bytes))
+		} else {
+			authenticated_attributes.
+				Set(fmt.Sprintf("Oid: %v", attr.Type), "Unknown")
 		}
 	}
 	signer.Set("AuthenticatedAttributes", authenticated_attributes)
@@ -542,21 +570,20 @@ func encodeValue(value []byte) string {
 }
 
 func getPolicyName(pol asn1.ObjectIdentifier) string {
-	if pol.Equal(oidSoftwarePublisher) {
+	switch {
+	case pol.Equal(oidSoftwarePublisher):
 		return fmt.Sprintf("Software Publisher (%v)", pol)
-	}
 
-	if pol.Equal(oidCodeSigning) {
+	case pol.Equal(oidCodeSigning):
 		return fmt.Sprintf("Code Signing (%v)", pol)
-	}
 
-	if pol.Equal(oidAnyPolicy) {
+	case pol.Equal(oidAnyPolicy):
 		return fmt.Sprintf("Any Policy (%v)", pol)
-	}
 
-	if pol.Equal(oidTimestampCert) {
+	case pol.Equal(oidTimestampCert):
 		return fmt.Sprintf("Timestamping Certificate (%v)", pol)
-	}
 
-	return fmt.Sprintf("%v", pol)
+	default:
+		return fmt.Sprintf("%v", pol)
+	}
 }

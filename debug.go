@@ -11,7 +11,7 @@ import (
 )
 
 var (
-	PE_DEBUG *bool
+	PE_DEBUG bool
 )
 
 func (self *IMAGE_NT_HEADERS) DebugDirectory(
@@ -37,29 +37,24 @@ func (self *PrefixedString) String() string {
 		int64(self.Length()))
 }
 
-func DebugPrint(fmt_str string, v ...interface{}) {
-	if PE_DEBUG == nil {
-		// os.Environ() seems very expensive in Go so we cache
-		// it.
-		for _, x := range os.Environ() {
-			if strings.HasPrefix(x, "PE_DEBUG=") {
-				value := true
-				PE_DEBUG = &value
-				break
-			}
+func init() {
+	// os.Environ() seems very expensive in Go so we cache it.
+	for _, x := range os.Environ() {
+		if strings.HasPrefix(x, "PE_DEBUG=") {
+			PE_DEBUG = true
+			return
 		}
 	}
+}
 
-	if PE_DEBUG == nil {
-		value := false
-		PE_DEBUG = &value
-	}
-
-	if *PE_DEBUG {
+func DebugPrint(fmt_str string, v ...interface{}) {
+	if PE_DEBUG {
 		fmt.Printf(fmt_str, v...)
 	}
 }
 
 func Debug(arg interface{}) {
-	spew.Dump(arg)
+	if PE_DEBUG {
+		spew.Dump(arg)
+	}
 }

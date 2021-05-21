@@ -1,0 +1,168 @@
+{
+  "Signer": {
+    "IssuerName": "C=US, ST=Washington, L=Redmond, O=Microsoft Corporation, CN=Microsoft Windows Production PCA 2011",
+    "SerialNumber": "33000001c422b2f79b793dacb20000000001c4",
+    "DigestAlgorithm": "SHA256",
+    "AuthenticatedAttributes": {
+      "ContentType": "Certificate Trust List",
+      "MessageDigest": "6A79wRZy/ozRQ9O+D0D17Hk0GQMEFHgBklmY9YxF8Dw=",
+      "MessageDigestHex": "e80efdc11672fe8cd143d3be0f40f5ec7934190304147801925998f58c45f03c",
+      "ProgramName": "Microsoft Windows",
+      "MoreInfo": "http://www.microsoft.com/windows"
+    },
+    "UnauthenticatedAttributes": {},
+    "Subject": "C=US, ST=Washington, L=Redmond, O=Microsoft Corporation, CN=Microsoft Windows"
+  },
+  "Certificates": [
+    {
+      "SerialNumber": "33000001c422b2f79b793dacb20000000001c4",
+      "SignatureAlgorithm": "SHA256-RSA",
+      "Subject": "C=US, ST=Washington, L=Redmond, O=Microsoft Corporation, CN=Microsoft Windows",
+      "Issuer": "C=US, ST=Washington, L=Redmond, O=Microsoft Corporation, CN=Microsoft Windows Production PCA 2011",
+      "NotBefore": "2018-07-03T20:45:50Z",
+      "NotAfter": "2019-07-26T20:45:50Z",
+      "PublicKey": "RSA\n                Public-Key: (2048 bit)\n                Modulus:\n                    c1:f5:ad:8c:70:a7:bd:d3:e9:da:54:04:aa:43:3a:\n                    28:4e:98:2c:a4:d2:59:e7:98:ce:19:66:93:c7:dc:\n                    85:b5:65:4a:b4:ab:c9:15:68:eb:38:dd:17:89:19:\n                    3c:80:0c:22:6f:3b:6c:93:60:f6:02:d3:9c:49:b9:\n                    e3:a5:c1:19:5b:4e:10:22:08:6c:95:e5:4f:ab:0c:\n                    d6:42:85:e5:bd:c6:f0:e9:80:f3:f6:2e:39:5e:a1:\n                    da:38:92:7c:db:b3:aa:9e:59:6e:d7:05:13:6f:26:\n                    fe:09:33:f9:eb:38:ee:a4:86:55:a2:f3:b5:34:51:\n                    6d:11:c8:75:98:b9:09:46:2d:7d:7e:ea:c1:02:db:\n                    a9:b2:45:c5:20:43:4d:ec:c5:9a:ef:73:c0:20:e1:\n                    f3:f0:d5:f0:ea:9f:84:a0:1f:ab:89:2d:49:88:01:\n                    00:30:6f:1d:10:02:a4:22:a2:80:6b:28:91:29:d5:\n                    50:1b:58:22:23:ee:be:5b:d2:6e:d4:8d:f3:09:d3:\n                    86:a0:e9:1f:85:fa:c5:47:d2:18:a7:5c:64:ef:58:\n                    19:f0:74:c7:24:70:4e:18:b0:8e:7a:f3:76:b1:e2:\n                    87:02:50:f6:87:07:b3:63:9f:11:fa:e7:27:08:1a:\n                    00:a7:7a:bc:eb:07:84:59:2c:8e:3b:37:25:09:9d:\n                    77\n                Exponent: 65537 (0x10001)\n",
+      "Extensions": {
+        "Extended Key Usage": {
+          "Critical": false,
+          "KeyUsage": [
+            "Code Signing"
+          ]
+        },
+        "SubjectKeyId": {
+          "Critical": false,
+          "Value": "71:12:02:72:C8:0C:EB:B1:35:1F:DC:6F:31:EF:21:FC:B3:BB:41:31"
+        },
+        "SubjectAlternativeName": {
+          "Critical": false,
+          "DNS": null,
+          "Email": null,
+          "IP": null
+        },
+        "AuthorityKeyIdentifier": {
+          "Critical": false,
+          "KeyId": ""
+        },
+        "CRLDistributionPoints": {
+          "Critical": false,
+          "URI": [
+            "http://www.microsoft.com/pkiops/crl/MicWinProPCA2011_2011-10-19.crl"
+          ]
+        },
+        "BasicConstraints": {
+          "Critical": true,
+          "IsCA": false,
+          "MaxPathLen": -1
+        }
+      }
+    },
+    {
+      "SerialNumber": "61077656000000000008",
+      "SignatureAlgorithm": "SHA256-RSA",
+      "Subject": "C=US, ST=Washington, L=Redmond, O=Microsoft Corporation, CN=Microsoft Windows Production PCA 2011",
+      "Issuer": "C=US, ST=Washington, L=Redmond, O=Microsoft Corporation, CN=Microsoft Root Certificate Authority 2010",
+      "NotBefore": "2011-10-19T18:41:42Z",
+      "NotAfter": "2026-10-19T18:51:42Z",
+      "PublicKey": "RSA\n                Public-Key: (2048 bit)\n                Modulus:\n                    dd:0c:bb:a2:e4:2e:09:e3:e7:c5:f7:96:69:bc:00:\n                    21:bd:69:33:33:ef:ad:04:cb:54:80:ee:06:83:bb:\n                    c5:20:84:d9:f7:d2:8b:f3:38:b0:ab:a4:ad:2d:7c:\n                    62:79:05:ff:e3:4a:3f:04:35:20:70:e3:c4:e7:6b:\n                    e0:9c:c0:36:75:e9:8a:31:dd:8d:70:e5:dc:37:b5:\n                    74:46:96:28:5b:87:60:23:2c:bf:dc:47:a5:67:f7:\n                    51:27:9e:72:eb:07:a6:c9:b9:1e:3b:53:35:7c:e5:\n                    d3:ec:27:b9:87:1c:fe:b9:c9:23:09:6f:a8:46:91:\n                    c1:6e:96:3c:41:d3:cb:a3:3f:5d:02:6a:4d:ec:69:\n                    1f:25:28:5c:36:ff:fd:43:15:0a:94:e0:19:b4:cf:\n                    df:c2:12:e2:c2:5b:27:ee:27:78:30:8b:5b:2a:09:\n                    6b:22:89:53:60:16:2c:c0:68:1d:53:ba:ec:49:f3:\n                    9d:61:8c:85:68:09:73:44:5d:7d:a2:54:2b:dd:79:\n                    f7:15:cf:35:5d:6c:1c:2b:5c:ce:bc:9c:23:8b:6f:\n                    6e:b5:26:d9:36:13:c3:4f:d6:27:ae:b9:32:3b:41:\n                    92:2c:e1:c7:cd:77:e8:aa:54:4e:f7:5c:0b:04:87:\n                    65:b4:43:18:a8:b2:e0:6d:19:77:ec:5a:24:fa:48:\n                    03\n                Exponent: 65537 (0x10001)\n",
+      "Extensions": {
+        "SubjectKeyId": {
+          "Critical": false,
+          "Value": "A9:29:02:39:8E:16:C4:97:78:CD:90:F9:9E:4F:9A:E1:7C:55:AF:53"
+        },
+        "KeyUsage": {
+          "Critical": false,
+          "KeyUsage": [
+            "Digital Signature",
+            "Certificate Sign",
+            "CRL Sign"
+          ]
+        },
+        "BasicConstraints": {
+          "Critical": true,
+          "IsCA": true,
+          "MaxPathLen": -1
+        },
+        "AuthorityKeyIdentifier": {
+          "Critical": false,
+          "KeyId": ""
+        },
+        "CRLDistributionPoints": {
+          "Critical": false,
+          "URI": [
+            "http://crl.microsoft.com/pki/crl/products/MicRooCerAut_2010-06-23.crl"
+          ]
+        }
+      }
+    }
+  ],
+  "OSAttr": "2:10.0",
+  "CertificateTrustList": [
+    {
+      "Hash": "027e387210927b592c6c979bf4ac695093e8069a"
+    },
+    {
+      "HashType": "SHA256",
+      "Hash": "1e520397902c237d6789b7ac53f8e96443bbe42e36f4a064802ae04dfd349491",
+      "Hint": "x86_microsoft-windows-servicingstack_31bf3856ad364e35_10.0.17763.1_none_9e06afaa6716752a\\tiworker.exe"
+    },
+    {
+      "HashType": "SHA256",
+      "Hash": "22b7108be535368e6120999e668450a39de4a4a9cda26ab5cea19d1b14b2589f",
+      "Hint": "x86_microsoft-windows-servicingstack_31bf3856ad364e35_10.0.17763.1_none_9e06afaa6716752a\\tifilefetcher.exe"
+    },
+    {
+      "HashType": "SHA256",
+      "Hash": "3623bda85d57aad0eaf2f4729d0849f7a236d6029c3a72e98c0da70bbc4dd314"
+    },
+    {
+      "Hash": "396e2e7af465bb6b41017c6190502cb1ea221d4d"
+    },
+    {
+      "Hash": "41cde58159e9243c3cadd6051c07aa7ec56f956f"
+    },
+    {
+      "Hash": "4bdf4e683b3e2eccd0b98802cac9f07148a3b867"
+    },
+    {
+      "HashType": "SHA256",
+      "Hash": "4ec49fc9981d847f28916e53299df3a102af9d32ac1c0e19df2ae5bbccb61739"
+    },
+    {
+      "Hash": "52b0e2e1521343c3fd9030c01ec968ff5e2176bd"
+    },
+    {
+      "HashType": "SHA256",
+      "Hash": "5f51017631c16d7145874d8bbe0e302b0e1bc4a8862d6fb4111474dab3d7c809"
+    },
+    {
+      "Hash": "6c99e6307e53b5f3a9431ac375c01c43c75861b6"
+    },
+    {
+      "HashType": "SHA256",
+      "Hash": "7ec24c6daee289fbd40c13635da56fb1e9f868b65e3120b59d480d394acd8285",
+      "Hint": "amd64_microsoft-windows-servicingstack_31bf3856ad364e35_10.0.17763.1_none_fa254b2e1f73e660\\tiworker.exe"
+    },
+    {
+      "HashType": "SHA256",
+      "Hash": "85f1daff689cef5a8bafdce3d2d635341801863969b9eaa7da2bdd93b8d03b35",
+      "Hint": "amd64_microsoft-windows-servicingstack_31bf3856ad364e35_10.0.17763.1_none_fa254b2e1f73e660\\tifilefetcher.exe"
+    },
+    {
+      "Hash": "86b2847535d02ff8534fa9f465eab922d60eb008"
+    },
+    {
+      "Hash": "8f3de05a109175abea746598d66137e715d0cc1d"
+    },
+    {
+      "HashType": "SHA256",
+      "Hash": "a88b7331c452b1f774e52ef9410fd6b6fb00435dc69b4760c78abe2dda392acd"
+    },
+    {
+      "HashType": "SHA256",
+      "Hash": "c2a17caf87e6b7c603f7b203bfdd469692d65dd718fcb23fabee28b3fbde765e"
+    },
+    {
+      "Hash": "e67fad2d8818d31e9ea4ad95b9bac49bf7c490d0"
+    }
+  ]
+}

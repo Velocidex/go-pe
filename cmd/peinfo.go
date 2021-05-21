@@ -29,7 +29,7 @@ func doInfo() {
 	kingpin.FatalIfError(err, "Can not open file %s: %v",
 		(*info_command_file).Name(), err)
 
-	serialized, _ := json.MarshalIndent(pe_file, "", "  ")
+	serialized, _ := json.MarshalIndent(pe_file.AsDict(), "", "  ")
 	fmt.Println(string(serialized))
 }
 

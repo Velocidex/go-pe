@@ -1,6 +1,8 @@
 package main
 
 import (
+	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"os"
 
@@ -18,8 +20,12 @@ func doCat() {
 	data, err := ioutil.ReadAll(*cat_command_file)
 	kingpin.FatalIfError(err, "Can not open file")
 
-	pkcs7, err := pkcs7.Parse(data)
+	pkcs7_obj, err := pkcs7.Parse(data)
 	kingpin.FatalIfError(err, "Can not open file")
 
-	pe.Debug(pkcs7)
+	dict := pe.PKCS7ToOrderedDict(pkcs7_obj)
+
+	serialized, _ := json.MarshalIndent(dict, "", "  ")
+	fmt.Println(string(serialized))
+
 }
