@@ -1,6 +1,8 @@
 package pe
 
-import "io"
+import (
+	"io"
+)
 
 func RoundUpToWordAlignment(offset int64) int64 {
 	if offset%4 > 0 {

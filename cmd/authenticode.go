@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/Velocidex/ordereddict"
 	kingpin "gopkg.in/alecthomas/kingpin.v2"
 	"www.velocidex.com/golang/binparsergen/reader"
 	pe "www.velocidex.com/golang/go-pe"
@@ -27,10 +28,13 @@ func doAuthenticode() {
 	kingpin.FatalIfError(err, "Can not open file %s: %v",
 		(*authenticode_command_file).Name(), err)
 
+	dict := ordereddict.NewDict()
 	authenticode_info, err := pe.ParseAuthenticode(pe_file)
-	kingpin.FatalIfError(err, "Can not parse authenticode_info")
-
-	dict := pe.PKCS7ToOrderedDict(authenticode_info)
+	if err != nil {
+		dict.Set("Error", fmt.Sprintf("Can not parse authenticode_info: %v", err))
+	} else {
+		dict = pe.PKCS7ToOrderedDict(authenticode_info)
+	}
 
 	if *authenticode_command_verify {
 		dict.Set("CalculatedHash", pe_file.CalcHashToDict())

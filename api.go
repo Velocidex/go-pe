@@ -114,6 +114,18 @@ func (self PEFile) Members() []string {
 	}
 }
 
+func (self PEFile) AsDict() *ordereddict.Dict {
+	return ordereddict.NewDict().
+		Set("FileHeader", self.FileHeader).
+		Set("GUIDAge", self.GUIDAge).
+		Set("PDB", self.PDB).
+		Set("Sections", self.Sections).
+		Set("VersionInformation", self.VersionInformation()).
+		Set("Imports", self.Imports()).
+		Set("Exports", self.Exports()).
+		Set("Forwards", self.Forwards())
+}
+
 var _sanitized_imp_name = regexp.MustCompile("(.ocx|.sys|.dll)$")
 
 // Calculate the import table hash
