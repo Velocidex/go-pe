@@ -2,7 +2,7 @@ module www.velocidex.com/golang/go-pe
 
 require (
 	github.com/Velocidex/ordereddict v0.0.0-20200723153557-9460a6764ab8
-	github.com/Velocidex/pkcs7 v0.0.0-20210520121421-8cb484a0d7b1
+	github.com/Velocidex/pkcs7 v0.0.0-20210524015001-8d1eee94a157
 	github.com/alecthomas/assert v0.0.0-20170929043011-405dbfeb8e38
 	github.com/alecthomas/colour v0.1.0 // indirect
 	github.com/alecthomas/repr v0.0.0-20201120212035-bb82daffcca2 // indirect
@@ -16,5 +16,7 @@ require (
 	gopkg.in/alecthomas/kingpin.v2 v2.2.6
 	www.velocidex.com/golang/binparsergen v0.1.0
 )
+
+// replace github.com/Velocidex/pkcs7 => /home/mic/projects/pkcs7
 
 go 1.13
