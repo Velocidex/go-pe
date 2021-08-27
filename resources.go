@@ -46,7 +46,7 @@ func (self *IMAGE_RESOURCE_DIRECTORY_ENTRY) _Traverse(
 	result *[]*IMAGE_RESOURCE_DATA_ENTRY) {
 
 	// Protect us from a deep tree here.
-	if self.Offset == 0 || len(*result) > 100 {
+	if self.Offset == 0 || len(*result) > MAX_RESOURCE_DIRECTORY_LENGTH {
 		return
 	}
 
@@ -97,6 +97,10 @@ func (self *VS_VERSIONINFO) Children() []*StringFileInfo {
 		}
 		result = append(result, file_info)
 		offset += RoundUpToWordAlignment(length)
+
+		if len(result) > MAX_RESOURCE_DIRECTORY_LENGTH {
+			break
+		}
 	}
 
 	return result
@@ -122,6 +126,10 @@ func (self *StringFileInfo) StringTable() []*StringTable {
 
 			result = append(result, string_table)
 			offset += RoundUpToWordAlignment(length)
+
+			if len(result) > MAX_RESOURCE_STRING_TABLE_LENGTH {
+				break
+			}
 		}
 	}
 
@@ -147,6 +155,10 @@ func (self *StringTable) ResourceStrings() []*ResourceString {
 		}
 		result = append(result, resource_string)
 		offset += RoundUpToWordAlignment(length)
+
+		if len(result) > MAX_RESOURCE_STRING_TABLE_LENGTH {
+			break
+		}
 	}
 
 	return result

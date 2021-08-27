@@ -32,7 +32,10 @@ func (self *IMAGE_NT_HEADERS) Sections() []*IMAGE_SECTION_HEADER {
 	offset := int64(self.FileHeader().SizeOfOptionalHeader()) +
 		self.OptionalHeader().Offset
 
-	for i := 0; i < int(self.FileHeader().NumberOfSections()); i++ {
+	number_of_sections := CapUint16(self.FileHeader().NumberOfSections(),
+		MAX_NUMBER_OF_SECTIONS)
+
+	for i := 0; i < int(number_of_sections); i++ {
 		section := self.Profile.IMAGE_SECTION_HEADER(
 			self.Reader, offset)
 		result = append(result, section)

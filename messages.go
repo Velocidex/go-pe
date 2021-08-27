@@ -66,6 +66,10 @@ func (self *MESSAGE_RESOURCE_BLOCK) Messages() []*Message {
 			EventId: int(event_id),
 			Message: item.Message()})
 
+		if len(result) > MAX_MESSAGES {
+			break
+		}
+
 		offset += int64(item.Length())
 	}
 
