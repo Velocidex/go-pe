@@ -18,7 +18,8 @@ func (self *IMAGE_RESOURCE_DIRECTORY) Entries() []*IMAGE_RESOURCE_DIRECTORY_ENTR
 	return ParseArray_IMAGE_RESOURCE_DIRECTORY_ENTRY(self.Profile,
 		self.Reader, self.Offset+
 			self.Profile.Off_IMAGE_RESOURCE_DIRECTORY__Entries,
-		int(self.NumberOfIdEntries()+self.NumberOfNamedEntries()))
+		int(CapUint16(self.NumberOfIdEntries()+self.NumberOfNamedEntries(),
+			MAX_RESOURCE_DIRECTORY_LENGTH)))
 }
 
 func (self *IMAGE_RESOURCE_DIRECTORY_ENTRY) NameString(

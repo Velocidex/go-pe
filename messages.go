@@ -11,7 +11,7 @@ func (self *MESSAGE_RESOURCE_DATA) Blocks() []*MESSAGE_RESOURCE_BLOCK {
 		self.Profile,
 		self.Reader,
 		self.Profile.Off_MESSAGE_RESOURCE_DATA__Blocks+self.Offset,
-		int(self.NumberOfBlocks()))
+		int(CapUint32(self.NumberOfBlocks(), MAX_RESOURCE_BLOCKS)))
 }
 
 func (self *MESSAGE_RESOURCE_DATA) Messages() []*Message {
@@ -80,14 +80,13 @@ func (self *MESSAGE_RESOURCE_ENTRY) Message() string {
 		result = ParseString(
 			self.Reader,
 			self.Profile.Off_MESSAGE_RESOURCE_ENTRY_Text+self.Offset,
-			int64(self.Length()))
+			CapInt64(int64(self.Length()), MAX_MESSAGE_LENGTH))
 
 	case 1: // UnicodeFlag
 		result = ParseUTF16String(
 			self.Reader,
 			self.Profile.Off_MESSAGE_RESOURCE_ENTRY_Text+self.Offset,
-			int64(self.Length()))
-
+			CapInt64(int64(self.Length()), MAX_MESSAGE_LENGTH))
 	}
 
 	return strings.Split(result, "\x00")[0]
