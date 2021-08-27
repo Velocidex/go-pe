@@ -63,6 +63,9 @@ func CapUint16(v uint16, max uint16) uint16 {
 }
 
 func CapInt64(v int64, max int64) int64 {
+	if v < 0 {
+		return 0
+	}
 	if v > max {
 		return max
 	}
@@ -70,6 +73,10 @@ func CapInt64(v int64, max int64) int64 {
 }
 
 func CapInt32(v int32, max int32) int32 {
+	if v < 0 {
+		return 0
+	}
+
 	if v > max {
 		return max
 	}
