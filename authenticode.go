@@ -69,7 +69,7 @@ func (self *IMAGE_NT_HEADERS) ParseSecurityInfo() (*pkcs7.PKCS7, error) {
 	// This is really a file offset and not a virtual offset at all!
 	win_cert := self.Profile.WIN_CERTIFICATE(self.Reader, int64(dir.VirtualAddress()))
 
-	data := make([]byte, win_cert.Length())
+	data := make([]byte, CapUint32(win_cert.Length(), MAX_WIN_CERTIFICATE_LENGTH))
 	_, err := win_cert.Reader.ReadAt(data, int64(win_cert.Offset+8))
 	if err != nil {
 		return nil, err

@@ -20,6 +20,9 @@ func (self *IMAGE_NT_HEADERS) ImportDirectory(
 		}
 
 		result = append(result, desc)
+		if len(result) > MAX_IMPORT_TABLE_LENGTH {
+			break
+		}
 
 		offset += uint32(desc.Size())
 	}
@@ -58,6 +61,11 @@ func (self *IMAGE_IMPORT_DESCRIPTOR) Functions32(rva_resolver *RVAResolver) []st
 				"%#x", 0xFFFFFF&thunk.Ordinal()))
 		}
 		offset += int64(thunk.Size())
+
+		// Keep the size resonable
+		if len(result) > MAX_IMPORT_TABLE_LENGTH {
+			break
+		}
 	}
 
 	return result
@@ -86,6 +94,9 @@ func (self *IMAGE_IMPORT_DESCRIPTOR) Functions64(rva_resolver *RVAResolver) []st
 				"%#x", 0xFFFFFF&thunk.Ordinal()))
 		}
 		offset += int64(thunk.Size())
+		if len(result) > MAX_IMPORT_TABLE_LENGTH {
+			break
+		}
 	}
 
 	return result

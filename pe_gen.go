@@ -1308,7 +1308,7 @@ func (self Enumeration) DebugString() string {
 
 
 func ParseArray_IMAGE_DATA_DIRECTORY(profile *PeProfile, reader io.ReaderAt, offset int64, count int) []*IMAGE_DATA_DIRECTORY {
-    result := []*IMAGE_DATA_DIRECTORY{}
+    result := make([]*IMAGE_DATA_DIRECTORY, 0, count)
     for i:=0; i<count; i++ {
       value := profile.IMAGE_DATA_DIRECTORY(reader, offset)
       result = append(result, value)
@@ -1318,7 +1318,7 @@ func ParseArray_IMAGE_DATA_DIRECTORY(profile *PeProfile, reader io.ReaderAt, off
 }
 
 func ParseArray_IMAGE_RESOURCE_DIRECTORY_ENTRY(profile *PeProfile, reader io.ReaderAt, offset int64, count int) []*IMAGE_RESOURCE_DIRECTORY_ENTRY {
-    result := []*IMAGE_RESOURCE_DIRECTORY_ENTRY{}
+    result := make([]*IMAGE_RESOURCE_DIRECTORY_ENTRY, 0, count)
     for i:=0; i<count; i++ {
       value := profile.IMAGE_RESOURCE_DIRECTORY_ENTRY(reader, offset)
       result = append(result, value)
@@ -1328,7 +1328,7 @@ func ParseArray_IMAGE_RESOURCE_DIRECTORY_ENTRY(profile *PeProfile, reader io.Rea
 }
 
 func ParseArray_MESSAGE_RESOURCE_BLOCK(profile *PeProfile, reader io.ReaderAt, offset int64, count int) []*MESSAGE_RESOURCE_BLOCK {
-    result := []*MESSAGE_RESOURCE_BLOCK{}
+    result := make([]*MESSAGE_RESOURCE_BLOCK, 0, count)
     for i:=0; i<count; i++ {
       value := profile.MESSAGE_RESOURCE_BLOCK(reader, offset)
       result = append(result, value)
@@ -1338,7 +1338,7 @@ func ParseArray_MESSAGE_RESOURCE_BLOCK(profile *PeProfile, reader io.ReaderAt, o
 }
 
 func ParseArray_byte(profile *PeProfile, reader io.ReaderAt, offset int64, count int) []byte {
-    result := []byte{}
+    result := make([]byte, 0, count)
     for i:=0; i<count; i++ {
       value := ParseUint8(reader, offset)
       result = append(result, value)
@@ -1348,7 +1348,7 @@ func ParseArray_byte(profile *PeProfile, reader io.ReaderAt, offset int64, count
 }
 
 func ParseArray_uint16(profile *PeProfile, reader io.ReaderAt, offset int64, count int) []uint16 {
-    result := []uint16{}
+    result := make([]uint16, 0, count)
     for i:=0; i<count; i++ {
       value := ParseUint16(reader, offset)
       result = append(result, value)
@@ -1358,7 +1358,7 @@ func ParseArray_uint16(profile *PeProfile, reader io.ReaderAt, offset int64, cou
 }
 
 func ParseArray_uint32(profile *PeProfile, reader io.ReaderAt, offset int64, count int) []uint32 {
-    result := []uint32{}
+    result := make([]uint32, 0, count)
     for i:=0; i<count; i++ {
       value := ParseUint32(reader, offset)
       result = append(result, value)
@@ -1368,7 +1368,7 @@ func ParseArray_uint32(profile *PeProfile, reader io.ReaderAt, offset int64, cou
 }
 
 func ParseArray_uint64(profile *PeProfile, reader io.ReaderAt, offset int64, count int) []uint64 {
-    result := []uint64{}
+    result := make([]uint64, 0, count)
     for i:=0; i<count; i++ {
       value := ParseUint64(reader, offset)
       result = append(result, value)

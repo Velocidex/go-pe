@@ -60,8 +60,12 @@ func (self *IMAGE_NT_HEADERS) ExportTable(
 		dll_name = desc.DLLName(rva_resolver)
 	}
 
-	number_of_names := int(desc.NumberOfNames())
-	number_of_funcs := desc.NumberOfFunctions()
+	// Keep number_of_names reasonable
+	number_of_names := int(CapUint32(
+		desc.NumberOfNames(), MAX_IMPORT_TABLE_LENGTH))
+
+	number_of_funcs := int(CapUint32(
+		desc.NumberOfFunctions(), MAX_IMPORT_TABLE_LENGTH))
 
 	ordinal_table := ParseArray_uint16(self.Profile, self.Reader,
 		int64(rva_resolver.GetFileAddress(desc.AddressOfNameOrdinals())),
@@ -74,7 +78,7 @@ func (self *IMAGE_NT_HEADERS) ExportTable(
 
 	func_table := ParseArray_uint32(self.Profile, self.Reader,
 		int64(rva_resolver.GetFileAddress(desc.AddressOfFunctions())),
-		int(number_of_funcs))
+		number_of_funcs)
 
 	seen := make(map[uint32]bool)
 
@@ -131,21 +135,19 @@ func (self *IMAGE_NT_HEADERS) ExportTable(
 	}
 
 	// Now list exported functions without a name (by ordinal)
-	base := desc.Base()
-	for i := uint32(0); i < number_of_funcs-1; i++ {
-		if i >= uint32(len(func_table)) {
-			break
-		}
-
-		ordinal := base + i
-		_, pres := seen[ordinal]
-		if !pres {
-			seen[ordinal] = true
-			result = append(result, &IMAGE_EXPORT_DESCRIPTOR{
-				Ordinal: int(ordinal),
-				DLLName: dll_name,
-				RVA:     int64(func_table[i]),
-			})
+	if len(func_table) > 0 {
+		base := desc.Base()
+		for i := 0; i < len(func_table)-1; i++ {
+			ordinal := base + uint32(i)
+			_, pres := seen[ordinal]
+			if !pres {
+				seen[ordinal] = true
+				result = append(result, &IMAGE_EXPORT_DESCRIPTOR{
+					Ordinal: int(ordinal),
+					DLLName: dll_name,
+					RVA:     int64(func_table[i]),
+				})
+			}
 		}
 	}
 
