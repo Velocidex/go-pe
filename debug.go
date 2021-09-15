@@ -53,8 +53,18 @@ func DebugPrint(fmt_str string, v ...interface{}) {
 	}
 }
 
+type DebugStringer interface {
+	DebugString() string
+}
+
 func Debug(arg interface{}) {
 	if PE_DEBUG {
+		d, ok := arg.(DebugStringer)
+		if ok {
+			fmt.Println(d.DebugString())
+			return
+		}
+
 		spew.Dump(arg)
 	}
 }
