@@ -131,11 +131,11 @@ func GetImports(nt_header *IMAGE_NT_HEADERS, rva_resolver *RVAResolver) []string
 		dll_name := desc.DLLName(rva_resolver)
 
 		// Is it valid to have an import with an empty dll name?
-		if dll_name == "" {
+		if dll_name == "" || len(dll_name) > 512 {
 			continue
 		}
 
-		if nt_header.OptionalHeader().Magic() == 0x20b {
+		if rva_resolver.Is64Bit {
 			for _, name := range desc.Functions64(rva_resolver) {
 				result = append(result, dll_name+"!"+name)
 			}

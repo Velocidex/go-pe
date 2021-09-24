@@ -14,17 +14,6 @@ func (self *IMAGE_DOS_HEADER) NTHeader() *IMAGE_NT_HEADERS {
 		self.Reader, int64(self.E_lfanew())+self.Offset)
 }
 
-func (self *IMAGE_NT_HEADERS) RealOptionalHeader() (
-	*IMAGE_OPTIONAL_HEADER, *IMAGE_OPTIONAL_HEADER64) {
-	result := self.OptionalHeader()
-	if result.Magic() == 0x20b {
-		return nil, self.Profile.IMAGE_OPTIONAL_HEADER64(
-			self.Reader, result.Offset)
-	}
-
-	return result, nil
-}
-
 func (self *IMAGE_NT_HEADERS) Sections() []*IMAGE_SECTION_HEADER {
 	result := []*IMAGE_SECTION_HEADER{}
 
