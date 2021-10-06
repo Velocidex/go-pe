@@ -18,7 +18,8 @@ type Section struct {
 	Perm       string `json:"Perm"`
 	Name       string `json:"Name"`
 	FileOffset int64  `json:"FileOffset"`
-	VMA        int64  `json:"VMA"`
+	VMA        uint64 `json:"VMA"`
+	RVA        uint64 `json:"RVA"`
 	Size       int64  `json:"Size"`
 }
 
@@ -27,6 +28,7 @@ type FileHeader struct {
 	TimeDateStamp    string `json:"TimeDateStamp"`
 	TimeDateStampRaw uint32 `json:"TimeDateStampRaw"`
 	Characteristics  uint16 `json:"Characteristics"`
+	ImageBase        uint64 `json:"ImageBase"`
 }
 
 type PEFile struct {
@@ -248,17 +250,20 @@ func NewPEFile(reader io.ReaderAt) (*PEFile, error) {
 			TimeDateStamp:    file_header.TimeDateStamp().String(),
 			Characteristics:  file_header.Characteristics(),
 			TimeDateStampRaw: file_header.TimeDateStampRaw(),
+			ImageBase:        rva_resolver.ImageBase,
 		},
 		GUIDAge: rsds.GUIDAge(),
 		PDB:     rsds.Filename(),
 	}
 
 	for _, section := range nt_header.Sections() {
+		rva := uint64(section.VirtualAddress())
 		result.Sections = append(result.Sections, &Section{
 			Perm:       section.Permissions(),
 			Name:       section.Name(),
 			FileOffset: int64(section.PointerToRawData()),
-			VMA:        int64(section.VirtualAddress()),
+			RVA:        rva,
+			VMA:        rva + rva_resolver.ImageBase,
 			Size:       int64(section.SizeOfRawData()),
 		})
 

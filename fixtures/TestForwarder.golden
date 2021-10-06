@@ -3,63 +3,72 @@
     "Machine": "IMAGE_FILE_MACHINE_AMD64",
     "TimeDateStamp": "2101-01-13T02:36:00Z",
     "TimeDateStampRaw": 4135026960,
-    "Characteristics": 8226
+    "Characteristics": 8226,
+    "ImageBase": 6442450944
   },
   "Sections": [
     {
       "Perm": "xr-",
       "Name": ".text",
       "FileOffset": 1024,
-      "VMA": 4096,
+      "VMA": 6442455040,
+      "RVA": 4096,
       "Size": 40448
     },
     {
       "Perm": "-r-",
       "Name": ".rdata",
       "FileOffset": 41472,
-      "VMA": 45056,
+      "VMA": 6442496000,
+      "RVA": 45056,
       "Size": 26112
     },
     {
       "Perm": "-rw",
       "Name": ".data",
       "FileOffset": 67584,
-      "VMA": 73728,
+      "VMA": 6442524672,
+      "RVA": 73728,
       "Size": 512
     },
     {
       "Perm": "-r-",
       "Name": ".pdata",
       "FileOffset": 68096,
-      "VMA": 77824,
+      "VMA": 6442528768,
+      "RVA": 77824,
       "Size": 2048
     },
     {
       "Perm": "-rw",
       "Name": ".didat",
       "FileOffset": 70144,
-      "VMA": 81920,
+      "VMA": 6442532864,
+      "RVA": 81920,
       "Size": 512
     },
     {
       "Perm": "-r-",
       "Name": ".rsrc",
       "FileOffset": 70656,
-      "VMA": 86016,
+      "VMA": 6442536960,
+      "RVA": 86016,
       "Size": 1536
     },
     {
       "Perm": "-r-",
       "Name": ".reloc",
       "FileOffset": 72192,
-      "VMA": 90112,
+      "VMA": 6442541056,
+      "RVA": 90112,
       "Size": 1024
     },
     {
       "Perm": "-r-",
       "Name": ".rdata2",
       "FileOffset": 73216,
-      "VMA": 94208,
+      "VMA": 6442545152,
+      "RVA": 94208,
       "Size": 512
     }
   ],

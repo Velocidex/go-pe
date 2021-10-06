@@ -15,7 +15,9 @@ type Run struct {
 
 type RVAResolver struct {
 	// For now very simple O(n) search.
-	Runs []*Run
+	Runs      []*Run
+	ImageBase uint64
+	Is64Bit   bool
 }
 
 func (self *RVAResolver) GetFileAddress(offset uint32) uint32 {
@@ -31,6 +33,18 @@ func (self *RVAResolver) GetFileAddress(offset uint32) uint32 {
 
 func NewRVAResolver(header *IMAGE_NT_HEADERS) *RVAResolver {
 	result := &RVAResolver{}
+	optional_header := header.OptionalHeader()
+
+	if optional_header.Magic() == 0x20b {
+		// It is a 64 bit header
+		optional_header64 := header.Profile.IMAGE_OPTIONAL_HEADER64(
+			optional_header.Reader, optional_header.Offset)
+		result.ImageBase = optional_header64.ImageBase()
+		result.Is64Bit = true
+	} else {
+		result.ImageBase = uint64(header.OptionalHeader().ImageBase())
+	}
+
 	for _, section := range header.Sections() {
 		if section.SizeOfRawData() == 0 {
 			continue
