@@ -58,6 +58,30 @@ func (self *PEFile) VersionInformation() *ordereddict.Dict {
 		self.resource_base)
 }
 
+func (self *PEFile) Resources() []*ordereddict.Dict {
+	result := []*ordereddict.Dict{}
+	resourceDirectory := self.nt_header.ResourceDirectory(self.rva_resolver)
+	resource_base := self.resource_base
+	if resource_base == 0 {
+		resource_base = resourceDirectory.Offset
+	}
+
+	for _, entry := range resourceDirectory.Entries() {
+		entry_type := entry.Type()
+		for _, child := range entry.Traverse(resource_base) {
+			result = append(result, ordereddict.NewDict().
+				Set("Type", entry.NameString(resource_base)).
+				Set("TypeId", entry_type.Value).
+				Set("FileOffset", self.rva_resolver.GetFileAddress(
+					child.OffsetToData())).
+				Set("DataSize", child.DataSize()).
+				Set("CodePage", child.CodePage()))
+		}
+	}
+
+	return result
+}
+
 // Delay calculating these until absolutely necessary.
 func (self *PEFile) Imports() []string {
 	self.mu.Lock()
@@ -123,6 +147,7 @@ func (self PEFile) AsDict() *ordereddict.Dict {
 		Set("PDB", self.PDB).
 		Set("Sections", self.Sections).
 		Set("VersionInformation", self.VersionInformation()).
+		Set("Resources", self.Resources()).
 		Set("Imports", self.Imports()).
 		Set("Exports", self.Exports()).
 		Set("Forwards", self.Forwards())

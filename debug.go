@@ -34,7 +34,7 @@ func (self *PrefixedString) String() string {
 	return ParseUTF16String(
 		self.Reader,
 		self.Profile.Off_PrefixedString__Buffer+self.Offset,
-		int64(self.Length()))
+		int64(self.Length()*2))
 }
 
 func init() {
