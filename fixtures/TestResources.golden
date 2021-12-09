@@ -1,0 +1,49 @@
+{
+  "VersionInformation": {
+    "CompanyName": "Microsoft Corporation",
+    "FileDescription": "Notepad",
+    "FileVersion": "10.0.19041.1320 (WinBuild.160101.0800)",
+    "InternalName": "Notepad",
+    "LegalCopyright": "© Microsoft Corporation. All rights reserved.",
+    "OriginalFilename": "NOTEPAD.EXE",
+    "ProductName": "Microsoft® Windows® Operating System",
+    "ProductVersion": "10.0.19041.1320"
+  },
+  "Resources": [
+    {
+      "Type": "EDPENLIGHTENEDAPPINFOID",
+      "TypeId": 120,
+      "FileOffset": 206096,
+      "DataSize": 2,
+      "CodePage": 0
+    },
+    {
+      "Type": "EDPPERMISSIVEAPPINFOID",
+      "TypeId": 230,
+      "FileOffset": 206104,
+      "DataSize": 2,
+      "CodePage": 0
+    },
+    {
+      "Type": "MUI",
+      "TypeId": 80,
+      "FileOffset": 207000,
+      "DataSize": 320,
+      "CodePage": 0
+    },
+    {
+      "Type": "RT_VERSION",
+      "TypeId": 16,
+      "FileOffset": 206112,
+      "DataSize": 884,
+      "CodePage": 0
+    },
+    {
+      "Type": "RT_MANIFEST",
+      "TypeId": 24,
+      "FileOffset": 204896,
+      "DataSize": 1199,
+      "CodePage": 0
+    }
+  ]
+}

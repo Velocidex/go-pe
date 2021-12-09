@@ -56,6 +56,26 @@ func TestAuthenticode(t *testing.T) {
 	g.AssertJson(t, "TestAuthenticode", result)
 }
 
+func TestResources(t *testing.T) {
+	fd, err := os.Open("testdata/notepad.exe")
+	assert.NoError(t, err)
+
+	reader, err := reader.NewPagedReader(fd, 4096, 100)
+	assert.NoError(t, err)
+
+	pe_file, err := NewPEFile(reader)
+	assert.NoError(t, err)
+
+	result := ordereddict.NewDict().
+		Set("VersionInformation", pe_file.VersionInformation()).
+		Set("Resources", pe_file.Resources())
+
+	g := goldie.New(t, goldie.WithFixtureDir("fixtures"),
+		goldie.WithNameSuffix(".golden"),
+		goldie.WithDiffEngine(goldie.ColoredDiff))
+	g.AssertJson(t, "TestResources", result)
+}
+
 func TestCatParser(t *testing.T) {
 	fd, err := os.Open("testdata/ntexe.cat")
 	assert.NoError(t, err)
