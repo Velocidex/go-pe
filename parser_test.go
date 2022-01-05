@@ -1,6 +1,7 @@
 package pe
 
 import (
+	"bytes"
 	"io/ioutil"
 	"os"
 	"testing"
@@ -92,4 +93,12 @@ func TestCatParser(t *testing.T) {
 		goldie.WithNameSuffix(".golden"),
 		goldie.WithDiffEngine(goldie.ColoredDiff))
 	g.AssertJson(t, "TestCatalog", dict)
+}
+
+func TestUTFParser(t *testing.T) {
+	en := []uint8{72, 0, 101, 0, 108, 0, 108, 0, 111, 0, 87, 0, 111, 0, 114, 0, 108, 0, 100, 0, 0, 0, 74, 0, 0, 0}
+	zh := []uint8{96, 79, 125, 89, 22, 78, 76, 117, 0, 0, 0, 0, 74, 0, 0, 0}
+
+	assert.Equal(t, ParseTerminatedUTF16String(bytes.NewReader(en), 0), "HelloWorld")
+	assert.Equal(t, ParseTerminatedUTF16String(bytes.NewReader(zh), 0), "你好世界")
 }
