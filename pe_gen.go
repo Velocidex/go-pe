@@ -1456,10 +1456,10 @@ func ParseTerminatedUTF16String(reader io.ReaderAt, offset int64) string {
    if idx < 0 {
       idx = n-1
    }
-   if idx%2 == 0 {
-      idx -= 1
+   if idx%2 != 0 {
+      idx += 1
    }
-   return UTF16BytesToUTF8(data[0:idx+1], binary.LittleEndian)
+   return UTF16BytesToUTF8(data[0:idx], binary.LittleEndian)
 }
 
 func ParseUTF16String(reader io.ReaderAt, offset int64, length int64) string {
