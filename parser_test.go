@@ -2,6 +2,7 @@ package pe
 
 import (
 	"bytes"
+	"io"
 	"io/ioutil"
 	"os"
 	"testing"
@@ -101,4 +102,22 @@ func TestUTFParser(t *testing.T) {
 
 	assert.Equal(t, ParseTerminatedUTF16String(bytes.NewReader(en), 0), "HelloWorld")
 	assert.Equal(t, ParseTerminatedUTF16String(bytes.NewReader(zh), 0), "你好世界")
+}
+
+func TestResourceStringParser(t *testing.T) {
+	profile := NewPeProfile()
+	b1 := []byte{15, 0, 0, 0, 1, 0, byte('t'), 0, byte('e'), 0, byte('s'), 0, byte('t'), 0, 0, 0, byte('X'), 0, 0, 0}
+	b2 := []byte{20, 0, 2, 0, 1, 0, byte('t'), 0, byte('e'), 0, byte('s'), 0, byte('t'), 0, 0, 0, byte('y'), 0, 0, 0}
+	rs1 := &ResourceString{
+		Reader:  io.NewSectionReader(bytes.NewReader(b1), 0, int64(len(b1))),
+		Profile: profile,
+	}
+	rs2 := &ResourceString{
+		Reader:  io.NewSectionReader(bytes.NewReader(b2), 0, int64(len(b2))),
+		Profile: profile,
+	}
+	assert.Equal(t, rs1.Key(), "test")
+	assert.Equal(t, rs1.Value(), "")
+	assert.Equal(t, rs2.Key(), "test")
+	assert.Equal(t, rs2.Value(), "y")
 }

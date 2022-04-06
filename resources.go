@@ -165,6 +165,10 @@ func (self *StringTable) ResourceStrings() []*ResourceString {
 }
 
 func (self *ResourceString) Value() string {
+	if self.ValueLength() == 0 {
+		return ""
+	}
+
 	key := self.Key()
 
 	offset := RoundUpToWordAlignment(
