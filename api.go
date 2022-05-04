@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io"
 	"regexp"
+	"strconv"
 	"strings"
 	"sync"
 
@@ -150,7 +151,8 @@ func (self PEFile) AsDict() *ordereddict.Dict {
 		Set("Resources", self.Resources()).
 		Set("Imports", self.Imports()).
 		Set("Exports", self.Exports()).
-		Set("Forwards", self.Forwards())
+		Set("Forwards", self.Forwards()).
+		Set("Imphash", self.ImpHash())
 }
 
 var _sanitized_imp_name = regexp.MustCompile("(.ocx|.sys|.dll)$")
@@ -166,6 +168,15 @@ func (self *PEFile) ImpHash() string {
 		parts := strings.SplitN(imp, "!", 2)
 		if len(parts) == 0 {
 			continue
+		}
+
+		// If the function is an ord we need to format it in a way to
+		// match pefile.py.
+		if strings.HasPrefix(parts[1], "0x") {
+			ord_number, err := strconv.ParseInt(parts[1], 0, 64)
+			if err == nil {
+				parts[1] = fmt.Sprintf("ord%d", ord_number)
+			}
 		}
 
 		// Remove extensions
