@@ -55,18 +55,33 @@ func (self *IMAGE_IMPORT_DESCRIPTOR) Functions32(rva_resolver *RVAResolver) []st
 			break
 		}
 
-		import_by_name := self.Profile.IMAGE_IMPORT_BY_NAME(
-			self.Reader, int64(rva_resolver.GetFileAddress(
-				thunk.AddressOfData())))
-
-		if import_by_name.Offset != 0 {
-			result = append(result, import_by_name.Name())
-		} else {
-			// If the import is by ordinal then encode it
-			// as hex.
+		ordinal := thunk.Ordinal()
+		if ordinal&0x80000000 > 0 {
+			// If the import is by ordinal then encode it as hex.
 			result = append(result, fmt.Sprintf(
 				"%#x", 0xFFFFFF&thunk.Ordinal()))
+
+		} else {
+			file_address := int64(rva_resolver.GetFileAddress(
+				uint32(thunk.AddressOfData())))
+
+			// If the thunk address is not found in the file skip this
+			// thunk.
+			if file_address == 0 {
+				return result
+			}
+
+			import_by_name := self.Profile.IMAGE_IMPORT_BY_NAME(
+				self.Reader, file_address)
+
+			name := import_by_name.Name()
+			if name != "" {
+				if import_by_name.Offset != 0 {
+					result = append(result, name)
+				}
+			}
 		}
+
 		offset += int64(thunk.Size())
 
 		// Keep the size resonable
