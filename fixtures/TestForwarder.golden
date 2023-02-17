@@ -159,6 +159,11 @@
     "api-ms-win-core-timezone-l1-1-0.dll!GetTimeZoneInformation"
   ],
   "Exports": [],
-  "Forwards": [],
+  "Forwards": [
+    "c:\\Windows\\System32\\dnshc.DllCanUnloadNow",
+    "c:\\Windows\\System32\\dnshc.DllGetClassObject",
+    "c:\\Windows\\System32\\dnshc.DllRegisterServer",
+    "c:\\Windows\\System32\\dnshc.DllUnregisterServer"
+  ],
   "ImpHash": "2c66cd20f0ece47502db44e1e16cee7b"
 }

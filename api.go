@@ -167,7 +167,7 @@ func (self *PEFile) Exports() []string {
 		self.exports = []string{}
 
 		export_desc, err := self.nt_header.ExportDirectory(self.rva_resolver)
-		if err != nil && export_desc != nil {
+		if err == nil && export_desc != nil {
 			for _, desc := range self.nt_header.ExportTable(self.rva_resolver) {
 				if desc.Forwarder != "" {
 					self.forwards = append(self.forwards, desc.Forwarder)
