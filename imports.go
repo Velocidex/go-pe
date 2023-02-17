@@ -2,10 +2,6 @@ package pe
 
 import "fmt"
 
-const (
-	IMAGE_DIRECTORY_ENTRY_IMPORT = 1
-)
-
 func (self *IMAGE_NT_HEADERS) ImportDirectory(
 	rva_resolver *RVAResolver) []*IMAGE_IMPORT_DESCRIPTOR {
 	result := []*IMAGE_IMPORT_DESCRIPTOR{}
@@ -13,7 +9,11 @@ func (self *IMAGE_NT_HEADERS) ImportDirectory(
 	dir := self.DataDirectory(IMAGE_DIRECTORY_ENTRY_IMPORT)
 	Debug(dir)
 
-	offset := rva_resolver.GetFileAddress(dir.VirtualAddress())
+	offset, err := rva_resolver.GetFileAddress(dir.VirtualAddress())
+	if err != nil {
+		return nil
+	}
+
 	for offset > 0 {
 		desc := self.Profile.IMAGE_IMPORT_DESCRIPTOR(
 			self.Reader, int64(offset))
@@ -35,22 +35,23 @@ func (self *IMAGE_NT_HEADERS) ImportDirectory(
 }
 
 func (self *IMAGE_IMPORT_DESCRIPTOR) DLLName(rva_resolver *RVAResolver) string {
-	offset := int64(rva_resolver.GetFileAddress(self.Name()))
-	if offset == 0 {
+	offset, err := rva_resolver.GetFileAddress(self.Name())
+	if err != nil || offset == 0 {
 		return ""
 	}
-	result := ParseTerminatedString(self.Reader, offset)
+	result := ParseTerminatedString(self.Reader, int64(offset))
 	return result
 }
 
 func (self *IMAGE_IMPORT_DESCRIPTOR) Functions32(rva_resolver *RVAResolver) []string {
 	result := []string{}
+	offset, err := rva_resolver.GetFileAddress(self.OriginalFirstThunk())
+	if err != nil {
+		return result
+	}
 
-	offset := int64(rva_resolver.GetFileAddress(self.OriginalFirstThunk()))
 	for {
-		thunk := self.Profile.IMAGE_THUNK_DATA32(
-			self.Reader, offset)
-
+		thunk := self.Profile.IMAGE_THUNK_DATA32(self.Reader, int64(offset))
 		if thunk.Function() == 0 {
 			break
 		}
@@ -62,17 +63,17 @@ func (self *IMAGE_IMPORT_DESCRIPTOR) Functions32(rva_resolver *RVAResolver) []st
 				"%#x", 0xFFFFFF&thunk.Ordinal()))
 
 		} else {
-			file_address := int64(rva_resolver.GetFileAddress(
-				uint32(thunk.AddressOfData())))
+			file_address, err := rva_resolver.GetFileAddress(
+				uint32(thunk.AddressOfData()))
 
 			// If the thunk address is not found in the file skip this
 			// thunk.
-			if file_address == 0 {
+			if err != nil || file_address == 0 {
 				return result
 			}
 
 			import_by_name := self.Profile.IMAGE_IMPORT_BY_NAME(
-				self.Reader, file_address)
+				self.Reader, int64(file_address))
 
 			name := import_by_name.Name()
 			if name != "" {
@@ -82,7 +83,7 @@ func (self *IMAGE_IMPORT_DESCRIPTOR) Functions32(rva_resolver *RVAResolver) []st
 			}
 		}
 
-		offset += int64(thunk.Size())
+		offset += uint32(thunk.Size())
 
 		// Keep the size resonable
 		if len(result) > MAX_IMPORT_TABLE_LENGTH {
@@ -95,9 +96,13 @@ func (self *IMAGE_IMPORT_DESCRIPTOR) Functions32(rva_resolver *RVAResolver) []st
 
 func (self *IMAGE_IMPORT_DESCRIPTOR) Functions64(rva_resolver *RVAResolver) []string {
 	result := []string{}
-	offset := int64(rva_resolver.GetFileAddress(self.OriginalFirstThunk()))
+	offset, err := rva_resolver.GetFileAddress(self.OriginalFirstThunk())
+	if err != nil {
+		return result
+	}
+
 	for {
-		thunk := self.Profile.IMAGE_THUNK_DATA64(self.Reader, offset)
+		thunk := self.Profile.IMAGE_THUNK_DATA64(self.Reader, int64(offset))
 		if thunk.Function() == 0 {
 			break
 		}
@@ -109,19 +114,19 @@ func (self *IMAGE_IMPORT_DESCRIPTOR) Functions64(rva_resolver *RVAResolver) []st
 				"%#x", 0xFFFFFF&thunk.Ordinal()))
 
 		} else {
-			file_address := int64(rva_resolver.GetFileAddress(
-				uint32(thunk.AddressOfData())))
+			file_address, err := rva_resolver.GetFileAddress(
+				uint32(thunk.AddressOfData()))
 
 			// If the thunk address is not found in the file skip this
 			// thunk.
-			if file_address == 0 {
+			if err != nil || file_address == 0 {
 				return result
 			}
 
 			Debug(thunk)
 
 			import_by_name := self.Profile.IMAGE_IMPORT_BY_NAME(
-				self.Reader, file_address)
+				self.Reader, int64(file_address))
 
 			name := import_by_name.Name()
 			if name != "" {
@@ -131,7 +136,7 @@ func (self *IMAGE_IMPORT_DESCRIPTOR) Functions64(rva_resolver *RVAResolver) []st
 			}
 		}
 
-		offset += int64(thunk.Size())
+		offset += uint32(thunk.Size())
 		if len(result) > MAX_IMPORT_TABLE_LENGTH {
 			break
 		}

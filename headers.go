@@ -4,11 +4,6 @@ import (
 	"io"
 )
 
-const (
-	IMAGE_DIRECTORY_ENTRY_DEBUG    = 6
-	IMAGE_DIRECTORY_ENTRY_RESOURCE = 2
-)
-
 func (self *IMAGE_DOS_HEADER) NTHeader() *IMAGE_NT_HEADERS {
 	return self.Profile.IMAGE_NT_HEADERS(
 		self.Reader, int64(self.E_lfanew())+self.Offset)
@@ -27,7 +22,9 @@ func (self *IMAGE_NT_HEADERS) Sections() []*IMAGE_SECTION_HEADER {
 	for i := 0; i < int(number_of_sections); i++ {
 		section := self.Profile.IMAGE_SECTION_HEADER(
 			self.Reader, offset)
-		result = append(result, section)
+		if section.Characteristics() > 0 {
+			result = append(result, section)
+		}
 		offset += int64(section.Size())
 	}
 

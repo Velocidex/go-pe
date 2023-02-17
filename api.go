@@ -9,11 +9,20 @@ import (
 	"strconv"
 	"strings"
 	"sync"
+	"time"
 
 	"github.com/Velocidex/ordereddict"
 )
 
 // Exported API
+
+type Directory struct {
+	Timestamp    time.Time `json:"Timestamp"`
+	TimestampRaw uint32
+	Size         uint32
+	FileAddress  uint32
+	SectionName  string
+}
 
 type Section struct {
 	Perm       string `json:"Perm"`
@@ -48,10 +57,9 @@ type PEFile struct {
 	GUIDAge    string     `json:"GUIDAge"`
 	PDB        string     `json:"PDB"`
 	Sections   []*Section `json:"Sections"`
-
-	imports  []string
-	exports  []string
-	forwards []string
+	imports    []string
+	exports    []string
+	forwards   []string
 }
 
 func (self *PEFile) VersionInformation() *ordereddict.Dict {
@@ -59,9 +67,62 @@ func (self *PEFile) VersionInformation() *ordereddict.Dict {
 		self.resource_base)
 }
 
+// List all the PE directories
+func (self *PEFile) GetDirectories() *ordereddict.Dict {
+	result := ordereddict.NewDict()
+
+	for _, i := range []struct {
+		idx  int64
+		name string
+	}{
+		{IMAGE_DIRECTORY_ENTRY_ARCHITECTURE, "Architecture_Directory"},
+		{IMAGE_DIRECTORY_ENTRY_BASERELOC, "Base_Relocation_Directory"},
+		{IMAGE_DIRECTORY_ENTRY_BOUND_IMPORT, "Bound_Import_Directory"},
+		{IMAGE_DIRECTORY_ENTRY_COM_DESCRIPTOR, "DotNet_Directory"},
+		{IMAGE_DIRECTORY_ENTRY_DEBUG, "Debug_Directory"},
+		{IMAGE_DIRECTORY_ENTRY_DELAY_IMPORT, "Delay_Imports_Directory"},
+		{IMAGE_DIRECTORY_ENTRY_EXCEPTION, "Exception_Directory"},
+		{IMAGE_DIRECTORY_ENTRY_EXPORT, "Export_Directory"},
+		{IMAGE_DIRECTORY_ENTRY_GLOBALPTR, "Global_Ptr_Directory"},
+		{IMAGE_DIRECTORY_ENTRY_IAT, "IAT_Directory"},
+		{IMAGE_DIRECTORY_ENTRY_IMPORT, "Import_Directory"},
+		{IMAGE_DIRECTORY_ENTRY_LOAD_CONFIG, "Load_Config_Directory"},
+		{IMAGE_DIRECTORY_ENTRY_RESOURCE, "Resource_Directory"},
+		{IMAGE_DIRECTORY_ENTRY_SECURITY, "Security_Directory"},
+		{IMAGE_DIRECTORY_ENTRY_TLS, "TLS_Directory"},
+	} {
+		dir := self.nt_header.DataDirectory(i.idx)
+		if dir.DirSize() > 0 {
+			file_address := dir.VirtualAddress()
+			var section_name string
+
+			section := findSection(self.Sections, int64(file_address))
+			if section != nil {
+				section_name = section.Name
+			}
+
+			gen_dir := self.nt_header.Profile.GENERIC_DIRECTORY(
+				self.nt_header.Reader, int64(dir.VirtualAddress()))
+			result.Set(i.name, Directory{
+				Size: dir.DirSize(),
+				// This is really a file address
+				FileAddress:  file_address,
+				Timestamp:    gen_dir.TimeDateStamp().Time,
+				TimestampRaw: gen_dir.TimeDateStamp().Raw,
+				SectionName:  section_name,
+			})
+		}
+	}
+
+	return result
+}
+
 func (self *PEFile) Resources() []*ordereddict.Dict {
 	result := []*ordereddict.Dict{}
-	resourceDirectory := self.nt_header.ResourceDirectory(self.rva_resolver)
+	resourceDirectory, err := self.nt_header.ResourceDirectory(self.rva_resolver)
+	if err != nil {
+		return nil
+	}
 	resource_base := self.resource_base
 	if resource_base == 0 {
 		resource_base = resourceDirectory.Offset
@@ -70,11 +131,13 @@ func (self *PEFile) Resources() []*ordereddict.Dict {
 	for _, entry := range resourceDirectory.Entries() {
 		entry_type := entry.Type()
 		for _, child := range entry.Traverse(resource_base) {
+			file_address, _ := self.rva_resolver.GetFileAddress(
+				child.OffsetToData())
+
 			result = append(result, ordereddict.NewDict().
 				Set("Type", entry.NameString(resource_base)).
 				Set("TypeId", entry_type.Value).
-				Set("FileOffset", self.rva_resolver.GetFileAddress(
-					child.OffsetToData())).
+				Set("FileOffset", file_address).
 				Set("DataSize", child.DataSize()).
 				Set("CodePage", child.CodePage()))
 		}
@@ -103,8 +166,8 @@ func (self *PEFile) Exports() []string {
 		self.forwards = []string{}
 		self.exports = []string{}
 
-		export_desc := self.nt_header.ExportDirectory(self.rva_resolver)
-		if export_desc != nil {
+		export_desc, err := self.nt_header.ExportDirectory(self.rva_resolver)
+		if err != nil && export_desc != nil {
 			for _, desc := range self.nt_header.ExportTable(self.rva_resolver) {
 				if desc.Forwarder != "" {
 					self.forwards = append(self.forwards, desc.Forwarder)
@@ -136,8 +199,9 @@ func (self *PEFile) Forwards() []string {
 
 func (self PEFile) Members() []string {
 	return []string{
-		"FileHeader", "GUIDAge", "PDB", "Sections", "VersionInformation",
-		"Imports", "Exports", "Forwards",
+		"FileHeader", "GUIDAge", "PDB", "Directories",
+		"Sections", "VersionInformation", "Resources",
+		"Imports", "Exports", "Forwards", "Imphash",
 	}
 }
 
@@ -146,6 +210,7 @@ func (self PEFile) AsDict() *ordereddict.Dict {
 		Set("FileHeader", self.FileHeader).
 		Set("GUIDAge", self.GUIDAge).
 		Set("PDB", self.PDB).
+		Set("Directories", self.GetDirectories()).
 		Set("Sections", self.Sections).
 		Set("VersionInformation", self.VersionInformation()).
 		Set("Resources", self.Resources()).
@@ -194,15 +259,24 @@ func (self *PEFile) GetMessages() []*Message {
 	resource_section := self.nt_header.SectionByName(".rsrc")
 	if resource_section != nil {
 		resource_base := int64(resource_section.PointerToRawData())
-		for _, entry := range self.nt_header.ResourceDirectory(
-			self.rva_resolver).Entries() {
+		resource_dir, err := self.nt_header.ResourceDirectory(
+			self.rva_resolver)
+		if err != nil {
+			return nil
+		}
+
+		for _, entry := range resource_dir.Entries() {
 			if entry.NameString(resource_base) == "RT_MESSAGETABLE" {
 				for _, child := range entry.Traverse(resource_base) {
+					file_address, err := self.rva_resolver.GetFileAddress(
+						child.OffsetToData())
+					if err != nil {
+						continue
+					}
+
 					// Rebase the reader on the resource.
 					reader := io.NewSectionReader(child.Reader,
-						int64(self.rva_resolver.GetFileAddress(
-							child.OffsetToData())),
-						int64(child.DataSize()))
+						int64(file_address), int64(child.DataSize()))
 
 					header := child.Profile.MESSAGE_RESOURCE_DATA(
 						reader, 0)
@@ -221,7 +295,11 @@ func GetVersionInformation(
 	resource_base int64) *ordereddict.Dict {
 	result := ordereddict.NewDict()
 
-	resourceDirectory := nt_header.ResourceDirectory(rva_resolver)
+	resourceDirectory, err := nt_header.ResourceDirectory(rva_resolver)
+	if err != nil {
+		return result
+	}
+
 	if resource_base == 0 {
 		resource_base = resourceDirectory.Offset
 	}
@@ -231,10 +309,14 @@ func GetVersionInformation(
 
 		if entry.NameString(resource_base) == "RT_VERSION" {
 			for _, child := range entry.Traverse(resource_base) {
+				file_address, err := rva_resolver.GetFileAddress(
+					child.OffsetToData())
+				if err != nil {
+					continue
+				}
+
 				vs_info := child.Profile.VS_VERSIONINFO(
-					child.Reader,
-					int64(rva_resolver.GetFileAddress(
-						child.OffsetToData())))
+					child.Reader, int64(file_address))
 
 				for _, child := range vs_info.Children() {
 					for _, string_table := range child.StringTable() {
@@ -274,7 +356,6 @@ func NewPEFile(reader io.ReaderAt) (*PEFile, error) {
 	resource_base := int64(resource_section.PointerToRawData())
 
 	file_header := nt_header.FileHeader()
-	rsds := nt_header.RSDS(rva_resolver)
 
 	result := &PEFile{
 		dos_header:    dos_header,
@@ -288,8 +369,12 @@ func NewPEFile(reader io.ReaderAt) (*PEFile, error) {
 			TimeDateStampRaw: file_header.TimeDateStampRaw(),
 			ImageBase:        rva_resolver.ImageBase,
 		},
-		GUIDAge: rsds.GUIDAge(),
-		PDB:     rsds.Filename(),
+	}
+
+	rsds, err := nt_header.RSDS(rva_resolver)
+	if err == nil {
+		result.GUIDAge = rsds.GUIDAge()
+		result.PDB = rsds.Filename()
 	}
 
 	for _, section := range nt_header.Sections() {
@@ -306,4 +391,15 @@ func NewPEFile(reader io.ReaderAt) (*PEFile, error) {
 	}
 
 	return result, nil
+}
+
+// Locate the relevant section for the file address
+func findSection(sections []*Section, offset int64) *Section {
+	for _, i := range sections {
+		if offset > i.FileOffset && offset < i.FileOffset+i.Size {
+			return i
+		}
+	}
+
+	return nil
 }

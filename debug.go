@@ -15,18 +15,30 @@ var (
 )
 
 func (self *IMAGE_NT_HEADERS) DebugDirectory(
-	rva_resolver *RVAResolver) *IMAGE_DEBUG_DIRECTORY {
+	rva_resolver *RVAResolver) (*IMAGE_DEBUG_DIRECTORY, error) {
 	dir := self.DataDirectory(IMAGE_DIRECTORY_ENTRY_DEBUG)
-	offset := rva_resolver.GetFileAddress(dir.VirtualAddress())
-	return self.Profile.IMAGE_DEBUG_DIRECTORY(self.Reader, int64(offset))
+	offset, err := rva_resolver.GetFileAddress(dir.VirtualAddress())
+	if err != nil {
+		return nil, err
+	}
+	return self.Profile.IMAGE_DEBUG_DIRECTORY(self.Reader, int64(offset)), nil
 }
 
 func (self *IMAGE_NT_HEADERS) RSDS(
-	rva_resolver *RVAResolver) *CV_RSDS_HEADER {
-	debug_directory := self.DebugDirectory(rva_resolver)
+	rva_resolver *RVAResolver) (*CV_RSDS_HEADER, error) {
+	debug_directory, err := self.DebugDirectory(rva_resolver)
+	if err != nil {
+		return nil, err
+	}
+
+	file_address, err := rva_resolver.GetFileAddress(
+		debug_directory.AddressOfRawData())
+	if err != nil {
+		return nil, err
+	}
+
 	return self.Profile.CV_RSDS_HEADER(self.Reader, int64(
-		rva_resolver.GetFileAddress(
-			debug_directory.AddressOfRawData())))
+		file_address)), nil
 }
 
 // A prefixed string contains a length followed by the UTF16 string.

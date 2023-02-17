@@ -23,10 +23,6 @@ import (
 	"github.com/Velocidex/pkcs7"
 )
 
-const (
-	IMAGE_DIRECTORY_ENTRY_SECURITY = 4
-)
-
 var (
 	oidEmailAddress                 = []int{1, 2, 840, 113549, 1, 9, 1}
 	oidExtensionAuthorityInfoAccess = []int{1, 3, 6, 1, 5, 5, 7, 1, 1}

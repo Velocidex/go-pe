@@ -37,7 +37,7 @@
         "Name": [12, ["unsigned long", {}]],
         "NumberOfFunctions": [20, ["unsigned long", {}]],
         "NumberOfNames": [24, ["unsigned long", {}]],
-        "TimeDateStamp": [4, ["unsigned long", {}]],
+        "TimeDateStamp": [4, ["UnixTimeStamp32", {}]],
         "ordinals": [0, ["Array", {
             "count": 0,
             "target": "unsigned short"
@@ -66,7 +66,7 @@
         "NumberOfSymbols": [12, ["unsigned long", {}]],
         "PointerToSymbolTable": [8, ["unsigned long", {}]],
         "SizeOfOptionalHeader": [16, ["unsigned short", {}]],
-        "TimeDateStamp": [4, ["UnixTimeStamp", {}]],
+        "TimeDateStamp": [4, ["UnixTimeStamp32", {}]],
         "TimeDateStampRaw": [4, ["unsigned long", {}]]
     }],
     "_IMAGE_IMPORT_BY_NAME": [4, {
@@ -79,7 +79,7 @@
         "ForwarderChain": [8, ["unsigned long", {}]],
         "Name": [12, ["unsigned long", {}]],
         "OriginalFirstThunk": [0, ["unsigned long", {}]],
-        "TimeDateStamp": [4, ["unsigned long", {}]]
+        "TimeDateStamp": [4, ["UnixTimeStamp32", {}]]
     }],
     "_IMAGE_NT_HEADERS": [248, {
         "FileHeader": [4, ["_IMAGE_FILE_HEADER", {}]],
@@ -184,10 +184,13 @@
         "MinorVersion": [10, ["unsigned short", {}]],
         "NumberOfIdEntries": [14, ["unsigned short", {}]],
         "NumberOfNamedEntries": [12, ["unsigned short", {}]],
-        "TimeDateStamp": [4, ["unsigned long", {}]],
+        "TimeDateStamp": [4, ["UnixTimeStamp32", {}]],
         "_Entries": [16, ["Array", {
             "target": "_IMAGE_RESOURCE_DIRECTORY_ENTRY"
         }]]
+    }],
+    "_GENERIC_DIRECTORY": [16, {
+        "TimeDateStamp": [4, ["UnixTimeStamp32", {}]]
     }],
     "_IMAGE_RESOURCE_DIRECTORY_ENTRY": [8, {
         "Type": [0, ["Enumeration", {
@@ -296,7 +299,7 @@
     }],
     "_IMAGE_DEBUG_DIRECTORY": [24, {
         "AddressOfRawData": [20, ["unsigned long"]],
-        "TimeDateStamp": [4, ["UnixTimeStamp"]],
+        "TimeDateStamp": [4, ["UnixTimeStamp32"]],
         "Type": [12, ["Enumeration", {
             "choices": {
                 "0": "IMAGE_DEBUG_TYPE_UNKNOWN",
