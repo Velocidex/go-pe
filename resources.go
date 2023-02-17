@@ -3,11 +3,22 @@
 
 package pe
 
+import (
+	"errors"
+)
+
+var (
+	traversalError = errors.New("Resource Directory is too deep")
+)
+
 func (self *IMAGE_NT_HEADERS) ResourceDirectory(
-	rva_resolver *RVAResolver) *IMAGE_RESOURCE_DIRECTORY {
+	rva_resolver *RVAResolver) (*IMAGE_RESOURCE_DIRECTORY, error) {
 	dir := self.DataDirectory(IMAGE_DIRECTORY_ENTRY_RESOURCE)
-	offset := rva_resolver.GetFileAddress(dir.VirtualAddress())
-	return self.Profile.IMAGE_RESOURCE_DIRECTORY(self.Reader, int64(offset))
+	offset, err := rva_resolver.GetFileAddress(dir.VirtualAddress())
+	if err != nil {
+		return nil, err
+	}
+	return self.Profile.IMAGE_RESOURCE_DIRECTORY(self.Reader, int64(offset)), nil
 }
 
 func (self *IMAGE_RESOURCE_DIRECTORY) Entries() []*IMAGE_RESOURCE_DIRECTORY_ENTRY {
@@ -36,18 +47,19 @@ func (self *IMAGE_RESOURCE_DIRECTORY_ENTRY) NameString(
 func (self *IMAGE_RESOURCE_DIRECTORY_ENTRY) Traverse(
 	resource_base int64) []*IMAGE_RESOURCE_DATA_ENTRY {
 	result := []*IMAGE_RESOURCE_DATA_ENTRY{}
-	self._Traverse(resource_base, &result)
+	self._Traverse(resource_base, &result, 0)
 
 	return result
 }
 
 func (self *IMAGE_RESOURCE_DIRECTORY_ENTRY) _Traverse(
 	resource_base int64,
-	result *[]*IMAGE_RESOURCE_DATA_ENTRY) {
+	result *[]*IMAGE_RESOURCE_DATA_ENTRY, depth int) error {
 
 	// Protect us from a deep tree here.
-	if self.Offset == 0 || len(*result) > MAX_RESOURCE_DIRECTORY_LENGTH {
-		return
+	if depth > MAX_RESOURCE_DIRECTORY_LENGTH ||
+		self.Offset == 0 || len(*result) > MAX_RESOURCE_DIRECTORY_LENGTH {
+		return traversalError
 	}
 
 	if self.DataIsDirectory() > 0 {
@@ -55,13 +67,18 @@ func (self *IMAGE_RESOURCE_DIRECTORY_ENTRY) _Traverse(
 			self.Reader, resource_base+int64(self.OffsetToDirectory()))
 
 		for _, entry := range directory.Entries() {
-			entry._Traverse(resource_base, result)
+			err := entry._Traverse(resource_base, result, depth+1)
+			if err != nil {
+				return err
+			}
 		}
 	} else {
 		data := self.Profile.IMAGE_RESOURCE_DATA_ENTRY(
 			self.Reader, resource_base+int64(self.OffsetToData()))
 		*result = append(*result, data)
 	}
+
+	return nil
 }
 
 func (self *VS_VERSIONINFO) Value() *TagVS_FIXEDFILEINFO {

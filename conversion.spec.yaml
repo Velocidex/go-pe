@@ -30,6 +30,7 @@ Structs:
   - _IMAGE_DEBUG_DIRECTORY
   - _IMAGE_RESOURCE_DATA_ENTRY
   - PrefixedString
+  - _GENERIC_DIRECTORY
 
   # The following are used to parse out the VersionInformation resource data.
 
@@ -57,8 +58,8 @@ FieldWhiteList:
        Characteristics, SizeOfRawData, Name]
   _IMAGE_FILE_HEADER: [SizeOfOptionalHeader, TimeDateStamp, TimeDateStampRaw,
        NumberOfSections, Machine, Characteristics]
-  _IMAGE_EXPORT_DIRECTORY: [Name, Base, NumberOfFunctions, NumberOfNames, AddressOfFunctions, AddressOfNames, AddressOfNameOrdinals, ordinals, names, funcs64]
-  _IMAGE_RESOURCE_DIRECTORY: [_Entries, NumberOfIdEntries, NumberOfNamedEntries]
+  _IMAGE_EXPORT_DIRECTORY: [Name, Base, NumberOfFunctions, NumberOfNames, AddressOfFunctions, AddressOfNames, AddressOfNameOrdinals, ordinals, names, funcs64, TimeDateStamp]
+  _IMAGE_RESOURCE_DIRECTORY: [_Entries, NumberOfIdEntries, NumberOfNamedEntries, TimeDateStamp]
   _IMAGE_RESOURCE_DIRECTORY_ENTRY: [NameIsString, NameOffset, Type,
        DataIsDirectory, OffsetToDirectory, OffsetToData]
   _IMAGE_OPTIONAL_HEADER: [Magic, DataDirectory, ImageBase, CheckSum, SizeOfHeaders]

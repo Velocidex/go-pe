@@ -1,5 +1,11 @@
 package pe
 
+import "errors"
+
+var (
+	addressNotFound = errors.New("Address not found")
+)
+
 // An RVA resolver maps a VirtualAddress to a file physical
 // address. When the physical file is mapped into memory, sections in
 // the file are mapped at different memory addresses. Internally the
@@ -20,15 +26,15 @@ type RVAResolver struct {
 	Is64Bit   bool
 }
 
-func (self *RVAResolver) GetFileAddress(offset uint32) uint32 {
+func (self *RVAResolver) GetFileAddress(offset uint32) (uint32, error) {
 	for _, run := range self.Runs {
 		if offset >= run.VirtualAddress &&
 			offset < run.VirtualEnd {
-			return offset - run.VirtualAddress + run.PhysicalAddress
+			return offset - run.VirtualAddress + run.PhysicalAddress, nil
 		}
 	}
 
-	return 0
+	return 0, addressNotFound
 }
 
 func NewRVAResolver(header *IMAGE_NT_HEADERS) *RVAResolver {
