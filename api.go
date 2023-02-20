@@ -44,6 +44,7 @@ type FileHeader struct {
 type PEFile struct {
 	mu sync.Mutex
 
+	max_size   int64
 	dos_header *IMAGE_DOS_HEADER
 	nt_header  *IMAGE_NT_HEADERS
 
@@ -338,6 +339,10 @@ func GetVersionInformation(
 }
 
 func NewPEFile(reader io.ReaderAt) (*PEFile, error) {
+	return NewPEFileWithSize(reader, 0)
+}
+
+func NewPEFileWithSize(reader io.ReaderAt, max_size int64) (*PEFile, error) {
 	profile := NewPeProfile()
 	dos_header := profile.IMAGE_DOS_HEADER(reader, 0)
 	if dos_header.E_magic() != 0x5a4d {
@@ -358,6 +363,7 @@ func NewPEFile(reader io.ReaderAt) (*PEFile, error) {
 	file_header := nt_header.FileHeader()
 
 	result := &PEFile{
+		max_size:      max_size,
 		dos_header:    dos_header,
 		nt_header:     nt_header,
 		rva_resolver:  rva_resolver,
