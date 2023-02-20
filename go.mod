@@ -2,7 +2,7 @@ module www.velocidex.com/golang/go-pe
 
 require (
 	github.com/Velocidex/ordereddict v0.0.0-20220428153415-da46091cd216
-	github.com/Velocidex/pkcs7 v0.0.0-20210524015001-8d1eee94a157
+	github.com/Velocidex/pkcs7 v0.0.0-20230220112103-d4ed02e1862a
 	github.com/alecthomas/assert v1.0.0
 	github.com/alecthomas/template v0.0.0-20190718012654-fb15b899a751 // indirect
 	github.com/alecthomas/units v0.0.0-20190924025748-f65c72e2690d // indirect
