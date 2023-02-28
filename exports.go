@@ -105,7 +105,7 @@ func (self *IMAGE_NT_HEADERS) ExportTable(
 			}
 			var ordinal uint32
 			if i < len(ordinal_table) {
-				ordinal = ordinal_table[i]
+				ordinal = uint32(ordinal_table[i])
 				seen[uint32(ordinal)] = true
 			}
 
