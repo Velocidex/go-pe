@@ -103,9 +103,11 @@ func (self *IMAGE_NT_HEADERS) ExportTable(
 			if i >= len(ordinal_table) {
 				continue
 			}
-
-			ordinal := ordinal_table[i]
-			seen[uint32(ordinal)] = true
+			var ordinal uint32
+			if i < len(ordinal_table) {
+				ordinal = ordinal_table[i]
+				seen[uint32(ordinal)] = true
+			}
 
 			file_address, err = rva_resolver.GetFileAddress(func_addr)
 			if err == nil {
@@ -121,15 +123,18 @@ func (self *IMAGE_NT_HEADERS) ExportTable(
 		}
 	}
 
-	for i := 0; i < number_of_names; i++ {
+	for i := 0; i < len(name_table); i++ {
 		file_address, err = rva_resolver.GetFileAddress(name_table[i])
 		if err != nil {
 			continue
 		}
 		name := ParseTerminatedString(self.Reader, int64(file_address))
-		ordinal := uint32(ordinal_table[i])
-		func_rva := uint32(0)
+		var ordinal uint32
+		if i < len(ordinal_table) {
+			ordinal = uint32(ordinal_table[i])
+		}
 
+		func_rva := uint32(0)
 		if int(ordinal) < len(func_table) {
 			func_rva = func_table[ordinal]
 		}
@@ -156,11 +161,13 @@ func (self *IMAGE_NT_HEADERS) ExportTable(
 			_, pres := seen[ordinal]
 			if !pres {
 				seen[ordinal] = true
-				result = append(result, &IMAGE_EXPORT_DESCRIPTOR{
-					Ordinal: int(ordinal),
-					DLLName: dll_name,
-					RVA:     int64(func_table[i]),
-				})
+				if i < len(func_table) {
+					result = append(result, &IMAGE_EXPORT_DESCRIPTOR{
+						Ordinal: int(ordinal),
+						DLLName: dll_name,
+						RVA:     int64(func_table[i]),
+					})
+				}
 			}
 		}
 	}
