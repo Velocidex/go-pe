@@ -185,6 +185,18 @@ func (self *PEFile) Exports() []string {
 	return self.exports
 }
 
+// Delay calculating these until absolutely necessary.
+func (self *PEFile) ExportRVAs() []*IMAGE_EXPORT_DESCRIPTOR {
+	self.mu.Lock()
+	defer self.mu.Unlock()
+
+	export_desc, err := self.nt_header.ExportDirectory(self.rva_resolver)
+	if err == nil && export_desc != nil {
+		return self.nt_header.ExportTable(self.rva_resolver)
+	}
+	return nil
+}
+
 func (self *PEFile) Forwards() []string {
 	self.mu.Lock()
 	defer self.mu.Unlock()
