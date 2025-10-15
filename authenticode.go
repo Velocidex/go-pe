@@ -2,6 +2,7 @@ package pe
 
 import (
 	"bytes"
+	"context"
 	"crypto/dsa"
 	"crypto/ecdsa"
 	"crypto/md5"
@@ -84,8 +85,12 @@ type Hashes struct {
 	SHA256 hash.Hash
 }
 
-func (self *PEFile) CalcHashToDict() *ordereddict.Dict {
-	hashes := self.CalcHash()
+func (self *PEFile) CalcHashToDict(
+	ctx context.Context) (*ordereddict.Dict, error) {
+	hashes, err := self.CalcHash(ctx)
+	if err != nil {
+		return nil, err
+	}
 	md5_hex := fmt.Sprintf("%0x", hashes.MD5.Sum(nil))
 	sha1_hex := fmt.Sprintf("%0x", hashes.SHA1.Sum(nil))
 	sha256_hex := fmt.Sprintf("%0x", hashes.SHA256.Sum(nil))
@@ -100,7 +105,7 @@ func (self *PEFile) CalcHashToDict() *ordereddict.Dict {
 	if err == nil {
 		indirect_data, err := parseIndirectData(authenticode_info)
 		if err != nil {
-			return result
+			return result, nil
 		}
 
 		expected_hash := fmt.Sprintf("%0x", indirect_data.MessageDigest.Digest)
@@ -117,11 +122,11 @@ func (self *PEFile) CalcHashToDict() *ordereddict.Dict {
 	}
 	result.Set("HashMatches", hash_matches)
 
-	return result
+	return result, nil
 }
 
 // Hashing algorithm description in "Windows Authenticode Portable Executable Signature Format" http://download.microsoft.com/download/9/c/5/9c5b2167-8017-4bae-9fde-d599bac8184a/authenticode_pe.docx
-func (self *PEFile) CalcHash() *Hashes {
+func (self *PEFile) CalcHash(ctx context.Context) (*Hashes, error) {
 	hasher := &Hashes{
 		MD5:    md5.New(),
 		SHA1:   sha1.New(),
@@ -137,10 +142,18 @@ func (self *PEFile) CalcHash() *Hashes {
 
 	wrapper := NewReaderWrapper(self.dos_header.Reader)
 	DebugPrint("First range %d-%d\n", self.dos_header.Offset, start_of_checksum)
-	wrapper.CopyRange(writer, self.dos_header.Offset, start_of_checksum)
+	err := wrapper.CopyRange(
+		ctx, writer, self.dos_header.Offset, start_of_checksum)
+	if err != nil {
+		return nil, err
+	}
 
 	DebugPrint("Second range %d-%d\n", start_of_checksum+4, security_dir.Offset)
-	wrapper.CopyRange(writer, start_of_checksum+4, security_dir.Offset)
+	err = wrapper.CopyRange(ctx,
+		writer, start_of_checksum+4, security_dir.Offset)
+	if err != nil {
+		return nil, err
+	}
 
 	// Sort the sections in ascending file offset order.
 	sections := self.nt_header.Sections()
@@ -149,7 +162,7 @@ func (self *PEFile) CalcHash() *Hashes {
 	})
 
 	if len(sections) == 0 {
-		return hasher
+		return hasher, nil
 	}
 
 	optional_header := self.nt_header.OptionalHeader()
@@ -157,12 +170,15 @@ func (self *PEFile) CalcHash() *Hashes {
 	// If the max size is exceeded then dont bother reading.
 	end := int64(optional_header.SizeOfHeaders())
 	if self.max_size > 0 && end > self.max_size {
-		return hasher
+		return hasher, nil
 	}
 
 	// The SizeOfHeaders is the end of the entire first part of
 	// the file (including all headers). After that there are sections.
-	wrapper.CopyRange(writer, security_dir.Offset+8, end)
+	err = wrapper.CopyRange(ctx, writer, security_dir.Offset+8, end)
+	if err != nil {
+		return nil, err
+	}
 	DebugPrint("range %d-%d\n", security_dir.Offset+8, end)
 
 	// Write the sections into the hash
@@ -176,10 +192,13 @@ func (self *PEFile) CalcHash() *Hashes {
 		end := start + int64(section.SizeOfRawData())
 
 		DebugPrint("Section %v from %d-%d\n", section.Name(), start, end)
-		wrapper.CopyRange(writer, start, end)
+		err = wrapper.CopyRange(ctx, writer, start, end)
+		if err != nil {
+			return nil, err
+		}
 	}
 
-	return hasher
+	return hasher, nil
 }
 
 func ParseAuthenticode(pe *PEFile) (*pkcs7.PKCS7, error) {

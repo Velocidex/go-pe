@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"os"
@@ -36,8 +37,10 @@ func doAuthenticode() {
 		dict = pe.PKCS7ToOrderedDict(authenticode_info)
 	}
 
+	ctx := context.Background()
 	if *authenticode_command_verify {
-		dict.Set("CalculatedHash", pe_file.CalcHashToDict())
+		res, _ := pe_file.CalcHashToDict(ctx)
+		dict.Set("CalculatedHash", res)
 	}
 
 	serialized, _ := json.MarshalIndent(dict, "", "  ")
