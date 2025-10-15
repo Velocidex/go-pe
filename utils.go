@@ -1,7 +1,19 @@
 package pe
 
 import (
+	"context"
+	"fmt"
 	"io"
+	"sync"
+)
+
+var (
+	pool = sync.Pool{
+		New: func() interface{} {
+			buffer := make([]byte, 32*1024)
+			return &buffer
+		},
+	}
 )
 
 func RoundUpToWordAlignment(offset int64) int64 {
@@ -26,9 +38,17 @@ func (self *ReaderWrapper) Seek(offset int64) {
 	self.offset = offset
 }
 
-func (self *ReaderWrapper) CopyRange(writer io.Writer, start, end int64) {
+func (self *ReaderWrapper) CopyRange(
+	ctx context.Context,
+	writer io.Writer, start, end int64) error {
+	if end-start < 0 || end-start > GetHashSizeLimit() {
+		return fmt.Errorf("Range size exceeded: %#x", end-start)
+	}
+
 	self.offset = start
-	io.CopyN(writer, self, end-self.offset)
+	CopyN(ctx, writer, self, end-self.offset)
+
+	return nil
 }
 
 func (self *ReaderWrapper) Tell() int64 {
@@ -81,4 +101,41 @@ func CapInt32(v int32, max int32) int32 {
 		return max
 	}
 	return v
+}
+
+func CopyN(ctx context.Context, dst io.Writer, src io.Reader, count int64) (
+	n int, err error) {
+	offset := 0
+	buff := pool.Get().(*[]byte)
+	defer pool.Put(buff)
+
+	for count > 0 {
+		select {
+		case <-ctx.Done():
+			return offset, nil
+
+		default:
+			read_buff := *buff
+			if count < int64(len(read_buff)) {
+				read_buff = read_buff[:count]
+			}
+
+			n, err = src.Read(read_buff)
+			if err != nil && err != io.EOF {
+				return offset, err
+			}
+
+			if n == 0 {
+				return offset, nil
+			}
+
+			_, err = dst.Write(read_buff[:n])
+			if err != nil {
+				return offset, err
+			}
+			offset += n
+			count -= int64(n)
+		}
+	}
+	return offset, nil
 }
