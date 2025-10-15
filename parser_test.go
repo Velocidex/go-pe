@@ -2,6 +2,7 @@ package pe
 
 import (
 	"bytes"
+	"context"
 	"io"
 	"io/ioutil"
 	"os"
@@ -49,8 +50,11 @@ func TestAuthenticode(t *testing.T) {
 	authenticode_info, err := ParseAuthenticode(pe_file)
 	assert.NoError(t, err)
 
+	res, err := pe_file.CalcHashToDict(context.Background())
+	assert.NoError(t, err)
+
 	result := PKCS7ToOrderedDict(authenticode_info).
-		Set("CalculatedHash", pe_file.CalcHashToDict())
+		Set("CalculatedHash", res)
 
 	g := goldie.New(t, goldie.WithFixtureDir("fixtures"),
 		goldie.WithNameSuffix(".golden"),
