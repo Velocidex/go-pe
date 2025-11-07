@@ -32,6 +32,7 @@ type Message struct {
 
 // Each block contains a list of entries.
 func (self *MESSAGE_RESOURCE_BLOCK) Messages() []*Message {
+	// fmt.Printf("MESSAGE_RESOURCE_BLOCK %v\n", self.DebugString())
 	result := []*Message{}
 	offset := int64(self.OffsetToEntries())
 	for i := self.LowId(); i <= self.HighId(); i++ {
@@ -66,6 +67,7 @@ func (self *MESSAGE_RESOURCE_BLOCK) Messages() []*Message {
 			EventId: int(event_id),
 			Message: item.Message()})
 
+		// fmt.Printf(" -> %x-%v\n", event_id, item.Message())
 		if len(result) > MAX_MESSAGES {
 			break
 		}
@@ -81,6 +83,10 @@ func (self *MESSAGE_RESOURCE_ENTRY) Message() string {
 
 	switch self.Flags() {
 	case 0: // AnsiFlag
+
+		// If we dont know the type, just extract the raw string. This
+		// is usually OK.
+	default:
 		result = ParseString(
 			self.Reader,
 			self.Profile.Off_MESSAGE_RESOURCE_ENTRY_Text+self.Offset,
