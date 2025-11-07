@@ -7,7 +7,7 @@ import (
 	"os"
 
 	"github.com/Velocidex/pkcs7"
-	kingpin "gopkg.in/alecthomas/kingpin.v2"
+	kingpin "github.com/alecthomas/kingpin/v2"
 	pe "www.velocidex.com/golang/go-pe"
 )
 
