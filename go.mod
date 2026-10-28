@@ -1,13 +1,13 @@
 module www.velocidex.com/golang/go-pe
 
 require (
-	github.com/Velocidex/ordereddict v0.0.0-20250821063524-02dc06e46238
+	github.com/Velocidex/ordereddict v0.0.0-20261028034010-6857b08b4dab
 	github.com/Velocidex/pkcs7 v0.0.0-20230220112103-d4ed02e1862a
 	github.com/alecthomas/assert v1.0.0
 	github.com/alecthomas/kingpin/v2 v2.4.0
 	github.com/davecgh/go-spew v1.1.1
 	github.com/sebdah/goldie/v2 v2.8.0
-	golang.org/x/text v0.30.0
+	golang.org/x/text v0.43.0
 	www.velocidex.com/golang/binparsergen v0.1.1-0.20220107080050-ae6122c5ed14
 )
 
@@ -27,4 +27,4 @@ require (
 
 // replace github.com/Velocidex/pkcs7 => /home/mic/projects/pkcs7
 
-go 1.24.0
+go 1.26.0

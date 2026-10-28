@@ -67,12 +67,12 @@ func (self *IMAGE_NT_HEADERS) ParseSecurityInfo() (*pkcs7.PKCS7, error) {
 	win_cert := self.Profile.WIN_CERTIFICATE(self.Reader, int64(dir.VirtualAddress()))
 
 	data := make([]byte, CapUint32(win_cert.Length(), MAX_WIN_CERTIFICATE_LENGTH))
-	_, err := win_cert.Reader.ReadAt(data, int64(win_cert.Offset+8))
-	if err != nil {
+	n, err := win_cert.Reader.ReadAt(data, int64(win_cert.Offset+8))
+	if err != nil && err != io.EOF {
 		return nil, err
 	}
 
-	pkcs7, err := pkcs7.Parse(data)
+	pkcs7, err := pkcs7.Parse(data[:n])
 	if err != nil {
 		return nil, err
 	}
